@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
+    <script src="{{ url_for('static', filename='js/jQuery-3.7.1.min.js') }}"></script>
+    <title>Contact</title>
+</head>
+<body>
+    <header id="header">
+        <nav class="container-fluid position-absolute w-100 top-0 welcome-navigation z-1" id="welcome-navigation">
+            <div class="d-flex px-5 py-2 justify-content-between align-items-center">
+                <div class="col-1" style="height: 100px;width: 100px;">
+                    <img class="app-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" width="100%" height="100%">
+                </div>
+                <div class="col-md-8 justify-content-between gap-3 md-pe-5 menu-list" id="menu-list">
+                    <ul class="nav col-md-8  justify-content-between">
+                        <a href="/" class="text-light text-uppercase nav-link fw-bold">home</a>
+                        <a href="/about" class="text-light text-uppercase nav-link fw-bold">about us</a>
+                        <a href="/contact" class="text-light text-uppercase nav-link fw-bold active-link">contact</a>
+                        <a href="/login" class="text-light text-uppercase nav-link fw-bold">login</a>
+                    </ul>
+                </div>
+                <button class="btn p-0 menu-toggler" id="button-toggler">
+                    <hr><hr><hr>
+                </button>
+            </div>
+        </nav>
+        <!--Slide-->
+        <div class="d-flex align-items-center justify-content-center py-5 slide-container z-1">
+            <div class="bg-light shadow align-items-center gap-3 p-2 contact-form-container">
+                <!-- Contact form -->
+                <form class="p-3 w-100 h-100 d-flex flex-row" method="POST">
+                    <div class="side">
+                        <h2>Contact Us</h2>
+                        <p class="w-100" style="line-height: 25px;">Feel Free to use the form or drop us an email. Old-fashioned phone calls work too.</p>
+                        <ul class="p-0">
+                            <li class="list-inline-item d-block" ><i class="me-2 fas fa-phone"></i>+261 33 14 568 86</li>
+                            <li class="list-inline-item d-block" ><i class="me-2 fas fa-envelope"></i>andrianaivonoe403@gmail.com</li>
+                            <li class="list-inline-item d-block" ><i class="me-2 fas fa-location"></i>Ankilahila Fandriana 308</li>
+                        </ul>
+                    </div>
+                    <div class="side">
+                        <div class="d-flex flex-column bg-light p-0">
+                            <!--Name input container-->
+                            <div class="bg-light p-0 my-1">
+                                <label for="name" class="m-0 d-block">Name</label>
+                                <div class="d-flex gap-2">
+                                    <input class="form-control border" type="text" placeholder="First" name="name">
+                                    <input class="form-control border" type="text" placeholder="Last" name="name">
+                                </div>
+                            </div>
+                            
+                            <!--Email input container-->
+                            <div class="bg-light p-0 my-1">
+                                <label for="email" class="m-0 d-block">Email</label>
+                                <input class="form-control border" type="email" placeholder="example@email.com" name="email">
+                            </div>
+                            
+                            <!--Phone input container-->
+                            <div class="bg-light p-0 my-1">
+                                <label for="phone" class="m-0 d-block">Phone (optional)</label>
+                                <input class="form-control border" type="phone" placeholder="XXX-XXX-XXXX" name="phone">
+                            </div>
+                            
+                            <!--Message input container-->
+                            <div class="bg-light p-0 my-1">
+                                <label for="phone" class="m-0 d-block">Message</label>
+                                <textarea name="message" id="messageContent" class="from-control w-100 border" rows="2"></textarea>
+                            </div>
+
+                            <!--Submit button-->
+                            <div class="bg-light p-0 my-1">
+                                <button type="submit" class="btn text-light fw-bold">Submit</button>
+                            </div>
+
+                        </div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="position-absolute end-0 bottom-0 mx-5 my-3 d-flex justify-content-between align-items-center gap-2 px-5 logo-container">
+                <a href="insta">
+                    <img src="{{ url_for('static', filename='images/instagram.svg') }}" alt="instagram logo" width="30" height="30">
+                </a>
+                <a href="face">
+                    <img src="{{ url_for('static', filename='images/facebook-f.svg') }}" alt="facebook logo" width="30" height="30">
+                </a>
+                <a href="twit">
+                    <img src="{{ url_for('static', filename='images/twitter.svg') }}" alt="twitter logo" width="30" height="30">
+                </a>
+                <a href="whats">
+                    <img src="{{ url_for('static', filename='images/whatsapp.svg') }}" alt="whatsapp logo" width="30" height="30">
+                </a>
+            </div>
+        </div>
+    </header>
+    <script src="{{ url_for('static', filename='js/contact.script.js') }}"></script>
+</body>
+</html>

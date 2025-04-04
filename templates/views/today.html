@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
+    <script src="{{ url_for('static', filename='js/jQuery-3.7.1.min.js') }}"></script>
+    <title>Today task</title>
+</head>
+<body>
+    <aside class="bg-light pt-2 rounded-2 position-fixed m-2 mb-0">
+        <div class="d-flex justify-content-between align-items-center my-1">
+            <h3 class="text-dark d-flex align-items-center justify-content-center gap-2">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="40px" height="40px">
+                Task manager
+            </h3>
+            <button class="btn menu-btn">
+                <hr><hr><hr>
+            </button>
+        </div>
+        <form class="d-flex justify-content-between align-items-center border px-3 py-2 rounded-2" action="">
+            <i class="text-primary fa fa-search"></i>
+            <input class="text-dark" type="search" placeholder="Find task">
+        </form>
+        <div class="my-3">
+            <h4 class="text-dark fw-bold" >TASKS</h4>
+            <ul class="p-0">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="text-warning fas fa-clock"></i>
+                        <a  class="text-dark text-decoration-none" href="/dashboard/upcoming">Upcoming</a>
+                    </div>
+                    <span class="text-dark">1</span>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center  active-page ">
+                    <div>
+                        <i class="text-success fas fa-list"></i>
+                        <a  class="text-dark text-decoration-none" href="/dashboard/today">Today</a>
+                    </div>
+                    <span class="text-dark">2</span>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="text-primary fas fa-calendar-days"></i>
+                        <a  class="text-dark text-decoration-none" href="/dashboard/calendar">Calendar</a>
+                    </div>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="text-info fas fa-grip"></i>
+                        <a  class="text-dark text-decoration-none " href="/dashboard">Sticky Wall</a>
+                    </div>
+                    <span class="text-dark bg-light" id="taskNbr">1</span>
+                </li>
+            </ul>
+        </div>
+        <div class="my-3">
+            <h4 class="text-dark fw-bold" >LISTS</h4>
+            <ul class="p-0">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                    <div>
+                        <i class="text-dark fas fa-user"></i>
+                        <a  class="text-dark text-decoration-none" href="#">Personal</a>
+                    </div>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                    <div>
+                        <i class="text-danger fas fa-circle"></i>
+                        <a  class="text-dark text-decoration-none" href="#">Work</a>
+                    </div>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                    <div>
+                        <i class="text-secondary fas fa-square"></i>
+                        <a  class="text-dark text-decoration-none" href="#">List 1</a>
+                    </div>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                    <div>
+                        <i class="text-success fas fa-add"></i>
+                        <a  class="text-dark text-decoration-none" href="#">Add new list</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="mt-5">
+            <ul class="p-0">
+                <li class="my-2 py-1">
+                    <i class="text-danger fas fa-bug"></i>
+                    <a class="text-dark text-decoration-none" href="mailto:andrianaivonoe403@gmail.com">Bug report</a>
+                </li>
+                <li class="my-2 py-1">
+                    <i class="text-dark fas fa-cog"></i>
+                    <a class="text-dark text-decoration-none" href="#">User account</a>
+                </li>
+                <li class="my-2 py-1">
+                    <i class="text-secondary fas fa-power-off"></i>
+                    <a class="text-dark text-decoration-none" href="/login">Sing out</a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <!-- Task list in Today -->
+    <main class="sticky-wall-main p-3 py-4">
+        <h1 class="text-dark d-flex align-items-center justify-content-between">
+            <button class="btn menu-btn float-left menu-btn-mobile">
+                <hr><hr><hr>
+            </button>
+            Today tasks
+        </h1>
+        <div class="container py-3">
+            <div class="row justify-content-start">
+                <!--Task 1-->
+                <div class=" col-4 p-1 taskBox" id="todayTask0">
+                    <div class=" h-100  p-2 rounded-3 bg-secondary">
+                        <h3 class="text-light">
+                            Dusk
+                            <span class="text-light" style="font-size: 15px;">
+                                10/02/25 to 25/02/25
+                            </span> 
+                            <i class="fas fa-trash text-danger" onclick="removeTask('todayTask0')"></i>
+                        </h3>
+                        <ul class="p-0">
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask00">Task 1 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask00')"></i></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask01">Task 2 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask01')"></i></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask02">Task 3 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask02')"></i></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask03">... <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask03')"></i></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask04">... <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask04')"></i></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask05">Task n <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask05')"></i></li>
+                        </ul>
+                    </div>
+                </div>
+                <!--Task 2-->
+                <div class=" col-4 p-1 taskBox" id="todayTask1">
+                    <div class=" h-100 p-2 rounded-3">
+                        <h3 class="text-dark">
+                            Evening
+                            <span class="text-dark" style="font-size: 15px;">
+                                10/02/25 to 25/02/25
+                            </span> 
+                            <i class="fas fa-trash text-danger" onclick="removeTask('todayTask1')"></i>
+                        </h3>
+                        <ul class="p-0">
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask10">Task 1 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask10')"></i></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask11">Task 2 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask11')"></i></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask12">Task 3 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask12')"></i></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask13">... <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask13')"></i></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask14">... <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask14')"></i></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask15">Task n <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask15')"></i></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='js/dashboard.script.js') }}"></script>
+</body>
+</html>

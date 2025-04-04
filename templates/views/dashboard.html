@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
+    <script src="{{ url_for('static', filename='js/jQuery-3.7.1.min.js') }}"></script>
+    <title>My Sticky wall</title>
+</head>
+<body>
+    <aside class="bg-light pt-2 rounded-2 position-fixed m-2 mb-0">
+        <div class="d-flex justify-content-between align-items-center my-1">
+            <h3 class="text-dark d-flex align-items-center justify-content-center gap-2">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="40px" height="40px">
+                Task manager
+            </h3>
+            <button class="btn menu-btn">
+                <hr><hr><hr>
+            </button>
+        </div>
+        <form class="d-flex justify-content-between align-items-center border px-3 py-2 rounded-2" action="">
+            <i class="text-primary fa fa-search"></i>
+            <input class="text-dark" type="search" placeholder="Find task">
+        </form>
+        <div class="my-3">
+            <h4 class="text-dark fw-bold" >TASKS</h4>
+            <ul class="p-0">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="text-warning fas fa-clock"></i>
+                        <a  class="text-dark text-decoration-none" href="/dashboard/upcoming">Upcoming</a>
+                    </div>
+                    <span class="text-dark">1</span>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="text-success fas fa-list"></i>
+                        <a  class="text-dark text-decoration-none" href="/dashboard/today">Today</a>
+                    </div>
+                    <span class="text-dark">2</span>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="text-primary fas fa-calendar-days"></i>
+                        <a  class="text-dark text-decoration-none" href="/dashboard/calendar">Calendar</a>
+                    </div>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center active-page ">
+                    <div>
+                        <i class="text-info fas fa-grip"></i>
+                        <a  class="text-dark text-decoration-none " href="/dashboard">Sticky Wall</a>
+                    </div>
+                    <span class="text-dark bg-light" id="taskNbr">1</span>
+                </li>
+            </ul>
+        </div>
+        <div class="my-3">
+            <h4 class="text-dark fw-bold" >LISTS</h4>
+            <ul class="p-0">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                    <div>
+                        <i class="text-dark fas fa-user"></i>
+                        <a  class="text-dark text-decoration-none" href="#">Personal</a>
+                    </div>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                    <div>
+                        <i class="text-danger fas fa-circle"></i>
+                        <a  class="text-dark text-decoration-none" href="#">Work</a>
+                    </div>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                    <div>
+                        <i class="text-secondary fas fa-square"></i>
+                        <a  class="text-dark text-decoration-none" href="#">List 1</a>
+                    </div>
+                </li>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                    <div>
+                        <i class="text-success fas fa-add"></i>
+                        <a  class="text-dark text-decoration-none" href="#">Add new list</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="mt-5">
+            <ul class="p-0">
+                <li class="my-2 py-1">
+                    <i class="text-danger fas fa-bug"></i>
+                    <a class="text-dark text-decoration-none" href="mailto:andrianaivonoe403@gmail.com">Bug report</a>
+                </li>
+                <li class="my-2 py-1">
+                    <i class="text-dark fas fa-cog"></i>
+                    <a class="text-dark text-decoration-none" href="#">User account</a>
+                </li>
+                <li class="my-2 py-1">
+                    <i class="text-secondary fas fa-power-off"></i>
+                    <a class="text-dark text-decoration-none" href="/login">Sing out</a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <!-- Task list in Sticky Wall -->
+    <main class="sticky-wall-main p-3 py-4">
+        {{ data }}
+        <h1 class="text-dark d-flex align-items-center justify-content-between">
+            <button class="btn menu-btn float-left menu-btn-mobile">
+                <hr><hr><hr>
+            </button>
+        </h1>
+        <div class="container py-3">
+            <div class="row justify-content-start">
+                <div class=" col-4 p-1 taskBox" id="task0">
+                    <div class=" h-100  p-2 rounded-3">
+                        <h3 class="text-dark">
+                            Task title                            
+                            <span class="text-dark date">
+                                10-02-25 to 25-02-25
+                            </span>
+                            <i class="fas fa-trash text-danger" onclick="removeTask('task0')"></i>
+                        </h3>
+                        <ul class="p-0">
+                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask00">Task 1 <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask00')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask00')"></i></div></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask01">Task 2 <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask01')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask01')"></i></div></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask02">Task 3 <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask02')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask02')"></i></div></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask03">... <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask03')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask03')"></i></div></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask04">... <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask04')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask04')"></i></div></li>
+                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask05">Task n <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask05')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask05')"></i></div></li>
+                        </ul>
+                    </div>
+                </div>
+                <!--Create task-->
+                <div class="col-4 p-1 rounded-3 task taskBox">
+                    <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                        <i class="text-dark fas fa-add addSing"></i>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="overlay"></div>
+                <div class="modal">
+                    <div class="d-flex flex-column justify-content-between h-100">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                                <label class="text-dark" name="tastTitle" >Task title</label>
+                                <input class="form-control w-75" type="text" id="title" placeholder="Task title">
+                            </div>
+                            <!--Start date-->
+                            <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                                <label class="text-dark" name="startDate" >Start date</label>
+                                <input class="form-control w-75" type="date" id="startDate" placeholder="Start date">
+                            </div>
+                            <!--End date-->
+                            <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                                <label class="text-dark" name="endDate" >End date</label>
+                                <input class="form-control w-75" type="date" id="endDate" placeholder="End date">
+                            </div>
+                            <!--Description-->
+                            <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                                <label class="text-dark" name="endDate" >Description</label>
+                                <input class="form-control w-75" type="text" id="description" placeholder="A short description (optional)">
+                            </div>
+                            <!--Backgound colour select-->
+                            <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                                <label class="text-dark" name="endDate" >Select task background-color <span>(default color    <div class="default-color"></div>  </span>)</label>
+                                <input class="" type="color" id="bg-color-piker" value="#95ce83">
+                            </div>
+                            <!--Task content-->
+                            <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                                <input class="form-control" type="text" id="content" placeholder="Add sub-task">
+                                <button class="add btn btn-primary">Add</button>
+                            </div>
+                            <ul class="text-dark task-list-container text-center">
+                                <span id="subTaskIndicator">No subtask added </br> all subtask will appear here</span>
+                            </ul>
+                        </div>
+                        
+                        <div class="btn-container">
+                            <button class="shadow submit text-light" id="submit">Submit</button>
+                            <button class="shadow btn-danger" id="closeModal">Close</button>
+                        </div>
+                    </div>
+                </div>
+                <!--End Modal-->
+            </div>
+        </div>
+    </main>
+
+    <!--Welcome Modal-->
+
+    <div id="welcomeModal" class="welcomeModal ">
+        <div class="welcome-modal-content py-5">
+          <h2 class="fw-bold">Welcome to Your Task Manager!</h2>
+          <p>Here's what we have:</p>
+          <div class="d-flex justify-content-center">
+            <ul class="d-flex flex-column align-items-start">
+                <li class="list-inline-item"><i class="fas fa-cogs text-primary "></i> Features : </li>
+                <li class="list-inline-item ms-5"><i class="fas fa-add text-success "></i> Add new tasks and subtasks to stay organized.</li>
+                <li class="list-inline-item ms-5"><i class="fas fa-times text-danger "></i> Remove tasks and their subtasks when they are completed.</li>
+                <li class="list-inline-item ms-5"><i class="fas fa-pen text-warning mb-3"></i> Edit your subtasks whenever needed.</li>
+
+                <li class="list-inline-item"><i class="fas fa-tasks text-primary "></i> Our available pages : </li>
+                <li class="list-inline-item ms-5"><i class="fas fa-check text-success "></i> Check your calendar.</li>
+                <li class="list-inline-item ms-5"><i class="fas fa-check text-success "></i> Check your Today tasks.</li>
+                <li class="list-inline-item ms-5"><i class="fas fa-check text-success "></i> Check Upcoming tasks.</li>
+                <li class="list-inline-item ms-5"><i class="fas fa-paper-plane text-success"></i> Send Bug report.</li>
+              </ul>
+          </div>
+          <p>Start managing your tasks efficiently! <br><span class="fw-bold fs-6">Click outside the pop-up window to close it</span>.</p>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/dashboard.script.js') }}"></script>
+</body>
+</html>

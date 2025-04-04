@@ -1,0 +1,477 @@
+:root{
+    --white-text:  #f8f9fa;
+    --black-text: #212529;
+    --green: #56A244;
+    --grey: #E6E6E6;
+}
+
+/* Welcome Page --index */
+
+/* Navigation */
+.active-link{
+    color: var(--white-text)!important;
+    border-bottom: 2px solid var(--white-text);
+}
+
+nav ul a{
+    color: var(--black-text)!important;
+}
+
+nav ul a:hover{
+    transition: .2s all;
+    color: var(--white-text)!important;
+    border-bottom: 2px solid var(--white-text);
+}
+
+.menu-list{
+    display: flex;
+}
+
+.menu-toggler{
+    width: 40px;
+    display: none;
+}
+
+.menu-toggler hr{
+    border: 2px solid var(--white-text)
+}
+
+/* Slide Start */
+.z-1{
+    z-index: 1;
+}
+header{
+    transition: 1s ease-in-out;
+    background-size: cover;
+    background-position: center;
+}
+
+header::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100%;
+    background-color: #0c0d0ebe;
+    mix-blend-mode: multiply;
+    backdrop-filter: saturate(100%) blur(5px);
+    z-index: 0;
+}
+
+.slide-container{
+    height: 100vh;
+}
+
+.slide-container h1{
+    font-size: 80px;
+}
+
+.slide-container p{
+    width: 70%;
+}
+
+.slide-indicator{
+    width: 5px;
+    height: 5px;
+    border-radius: 20px;
+    border: none;
+    transition: 0.5s all;
+}
+
+.inactive-btn-slide-indicator{
+    background-color: #ffffff7e;
+    height: 5px;
+}
+
+.slide-btn-container{
+    height: 20px;
+    bottom: 20px;
+    align-items: center;
+    display: flex;
+}
+
+.active-btn{
+    width: 10px;
+    height: 10px;
+    background-color: rgb(24, 22, 22);
+    padding: 10px;
+}
+
+.logo-container img{
+    filter: invert(1);
+}
+/* Slide End */
+
+/* End Welcome Page --index */
+
+/* Login page  */
+
+.form-container, .contact-form-container{
+    position: absolute;
+    width: 50%;
+    left: 25%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.side{
+    width: 50%;
+    height: 100%;
+}
+
+.side:first-child{
+    line-height: 40px;
+}
+
+textarea{
+    outline: none;
+    background-color: var(--grey);
+}
+
+.form-container > div{
+    width: 50%;
+    height: 325px;
+}
+
+.contact-form-container i, .form-container i{
+    color: rgb(233, 84, 14);
+}
+
+.contact-form-container input{
+    background-color: var(--grey);
+}
+
+.form-container button, .contact-form-container button, .submit{
+    border-radius: 50px;
+    background-color: var(--green);
+}
+
+.form-container form{
+    transition: .5s all; 
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.form-container form div input{
+    height: 40px;
+    border: none;
+    outline: none;
+    width: calc(100% - 30px);
+    background-color: transparent;
+}
+
+.form-container form div div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--grey);
+    border-radius: 50px;
+    padding: 10px;
+    gap: 10px;
+    margin: 10px auto
+}
+
+.form-container a{
+    font-size: 15px;
+}
+
+.disp-none{
+    display: none!important;
+}
+
+/* End login page */
+
+/* Start Dashboard page */
+
+
+.menu-btn{
+    width: 35px;
+    padding: 0;
+    display: none;
+}
+
+.menu-btn-mobile{
+    display: none;
+}
+
+.menu-btn > hr{
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+aside{
+    left: 0;
+    width: 25%;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+::-webkit-scrollbar{
+    width: 5px;
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: #6f8f75;
+    border-radius: 5px;
+}
+
+
+
+aside form input{
+    border: none;
+    width: 90%;
+    background-color: transparent;
+    outline: none;
+}
+
+aside div h4{
+    font-size: 16px;
+}
+
+aside div ul li:hover{
+    transition: .5s all;
+    background-color: var(--white-text);
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    text-decoration: underline;
+}
+
+aside div ul li span{
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+    border-radius: 5px;
+    background-color: var(--grey);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.sticky-wall-main{
+    margin-left: 350px;
+}
+
+aside{
+    z-index: 99;
+    transition: .5s all;
+}
+
+aside i{
+    margin: 0 5px;
+}
+
+aside div ul li{
+    border-radius: 5px;
+    list-style: none;
+}
+
+
+/* Modal styles */
+
+.modal {
+    /*display: none;*/
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px gray;
+    border-radius: 5px;
+}
+
+.open-modal{
+    background-color: #ECECEC!important;
+}
+
+.addSing{
+    font-size: 60px;
+}
+
+.date{
+    font-size: 12px;
+}
+
+.subtaskNbr{
+    font-size: 15px
+}
+
+.modal div div ul{
+    height: 120px;
+    max-height: 120px;
+    overflow-y: auto;
+    padding: 0;
+} 
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+.btn-container{
+    display: flex;
+    justify-content: space-between;
+}
+.btn-container button{
+    width: 45%;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+}
+.task-container{
+    width: 300px;
+    height: 300px;
+    padding: 20px 10px;
+}
+
+
+/* End modal */
+
+/* Main */
+
+main .container{
+    transition: 2s all;
+}
+
+main .container li{
+    background-color: var(--white-text);
+    list-style: none;
+    margin: 10px auto;
+    margin-top: 0;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+main .container li:hover{
+    background-color: var(--grey);
+    transition: 1s all;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.taskBox{
+    transition: .5s all;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.taskBox ul{
+    
+    max-height: 322px;
+    overflow-y: auto;
+}
+
+.taskBox:hover{
+    transform: scale(1.02);
+}
+
+.taskBox div{
+    background-color:#95ce83;
+}
+
+.taskBox i:hover{
+    transition: .5s ease-in;
+    transform: scale(1.1);
+}
+
+.taskBox div h3{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.taskBox div h3 i{
+    font-size: 20px;
+    display: none;
+    transition: .5s all;
+    cursor: pointer;
+}
+
+.taskBox:hover div h3 i{
+    display: block;
+}
+
+.active-page{
+    background-color: var(--grey);
+}
+
+.subTask{
+    display: flex;
+    padding: auto 10px;
+}
+
+.subTask i{
+    display: none;
+}
+
+.subTask:hover i{
+    display: inline;
+}
+
+#calendar{
+    z-index: 0;
+}
+
+/* End Main */
+
+/* End Dashboard page */
+
+/* Welcome modal */
+
+.welcomeModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.welcome-modal-content {
+    background-color: white;
+    border-radius: 5px;
+    width: 50%;
+    height: auto;
+    text-align: center;
+}
+
+.default-color{
+    display: inline-block;
+    margin-bottom: -5px;
+    background-color: #95ce83;
+    width: 20px;
+    height: 20px;
+}
+
+.error{
+    font-size: 12px;
+}
+
+.info{
+    top: 10px;
+    background-color: antiquewhite;
+}

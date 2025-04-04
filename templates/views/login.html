@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
+    <script src="{{ url_for('static', filename='js/jQuery-3.7.1.min.js') }}"></script>
+    <title>Task manager login</title>
+</head>
+<body>
+    <header id="header">
+        <nav class="container-fluid position-absolute w-100 top-0 welcome-navigation z-1" id="welcome-navigation">
+            <div class="d-flex  px-5 py-2  justify-content-between align-items-center">
+                <div class="col-1" style="height: 100px;width: 100px;">
+                    <img class="app-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" width="100%" height="100%">
+                </div>
+                <div class="col-md-8 justify-content-between gap-3 md-pe-5 menu-list" id="menu-list">
+                    <ul class="nav col-md-8  justify-content-between">
+                        <a href="/" class="text-light text-uppercase nav-link fw-bold">home</a>
+                        <a href="/about" class="text-light text-uppercase nav-link fw-bold">about us</a>
+                        <a href="/contact" class="text-light text-uppercase nav-link fw-bold">contact</a>
+                        <a href="/login" class="text-light text-uppercase nav-link fw-bold active-link">login</a>
+                    </ul>
+                </div>
+                <button class="btn p-0 menu-toggler" id="button-toggler">
+                    <hr><hr><hr>
+                </button>
+            </div>
+        </nav>
+        <!--Slide-->
+        <div class="d-flex align-items-center justify-content-center py-5 slide-container z-1">
+            <div class="bg-light shadow align-items-center gap-3 p-2 form-container py-5">
+                <div class="bg-light overflow-hidden auth-img {{ d_noneLogin }}" id="login-img">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="100%" height="100%">
+                </div>
+                <!-- Login form -->
+                <form class="p-3 {{ d_noneLogin }}" id="login" name="login" method="POST" action="/login">
+                    <h2 class="text-dark text-center">Member login</h2>
+                    <span class="rouded-4 text-dark shadow p-1 position-absolute info">Enter any login information to connect</span>
+                    <div>
+                        <div class="py-0 px-4">
+                            <i class="fa fa-envelope"></i>
+                            <input class="text-dark" type="email" placeholder="Email" id="email" name="email" value="{{ email }}">
+                        </div>
+                        <div class="py-0 px-4">
+                            <i class="fas fa-key"></i>
+                            <input class="text-dark" type="password" placeholder="Password" id="password" name="password" value="{{ password }}">
+                            
+                        </div>
+                        <div class="m-0 py-0 px-4 bg-light text-center">
+                            <span class="text-danger error">{{ errorLogin }}</span>
+                        </div>
+                    </div>
+                    <button class="btn fw-bold text-light" id="log-in">
+                        Login
+                    </button>
+                    <a class="text-dark text-center text-decoration-none fw-bold" href="#">Forgot Password?</a>
+                    <a class="text-center text-decoration-none" href="" id="register-btn"> <i class="fas fa-arrow-left mx-2"></i> Create your account</a>
+                </form>
+        
+                <!--Registration  form-->
+                <form class="p-3 {{ d_noneRegister }}" id="register" name="register" method="POST" action="/login">
+                    <h2 class="text-dark text-center">Member Register</h2>
+                    <div>
+                        <div class="py-0 px-4">
+                            <i class="fas fa-envelope"></i>
+                            <input class="text-dark" type="email" placeholder="Email" name="new_email">
+                        </div>
+                        <div class="py-0 px-4">
+                            <i class="fas fa-key"></i>
+                            <input class="text-dark" type="password" placeholder="Password" name="new_password">
+                        </div>
+                        <div class="py-0 px-4">
+                            <i class="fas fa-key"></i>
+                            <input class="text-dark" type="password" placeholder="Confirm password" name="new_confirmation_password">
+                        </div>
+                        <div class="m-0 py-0 px-4 bg-light text-center">
+                            <span class="text-danger error">{{ errorRegister }}</span>
+                        </div>
+                    </div>
+                    <button class="btn fw-bold text-light">
+                        Register
+                    </button>
+                    <a class="text-center text-decoration-none" href="" id="login-btn">Already have an account <i class="fas fa-arrow-right mx-2"></i></a>
+                </form>
+                <div class="bg-light overflow-hidden auth-img {{ d_noneRegister }}" id="register-img">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="100%" height="100%">
+                </div>
+            </div>
+
+            <div class="position-absolute end-0 bottom-0 mx-5 my-3 d-flex justify-content-between align-items-center gap-2 px-5 logo-container">
+                <a href="insta">
+                    <img src="{{ url_for('static', filename='images/instagram.svg') }}" alt="instagram logo" width="30" height="30">
+                </a>
+                <a href="face">
+                    <img src="{{ url_for('static', filename='images/facebook-f.svg') }}" alt="facebook logo" width="30" height="30">
+                </a>
+                <a href="twit">
+                    <img src="{{ url_for('static', filename='images/twitter.svg') }}" alt="twitter logo" width="30" height="30">
+                </a>
+                <a href="whats">
+                    <img src="{{ url_for('static', filename='images/whatsapp.svg') }}" alt="whatsapp logo" width="30" height="30">
+                </a>
+            </div>
+        </div>
+    </header>
+    <script src="{{ url_for('static', filename='js/login.script.js') }}"></script>
+</body>
+</html>

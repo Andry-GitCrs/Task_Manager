@@ -1,0 +1,196 @@
+@media screen and (max-width: 1125px){
+
+    /* Welcome page responsive */
+    .menu-list{
+        display: none;
+        background-color: rgba(51, 47, 47, 0.336);;
+        position: absolute;
+        top: 78px;
+        padding: 15px 0;
+        right: 0;
+        margin-right: 0px;
+        width: 200px;
+        z-index: 9!important;
+        flex-direction: column;
+        justify-content: center!important;
+        align-items: center;
+        transition: 1s all;
+    }
+
+    .menu-list ul a{
+        text-align: center;
+        height: 50px;
+    }
+
+    .menu-list > a{
+        width: 100%;
+    } 
+
+    .menu-list ul{
+        flex-direction: column;
+    }
+
+    .menu-toggler{
+        display: block;
+    }
+
+    .welcome-text{
+        z-index: 0!important;
+    }
+
+    .slide-container h1{
+        text-align: center;
+        font-size: 50px;
+    }
+
+    .slide-container{
+        padding: 10px;
+    }
+
+    .slide-container p{
+        width: 100%;
+    }
+
+    .logo-container{
+        right: 30px!important;
+    }
+
+    /* End Welcome page index responsive */
+
+    /* Start login and registration */
+    .form-container{
+        width: 100%;
+        left: 0;
+        margin: 0 auto;
+        height: auto;
+        box-shadow: none!important;
+    }
+
+    .color{
+        color: white!important;
+    }
+
+    .form-container .auth-img{
+        max-width: 400px;
+        border-radius: 20px;
+    }
+
+    .form-container div, .form-container form{
+        width: 100%;
+    }
+    /* End login and registration */
+    /*  Dashboard */
+    main h1{
+        text-align: center;
+    }
+
+    aside{
+        width: 50%;
+        left: -500px;
+    }
+
+    .sticky-wall-main{
+        margin: 0;
+    }
+
+    .menu-btn{
+        display: inline;
+    }
+
+    /* Contact responsive */
+
+    .contact-form-container form{
+        flex-direction: column!important;
+    }
+
+    .side{
+        width: 100%!important;
+    }
+
+    .contact-form-container, .form-container{
+        top: 20%;
+        height: auto;
+        left: 0;
+        width: 100%;
+    }
+    
+    .logo-container{
+        display: none!important;
+    }
+
+    /* End contact responsive*/
+
+    /* Welcome modal responsive */
+
+    .welcome-modal-content{
+        width: 100%;
+    }
+    /* End Welcome Modal */
+}
+
+@media screen and (max-width:768px){
+    /* Login and registration page */
+    .form-container{
+        border-radius: none!important;
+        box-shadow: none!important;
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .form-container form, .form-container > div{
+        width: 80%
+    }
+
+    header::before {
+        width: auto;
+    }
+
+    .logo-container{
+        display: none!important;
+    }
+    
+    .contact-form-container form{
+        flex-direction: column!important;
+        justify-content: center;
+    }
+
+    #register-img{
+        top: 0;
+    }
+
+    #login-img{
+        top: 0;
+    }
+    /* End Login and registration page */
+
+    /*  Dashboard */
+    aside{
+        left: -500px;
+    }
+}
+
+@media screen and (max-width: 766px){
+    /*  Dashboard */
+    main .container .row{
+        flex-direction: column;
+    }
+
+    main .container .row .taskBox{
+        width: 100%;
+    }
+
+    main .container{
+        width: 100%;
+    }
+
+    aside{
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    aside{
+        left: -500px;
+    }
+
+}

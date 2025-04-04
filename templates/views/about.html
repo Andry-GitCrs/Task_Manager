@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
+    <script src="{{ url_for('static', filename='js/jQuery-3.7.1.min.js') }}"></script>
+    <title>About Us</title>
+</head>
+<body>
+    <header id="header">
+        <nav class="container-fluid position-absolute w-100 top-0 welcome-navigation z-1" id="welcome-navigation">
+            <div class="d-flex px-5 py-2 justify-content-between align-items-center">
+                <div class="col-1" style="height: 100px;width: 100px;">
+                    <img class="app-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" width="100%" height="100%">
+                </div>
+                <div class="col-md-8 justify-content-between gap-3 md-pe-5 menu-list" id="menu-list">
+                    <ul class="nav col-md-8  justify-content-between">
+                        <a href="/" class="text-light text-uppercase nav-link fw-bold">home</a>
+                        <a href="/about" class="text-light text-uppercase nav-link fw-bold active-link">about us</a>
+                        <a href="/contact" class="text-light text-uppercase nav-link fw-bold">contact</a>
+                        <a href="/login" class="text-light text-uppercase nav-link fw-bold">login</a>
+                    </ul>
+                </div>
+                <button class="btn p-0 menu-toggler" id="button-toggler">
+                    <hr><hr><hr>
+                </button>
+            </div>
+        </nav>
+        <!--Slide-->
+        <div class="d-flex align-items-center justify-content-center py-5 slide-container z-1">
+            <div class="d-flex align-items-center flex-column gap-3 z-1 welcome-text">
+              <h1 class="text-light">About us</h1>
+              <p class="text-center text-light ">
+                Welcome to Task manager, the ultimate task management solution designed to help you stay organized, productive, and in control of your daily responsibilities.
+
+Our mission is to simplify task management by providing a seamless and intuitive experience for individuals and teams. Whether you're managing personal projects or collaborating with colleagues, Task manager offers powerful features to streamline your workflow.
+              </p>
+              <div class="justify-content-between gap-2 position-absolute slide-btn-container" id="slide-btn-container"></div>
+            </div>
+
+            <div class="position-absolute end-0 bottom-0 mx-5 my-3 d-flex justify-content-between align-items-center gap-2 px-5 logo-container">
+                <a href="insta">
+                    <img src="{{ url_for('static', filename='images/instagram.svg') }}" alt="instagram logo" width="30" height="30">
+                </a>
+                <a href="face">
+                    <img src="{{ url_for('static', filename='images/facebook-f.svg') }}" alt="facebook logo" width="30" height="30">
+                </a>
+                <a href="twit">
+                    <img src="{{ url_for('static', filename='images/twitter.svg') }}" alt="twitter logo" width="30" height="30">
+                </a>
+                <a href="whats">
+                    <img src="{{ url_for('static', filename='images/whatsapp.svg') }}" alt="whatsapp logo" width="30" height="30">
+                </a>
+            </div>
+        </div>
+    </header>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
