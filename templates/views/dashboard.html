@@ -107,11 +107,12 @@
     <!-- Task list in Sticky Wall -->
     <main class="sticky-wall-main p-3 py-4">
         {{ message[:-10] }}'s Stycky Wall
-
-        <form action="/api/user/tasks" id="get_task">
-            <input type="submit" value="All my tasks">
-        </form>
         
+        <div id="error" style="color: red;"></div>
+        <div id="info" style="color: green;"></div>
+        <div id="task-list"></div> <!-- This will display the task list -->
+
+
         <h1 class="text-dark d-flex align-items-center justify-content-between">
             <button class="btn menu-btn float-left menu-btn-mobile">
                 <hr><hr><hr>

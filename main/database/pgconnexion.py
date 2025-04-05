@@ -31,11 +31,16 @@ def connect(app):
         class Task(db.Model):
             __table__ = db.Table('tasks', db.metadata, autoload_with = db.engine)
     
+    with app.app_context():
+        class Subtask(db.Model):
+            __table__ = db.Table('subtasks', db.metadata, autoload_with = db.engine)
+    
     return {
         "message": "Database connected",
         "db": db,
         "tables": {
             "User": User,
-            "Task": Task
+            "Task": Task,
+            "Subtask": Subtask
         }
     }
