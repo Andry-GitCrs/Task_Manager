@@ -242,7 +242,7 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
                                 <i class="fas fa-trash text-danger"  onclick="alert('Delete subtask${subtask.subtask_id}')"></i>
                             </div>
                         </li>
-                    `)
+                    `).join('')
                 }
             </ul>
         </div>

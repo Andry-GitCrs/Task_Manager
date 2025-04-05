@@ -7,7 +7,7 @@ import os
 ## App config 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from routes import auth, login, register, gettasks
+from routes import auth, login, register, gettasks, addtask
 from database import pgconnexion
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -76,3 +76,6 @@ def upcoming():
 
 ## Get task
 gettasks.get_tasks(app, database)
+
+## Add new task
+addtask.add_task(app, database)
