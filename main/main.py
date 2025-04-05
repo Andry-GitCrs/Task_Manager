@@ -7,7 +7,7 @@ import os
 ## App config 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from routes import auth, login, register, gettasks, addtask
+from routes import addsubtask, auth, deletesubtask, deletetask, login, register, gettasks, addtask
 from database import pgconnexion
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -79,3 +79,12 @@ gettasks.get_tasks(app, database)
 
 ## Add new task
 addtask.add_task(app, database)
+
+## Add subtask
+addsubtask.add_subtask(app, database)
+
+## Delete task
+deletetask.deleteTask(app, database)
+
+## Delete subtask
+deletesubtask.deleteSubTask(app, database)

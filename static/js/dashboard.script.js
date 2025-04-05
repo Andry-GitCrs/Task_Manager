@@ -16,7 +16,8 @@ $(document).ready(function() {
     })
 
     // Close modal
-    $("#closeModal, .overlay").on("click", function() {
+    $("#closeModal, .overlay").on("click", function(e) {
+        e.preventDefault()
         $(".overlay, .modal").fadeOut()
     })
 
@@ -27,12 +28,15 @@ $(document).ready(function() {
         $("#content").val("")
         if( content.trim() !== ""){
             
-            if( content !== subTaskList[subTaskList.length - 1]){
+            if( subTaskList.map( subTask => subTask.tirm()  == content.trim() )){
+                
                 if(subTaskNbr == 1){
                     $(".task-list-container").text("")
                 }
                 subTaskList.push(content)
                 $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask' id='subtask${taskNbr}${subTaskNbr}'></li>`).html(`${content}  <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask('subtask${taskNbr}${subTaskNbr}')"></i></div>`))
+            }else{
+                alert("Subtask already exist")
             }
         }
         subTaskNbr += 1
@@ -67,13 +71,15 @@ $(document).ready(function() {
             `)
 
             task = {
-                "title": title,
-                "start_date": startDate,
-                "end_date": endDate,
-                "description": description,
-                "bg_color": bgColor,
+                "task_title": title,
+                "task_start_date": startDate,
+                "task_end_date": endDate,
+                "task_background_color": bgColor,
+                "description": description || "None",
                 "subtasks": [...subTaskList]
             }
+
+            console.log(task)
 
             taskcount += 1
             taskNbr += 1
