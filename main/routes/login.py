@@ -1,33 +1,32 @@
 from flask import jsonify, request
+from flask_login import login_user
 from flask_bcrypt import Bcrypt
-from flask_jwt_extended import create_access_token
+
+bcrypt = Bcrypt()
 
 def login(app, database):
     User = database["tables"]["User"]
 
-    @app.route('/auth/login', methods = ['POST'])
-    def login():
-        bcrypt = Bcrypt()
-        data = request.get_json()
-        email = data['email']
-        password = data['password']
+    @app.route('/auth/login', methods=['POST'])
+    def login_route():
+        try:
+            data = request.get_json()
+            email = data.get('email')
+            password = data.get('password')
 
-        user = User.query.filter_by(email = email).first()
+            user = User.query.filter_by(email=email).first()
 
-        if user:
-            if bcrypt.check_password_hash(user.password, password):
-                access_token = create_access_token(identity = email)
-                return jsonify({
-                    "message": f"User {email} logged in successfully",
-                    "token": access_token
-                }), 200
-            
-            else:
-                return jsonify({
-                    "error": "Incorrect password"
-                }), 400
-            
-        if not user:
+            if not user:
+                return jsonify({"error": "Invalid email or password"}), 401
+
+            if not bcrypt.check_password_hash(user.password, password):
+                return jsonify({"error": "Incorrect password"}), 400
+
+            login_user(user)
             return jsonify({
-                "error": "Invalid email or password"
-            }), 401
+                "message": f"User {user.email} logged in successfully"
+            }), 200
+
+        except Exception as e:
+            print("Login error:", str(e))  # for debug
+            return jsonify({"error": "Something went wrong", "details": str(e)}), 500

@@ -99,14 +99,14 @@
                 </li>
                 <li class="my-2 py-1">
                     <i class="text-secondary fas fa-power-off"></i>
-                    <a class="text-dark text-decoration-none" href="/auth">Sing out</a>
+                    <a class="text-dark text-decoration-none" href="/auth/logout">Sing out</a>
                 </li>
             </ul>
         </div>
     </aside>
     <!-- Task list in Sticky Wall -->
     <main class="sticky-wall-main p-3 py-4">
-        {{ data }}
+        {{ message[:-10] }}'s Stycky Wall
         <h1 class="text-dark d-flex align-items-center justify-content-between">
             <button class="btn menu-btn float-left menu-btn-mobile">
                 <hr><hr><hr>

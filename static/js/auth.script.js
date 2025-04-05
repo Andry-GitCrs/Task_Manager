@@ -65,12 +65,10 @@ $("#login_form").on("submit", async (e) => {
         const responseData = await response.json();
 
         if (response.ok) {  //Response with status code 200
-            const token = responseData.token
-            localStorage.setItem("token", token);
             document.getElementById("login_error").textContent = ""
             document.getElementById("login_info").textContent = "Login successful"
             empty_login_field()
-            userDashboard()
+            location.href = '/dashboard'
         } else {
             document.getElementById("login_error").textContent = responseData.error
         }
@@ -122,33 +120,5 @@ function empty_register_field(){
     document.getElementById("new_confirmation_password").value = ""
 }
 /* End Login and Register */
-
-//Handle dashboard
-async function userDashboard() {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        alert("Please log in first!");
-        return;
-    }
-
-    try {
-            const response = await fetch("/dashboard", {
-            method: "GET",
-            headers: { "Authorization": `Bearer ${token}` }});
-
-        if (response.ok) {
-            window.location.href = "/dashboard";  
-        } else {
-            alert("Unauthorized! Redirecting to login...");
-            localStorage.removeItem("token"); 
-            window.location.href = "/auth"; 
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        alert("Something went wrong!");
-    }
-}
-
-
 
 $("#header").css("background-image", "url('../../static/images/bg-4.avif')")
