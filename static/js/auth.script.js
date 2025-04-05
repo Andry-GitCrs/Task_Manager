@@ -120,5 +120,4 @@ function empty_register_field(){
     document.getElementById("new_confirmation_password").value = ""
 }
 /* End Login and Register */
-
 $("#header").css("background-image", "url('../../static/images/bg-4.avif')")

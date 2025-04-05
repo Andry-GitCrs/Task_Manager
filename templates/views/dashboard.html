@@ -107,6 +107,11 @@
     <!-- Task list in Sticky Wall -->
     <main class="sticky-wall-main p-3 py-4">
         {{ message[:-10] }}'s Stycky Wall
+
+        <form action="/api/user/tasks" id="get_task">
+            <input type="submit" value="All my tasks">
+        </form>
+        
         <h1 class="text-dark d-flex align-items-center justify-content-between">
             <button class="btn menu-btn float-left menu-btn-mobile">
                 <hr><hr><hr>
@@ -194,7 +199,7 @@
 
     <div id="welcomeModal" class="welcomeModal ">
         <div class="welcome-modal-content py-5">
-          <h2 class="fw-bold">Welcome to Your Task Manager!</h2>
+          <h2 class="fw-bold">Welcome to Your Task Manager, {{ message[:-10] }}!</h2>
           <p>Here's what we have:</p>
           <div class="d-flex justify-content-center">
             <ul class="d-flex flex-column align-items-start">

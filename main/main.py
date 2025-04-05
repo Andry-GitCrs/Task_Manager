@@ -24,7 +24,7 @@ User = database["tables"]["User"]
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Routes
+# Public Routes
 @app.route('/')
 def main():
     return render_template('views/main.html')
@@ -37,33 +37,49 @@ def about():
 def contact():
     return render_template('views/contact.html')
 
-## Auth route
 auth.auth(app)
+## Auth route
 
-## Auth API
-login.login(app, database)
-@app.route('/auth/logout')
+## Protected routes
+login.login(app, database) # Login
+@app.route('/auth/logout') # Logout
 @login_required
 def logout():
     logout_user()
     return redirect('/auth')
 
-register.register(app, database)
-# ## End Auth API
+register.register(app, database) # Register
 
-@app.route('/dashboard')
+@app.route('/dashboard') # Dashboard
 @login_required
 def dashboard():
     return render_template('views/dashboard.html', message = current_user.email)
 
-@app.route('/dashboard/calendar')
+@app.route('/dashboard/calendar') # Calendar
+@login_required
 def calendar():
     return render_template('views/calendar.html')
 
-@app.route('/dashboard/today')
+@app.route('/dashboard/today') # Today tasks
+@login_required
 def today():
     return render_template('views/today.html')
 
-@app.route('/dashboard/upcoming')
+@app.route('/dashboard/upcoming') # Upcoming tasks
+@login_required
 def upcoming():
     return render_template('views/upcoming.html')
+
+# data API
+## Fetch User task
+@app.route('/api/user/tasks', methods=['GET', 'POST'])
+@login_required
+def userTasks():
+    user_id = current_user.user_id
+    print("Method:", request.method)
+    return jsonify([
+        {
+            "user_id": user_id,
+            "data": []
+        }
+    ])
