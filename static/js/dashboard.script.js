@@ -1,11 +1,12 @@
 let taskcount = 1
 let taskList = []
+
+
 $(document).ready(function() {
     let addTask = null
     let subTaskList = []
     let taskNbr = 1
     let subTaskNbr = 1
-
     /* Task number */
 
     // Open modal and store clicked element
@@ -20,7 +21,8 @@ $(document).ready(function() {
     })
 
     // Add task
-    $(".add").on("click", () => {
+    $(".add").on("click", (e) => {
+        e.preventDefault()
         let content = $("#content").val()
         $("#content").val("")
         if( content.trim() !== ""){
@@ -36,11 +38,13 @@ $(document).ready(function() {
         subTaskNbr += 1
     })
     // Handle form submission
-    $("#submit").on("click", function() {
+    $("#submit").on("click", function(e) {
+        e.preventDefault()
         let title = $("#title").val()
         let startDate = $("#startDate").val()
         let endDate = $("#endDate").val()
         let bgColor = $("#bg-color-piker").val()
+        let description = $("#description").val()
 
         if (title.trim() !== "" && subTaskList.length !== 0 && startDate !== "" && endDate !== "") {
             let taskContainer = $(`<div class="col-4 p-1 taskBox" id="task${taskNbr}"></div>`)
@@ -61,6 +65,16 @@ $(document).ready(function() {
                     </ul>
                 </div>
             `)
+
+            task = {
+                "title": title,
+                "start_date": startDate,
+                "end_date": endDate,
+                "description": description,
+                "bg_color": bgColor,
+                "subtasks": [...subTaskList]
+            }
+
             taskcount += 1
             taskNbr += 1
             subTaskNbr = 1
@@ -105,7 +119,7 @@ function removeSubTask(id){
 function editSubTask(id){
     let oldContent = $(`#${id}`).text()
     let newContent = prompt(`Old task : ${oldContent},\n Enter new task :`)
-    if(newContent.trim() !== ""){
+    if(newContent && newContent.trim() !== ""){
         $(`#${id}`).html(`${newContent} <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('${id}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask('${id}')"></i></div>`)
     }
 }
@@ -134,16 +148,23 @@ $('.menu-btn').on('click', () => {
 
 /* Welcome Modal */
 
-$(document).ready(function(){
-    $("#welcomeModal").fadeIn(); // Show modal on login
+$(document).ready(function() {
+    
+    $("#welcomeModal").fadeIn();
 
-    $(window).click(function(event){
+    // Close on click outside the modal box
+    $(window).click(function(event) {
         if (event.target.id === "welcomeModal") {
-            $("#welcomeModal").fadeOut(); // Close modal when clicking outside
+            $("#welcomeModal").fadeOut();
         }
     });
-});
 
+    // // Close on "Close" button
+    // $("#closeModal").click(function() {
+    //     $("#welcomeModal").fadeOut();
+    //     document.getElementById("welcomeModal").style.display = "none"
+    // });
+});
 
 const fetchTasks = async () => {
     try {
@@ -160,33 +181,25 @@ const fetchTasks = async () => {
 
         let responseData = await response.json();
 
-        // Process the response and update the UI
         if (response.ok) {
             responseData = responseData.data
-            document.getElementById("error").textContent = ""; // Clear any existing error message
+            document.getElementById("error").textContent = ""; 
             document.getElementById("info").textContent = `Found ${responseData.length} tasks.`;
-
-            // Assuming you have a table or a div to display tasks
-            const taskListElement = document.getElementById("task-list");
-            taskListElement.innerHTML = ""; // Clear the previous task list
-
+            $("#taskNbr").text(taskcount + responseData.length)
+            taskcount = responseData.length
             // Loop through the tasks and display them
             responseData.forEach(task => {
-                const taskItem = document.createElement("div");
-                taskItem.classList.add("task-item");
+                const id = task.task_id
+                const title = task.title
+                const start_date = task.start_date
+                const end_date = task.end_date
+                const subtasks = task.subtasks
+                const description = task.description
+                const bg_color = task.bg_color
 
-                taskItem.innerHTML = `
-                    <h3>${task.title}</h3>
-                    <p><strong>Email:</strong> ${task.title}</p>
-                    <p><strong>Start Date:</strong> ${formatDate(task.start_date)}</p>
-                    <p><strong>End Date:</strong> ${formatDate(task.end_date)}</p>
-                    <ul>
-                        ${task.subtasks.map(subtask => `<li>${subtask.subtask_title}</li>`).join('')}
-                    </ul>
-                `;
-
-                taskListElement.appendChild(taskItem);
+                addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color,  subtasks)
             });
+            return responseData.length
         } else {
             document.getElementById("info").textContent = "No task found";
         }
@@ -196,8 +209,7 @@ const fetchTasks = async () => {
 };
 
 // Call the function to fetch tasks
-fetchTasks();
-
+fetchTasks()
 
 const formatDate = (date) => {
     const d = new Date(date);
@@ -206,4 +218,34 @@ const formatDate = (date) => {
     const day = d.getDate().toString().padStart(2, '0'); // Pad day with 0 if single digit
 
     return `${day}-${month}-${year}`;
+}
+
+function addNewTask(id, title, start_date, end_date, description, bg_color,  subtasks){
+    let taskContainer = $(`<div class="col-4 p-1 taskBox" id=""></div>`)
+    taskContainer.html(`    
+        <div class=" h-100 p-2 rounded-3" style='background-color: ${bg_color}' id='task${id}'>
+            <h3 class="text-dark task-title">
+                ${title}
+                <span class="text-dark date">
+                    ${start_date} to ${end_date}
+                </span>
+                <i class="fas fa-add text-success" onclick="alert('Edit task${id} ?')"></i> 
+                <i class="fas fa-trash text-danger" onclick="alert('Delete task${id} ?')"></i>
+            </h3>
+            <ul class="p-0">
+                ${
+                    subtasks.map( subtask => `
+                        <li class='text-dark justify-content-between align-items-center subTask' id='subtask${subtask.subtask_id}'>
+                            ${subtask.subtask_title}
+                            <div class="w-25 d-flex justify-content-center gap-3 bg-transparent">
+                                <i class="fas fa-pen" onclick="alert('Edit subtask${subtask.subtask_id}')"></i>
+                                <i class="fas fa-trash text-danger"  onclick="alert('Delete subtask${subtask.subtask_id}')"></i>
+                            </div>
+                        </li>
+                    `)
+                }
+            </ul>
+        </div>
+    `)
+    $(".task").before(taskContainer)
 }
