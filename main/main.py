@@ -1,14 +1,18 @@
+import sys
 from flask import Flask, jsonify, redirect, render_template, request
 from flask_login import login_required, current_user
-from routes import auth, login, register, gettasks
-from database import pgconnexion
 from flask_login import LoginManager, login_required, logout_user, current_user
 import os
 
-## App initialization
+## App config 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from routes import auth, login, register, gettasks
+from database import pgconnexion
+
 script_dir = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, template_folder = f'{script_dir}/../templates', static_folder = f'{script_dir}/../static')
-app.secret_key = "super-secret-key"
+app.secret_key = "secret-key"
 
 # Login Manager
 login_manager = LoginManager()
@@ -17,10 +21,7 @@ login_manager.init_app(app)
 
 # Database Setup
 database = pgconnexion.connect(app)
-db = database["db"]
 User = database["tables"]["User"] 
-Task = database["tables"]["Task"] 
-Subtask = database["tables"]["Subtask"]
 
 # Flask-Login User Loader
 @login_manager.user_loader
