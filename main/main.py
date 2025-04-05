@@ -1,38 +1,28 @@
-from flask import *
+from flask import Flask, render_template, request
+from routes import auth, login, register
+from database import pgconnexion
 import os
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, template_folder = f'{script_dir}/../templates', static_folder = f'{script_dir}/../static')
 
+## Database connection
+database = pgconnexion.connect(app)
+message = database["message"]
+
 @app.route('/')
 def main():
-    return render_template('views/main.html')
+    return render_template('views/main.html', message = message)
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        error = "Please fill the banks"
-        try:
-            email = request.form['email']
-            password = request.form['password']
-            
-            if email and password:
-                return redirect('/dashboard')
-            
-            else:
-                return render_template('views/login.html', email = email, password = password, errorLogin = error, d_noneRegister = 'd-none')
-            
-        except KeyError: ##Register
-            new_email = request.form['new_email']
-            new_password = request.form['new_password']
-            new_confirmation_password = request.form['new_confirmation_password']
+## Auth route
+auth.auth(app)
 
-            if new_email and new_password and new_confirmation_password :
-                return render_template('views/login.html', d_noneRegister = 'd-none')
-            
-            return render_template('views/login.html', d_noneLogin = 'd-none', errorRegister = error)
-    
-    return render_template('views/login.html', d_noneRegister = 'd-none')
+## Auth API
+login.login(app, database)
+register.register(app, database)
+# ## End Auth API
+
+## App routes
 @app.route('/about')
 def about():
     return render_template('views/about.html')

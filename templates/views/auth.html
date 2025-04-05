@@ -23,7 +23,7 @@
                         <a href="/" class="text-light text-uppercase nav-link fw-bold">home</a>
                         <a href="/about" class="text-light text-uppercase nav-link fw-bold">about us</a>
                         <a href="/contact" class="text-light text-uppercase nav-link fw-bold">contact</a>
-                        <a href="/login" class="text-light text-uppercase nav-link fw-bold active-link">login</a>
+                        <a href="/auth" class="text-light text-uppercase nav-link fw-bold active-link">login</a>
                     </ul>
                 </div>
                 <button class="btn p-0 menu-toggler" id="button-toggler">
@@ -34,25 +34,25 @@
         <!--Slide-->
         <div class="d-flex align-items-center justify-content-center py-5 slide-container z-1">
             <div class="bg-light shadow align-items-center gap-3 p-2 form-container py-5">
-                <div class="bg-light overflow-hidden auth-img {{ d_noneLogin }}" id="login-img">
+                <div class="bg-light overflow-hidden auth-img" id="login-img">
                     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="100%" height="100%">
                 </div>
                 <!-- Login form -->
-                <form class="p-3 {{ d_noneLogin }}" id="login" name="login" method="POST" action="/login">
+                <form class="p-3" id="login_form" method="POST" action="/auth">
                     <h2 class="text-dark text-center">Member login</h2>
-                    <span class="rouded-4 text-dark shadow p-1 position-absolute info">Enter any login information to connect</span>
                     <div>
                         <div class="py-0 px-4">
                             <i class="fa fa-envelope"></i>
-                            <input class="text-dark" type="email" placeholder="Email" id="email" name="email" value="{{ email }}">
+                            <input class="text-dark" type="email" placeholder="Email" id="email" name="email" value="{{ email }}" required>
                         </div>
                         <div class="py-0 px-4">
                             <i class="fas fa-key"></i>
-                            <input class="text-dark" type="password" placeholder="Password" id="password" name="password" value="{{ password }}">
+                            <input class="text-dark" type="password" placeholder="Password" id="password" name="password" value="{{ password }}" required>
                             
                         </div>
                         <div class="m-0 py-0 px-4 bg-light text-center">
-                            <span class="text-danger error">{{ errorLogin }}</span>
+                            <span class="text-danger" id="login_error"></span>
+                            <span class="text-success" id="login_info"></span>
                         </div>
                     </div>
                     <button class="btn fw-bold text-light" id="log-in">
@@ -63,23 +63,24 @@
                 </form>
         
                 <!--Registration  form-->
-                <form class="p-3 {{ d_noneRegister }}" id="register" name="register" method="POST" action="/login">
+                <form class="p-3 d-none" id="register_form" name="register" method="POST" action="/auth">
                     <h2 class="text-dark text-center">Member Register</h2>
                     <div>
                         <div class="py-0 px-4">
                             <i class="fas fa-envelope"></i>
-                            <input class="text-dark" type="email" placeholder="Email" name="new_email">
+                            <input class="text-dark" type="email" placeholder="Email" name="new_email" id="new_email" required>
                         </div>
                         <div class="py-0 px-4">
                             <i class="fas fa-key"></i>
-                            <input class="text-dark" type="password" placeholder="Password" name="new_password">
+                            <input class="text-dark" type="password" placeholder="Password" name="new_password" id="new_password" required>
                         </div>
                         <div class="py-0 px-4">
                             <i class="fas fa-key"></i>
-                            <input class="text-dark" type="password" placeholder="Confirm password" name="new_confirmation_password">
+                            <input class="text-dark" type="password" placeholder="Confirm password" name="new_confirmation_password" id="new_confirmation_password" required>
                         </div>
                         <div class="m-0 py-0 px-4 bg-light text-center">
-                            <span class="text-danger error">{{ errorRegister }}</span>
+                            <span class="text-danger" id="register_error"></span>
+                            <span class="text-success" id="register_info"></span>
                         </div>
                     </div>
                     <button class="btn fw-bold text-light">
@@ -87,7 +88,7 @@
                     </button>
                     <a class="text-center text-decoration-none" href="" id="login-btn">Already have an account <i class="fas fa-arrow-right mx-2"></i></a>
                 </form>
-                <div class="bg-light overflow-hidden auth-img {{ d_noneRegister }}" id="register-img">
+                <div class="bg-light overflow-hidden auth-img d-none" id="register-img">
                     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="100%" height="100%">
                 </div>
             </div>
@@ -108,6 +109,6 @@
             </div>
         </div>
     </header>
-    <script src="{{ url_for('static', filename='js/login.script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/auth.script.js') }}"></script>
 </body>
 </html>

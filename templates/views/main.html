@@ -23,7 +23,7 @@
                         <a href="/" class="text-uppercase nav-link fw-bold active-link">home</a>
                         <a href="/about" class="text-light text-uppercase nav-link fw-bold">about us</a>
                         <a href="/contact" class="text-light text-uppercase nav-link fw-bold">contact</a>
-                        <a href="/login" class="text-light text-uppercase nav-link fw-bold">login</a>
+                        <a href="/auth" class="text-light text-uppercase nav-link fw-bold">login</a>
                     </ul>
                 </div>
                 <button class="btn p-0 menu-toggler" id="button-toggler">
@@ -35,13 +35,14 @@
         <div class="d-flex align-items-center justify-content-center py-5 slide-container z-1">
             <div class="d-flex align-items-center flex-column gap-3 z-1 welcome-text">
               <h1 class="text-light">Task Manager App</h1>
+              <span>{{ message }}</span>
               <p class="text-center text-light">
                 "Welcome to Task Manager App – Your Ultimate Productivity Companion!
 
                 Managing tasks has never been easier! With our intuitive and user-friendly interface, you can organize your daily activities, track progress, and stay productive effortlessly. Whether you're handling personal to-do lists, work projects, or long-term goals, our app is designed to help you stay on track.
                  No more scattered notes or forgotten tasks—everything you need is in one place! Take control of your workflow and boost your productivity. Click "Get Started" now and experience the power of seamless task management!"
               </p>
-              <a href="/login">
+              <a href="/auth">
                 <button class="btn rounded-5 shadow py-3 px-5 fw-bold btn-warning text-dark">
                     GET STARTED
                 </button>
