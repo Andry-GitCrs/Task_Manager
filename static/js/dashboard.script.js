@@ -68,8 +68,6 @@ $(document).ready(function() {
         
                 if (response.ok) {  //Response with status code 200
                     const response_data = responseData.data
-                    $("#info").text(responseData.message)
-                    console.log(responseData.data)
 
                     const id = response_data.task_id
                     const title = response_data.title
@@ -81,6 +79,9 @@ $(document).ready(function() {
 
                     addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color,  subtasks)
 
+                    $(".task-list-container").html("<span id='subTaskIndicator'>No subtask added </br> all subtask will appear here</span>")
+                    
+                    subTaskList.splice(0, subTaskList.length)
                     $("#title").val("")
                     $("#content").val("")
                     $("#startDate").val("")
@@ -240,11 +241,6 @@ $(document).ready(function() {
         }
     });
 
-    // // Close on "Close" button
-    // $("#closeModal").click(function() {
-    //     $("#welcomeModal").fadeOut();
-    //     document.getElementById("welcomeModal").style.display = "none"
-    // });
 });
 
 const fetchTasks = async () => {
