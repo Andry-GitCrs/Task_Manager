@@ -316,11 +316,13 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
             <ul class="p-0" id='subtaskContainer${id}'>
                 ${
                     subtasks.map( subtask => `
-                        <li class='text-dark justify-content-between align-items-center subTask' id='${subtask.subtask_id}'>
+                        <li class=' justify-content-between align-items-center subTask subtask${subtask.subtask_id}' id='${subtask.subtask_id}'>
                             ${subtask.subtask_title}
-                            <div class="w-25 d-flex justify-content-center gap-3 bg-transparent">
+                            <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
                                 <i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i>
                                 <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                                <input clicked=false class="from-control mx-2 my-0" type="checkbox" name="subtask_status" id="input${subtask.subtask_id}" onchange="check(${subtask.subtask_id})"/>
+                                <i class="fas fa-check-circle text-warning " style='display: none'  id='check_icon${subtask.subtask_id}'></i>
                             </div>
                         </li>
                     `).join('')
@@ -356,3 +358,20 @@ function showNotification(type, message) {
       notification.classList.add('d-none');
     }, 5000);
   }
+
+// Check Subtask
+function check(id){
+    if( $(`#input${id}`).val() == "on" ){
+        showNotification('success', `Checked subtask`)
+        $(`.subtask${id}`).css("background-color", '#198754')
+        $(`.subtask${id}`).css("color", '#f8f9fa')
+        $(`#check_icon${id}`).css("display", 'inline')
+        $(`#input${id}`).val("off")
+    }else{
+        showNotification('success', `Unchecked subtask`)
+        $(`.subtask${id}`).css("background-color", '#f8f9fa')
+        $(`.subtask${id}`).css("color", '#000')
+        $(`#check_icon${id}`).css("display", 'none')
+        $(`#input${id}`).val("on")
+    }
+} 

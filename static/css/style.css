@@ -353,6 +353,7 @@ main .container{
 }
 
 main .container li{
+    transition: .5s ease-in-out;
     background-color: var(--white-text);
     list-style: none;
     margin: 10px auto;
@@ -375,7 +376,6 @@ main .container li:hover{
 }
 
 .taskBox ul{
-    
     max-height: 322px;
     overflow-y: auto;
 }
@@ -399,6 +399,11 @@ main .container li:hover{
     align-items: center;
 }
 
+.taskBox:hover h3{
+    transition: .2s ease-in;
+    font-size: 14px;
+}
+
 .taskBox div h3 i{
     font-size: 20px;
     display: none;
@@ -419,11 +424,11 @@ main .container li:hover{
     padding: auto 10px;
 }
 
-.subTask i{
+.subTask i, .subTask input{
     display: none;
 }
 
-.subTask:hover i{
+.subTask:hover i, .subTask:hover input{
     display: inline;
 }
 
