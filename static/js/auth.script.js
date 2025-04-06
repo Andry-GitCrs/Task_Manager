@@ -65,15 +65,14 @@ $("#login_form").on("submit", async (e) => {
         const responseData = await response.json();
 
         if (response.ok) {  //Response with status code 200
-            document.getElementById("login_error").textContent = ""
-            document.getElementById("login_info").textContent = "Login successful"
+            showNotification("success", responseData.message)
             empty_login_field()
             location.href = '/dashboard'
         } else {
-            document.getElementById("login_error").textContent = responseData.error
+            showNotification("error", responseData.error)
         }
     } catch (error) {
-        document.getElementById("login_error").textContent = error
+        showNotification("error", error)
     }
 })
 
@@ -94,18 +93,17 @@ $("#register_form").on("submit", async (e) => {
         const responseData = await response.json();
 
         if (response.ok) {  //Response with status code 200
-            document.getElementById("register_error").textContent = ""
-            document.getElementById("register_info").textContent = "Registration successful!"
+            showNotification("success", responseData.message)
             empty_register_field()
             loginForm.classList.remove("d-none")
             loginImg.classList.remove("d-none")
             registerForm.classList.add("d-none")
             registerImg.classList.add("d-none")
         } else {
-            document.getElementById("register_error").textContent = responseData.error
+            showNotification("error", responseData.error)
         }
     } catch (error) {
-        document.getElementById("register_error").textContent = error
+        showNotification("error", error)
     }
 })
 
@@ -119,5 +117,32 @@ function empty_register_field(){
     document.getElementById("new_password").value = ""
     document.getElementById("new_confirmation_password").value = ""
 }
+
+//Notification displayer
+function showNotification(type, message) {
+    const notification = document.getElementById('notification');
+    const messageBox = document.getElementById('notification-message');
+    const icon = document.getElementById('notification-icon');
+
+    // Reset classes
+    notification.className = 'position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2';
+    icon.className = '';
+
+    if (type === 'error') {
+      notification.classList.add('bg-danger');
+      icon.classList.add('fas', 'fa-circle-exclamation');
+    } else if (type === 'success') {
+      notification.classList.add('bg-success');
+      icon.classList.add('fas', 'fa-check-circle');
+    }
+
+    messageBox.textContent = message;
+    notification.classList.remove('d-none');
+
+    setTimeout(() => {
+      notification.classList.add('d-none');
+    }, 5000);
+  }
+
 /* End Login and Register */
 $("#header").css("background-image", "url('../../static/images/bg-4.avif')")

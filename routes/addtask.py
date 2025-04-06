@@ -12,7 +12,7 @@ def add_task(app, database):
     def addtask():
         data = request.get_json()
         user_id = current_user.user_id
-        task_title = data['task_title']
+        task_title = data['task_title'].strip()
         task_start_date = data['task_start_date']
         task_end_date = data['task_end_date']
         task_background_color = data['task_background_color']

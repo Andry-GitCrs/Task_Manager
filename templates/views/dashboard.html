@@ -114,25 +114,6 @@
         </h1>
         <div class="container py-3">
             <div class="row justify-content-start" id="allTaskContainer">
-                <!-- <div class=" col-4 p-1 taskBox" id="task0">
-                    <div class=" h-100  p-2 rounded-3">
-                        <h3 class="text-dark">
-                            Task title                            
-                            <span class="text-dark date">
-                                10-02-25 to 25-02-25
-                            </span>
-                            <i class="fas fa-trash text-danger" onclick="removeTask('task0')"></i>
-                        </h3>
-                        <ul class="p-0">
-                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask00">Task 1 <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask00')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask00')"></i></div></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask01">Task 2 <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask01')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask01')"></i></div></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask02">Task 3 <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask02')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask02')"></i></div></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask03">... <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask03')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask03')"></i></div></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask04">... <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask04')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask04')"></i></div></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="subtask05">Task n <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask05')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask05')"></i></div></li>
-                        </ul>
-                    </div>
-                </div> -->
                 <!--Create task-->
                 <div class="col-4 p-1 rounded-3 task taskBox">
                     <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
@@ -171,7 +152,7 @@
                             </div>
                             <!--Task content-->
                             <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                                <input class="form-control" type="text" id="content" placeholder="Add sub-task">
+                                <input class="form-control" type="text" id="content" placeholder="Add sub-task (Optional)">
                                 <button class="add btn btn-primary">Add</button>
                             </div>
                             <ul class="text-dark task-list-container text-center">
@@ -191,6 +172,12 @@
                 </div>
                 <!--End Modal-->
             </div>
+        </div>
+
+        <!-- nofitication displayer -->
+        <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
+            <i id="notification-icon" class=""></i>
+            <span id="notification-message"></span>
         </div>
     </main>
 

@@ -32,7 +32,7 @@ $(document).ready(function() {
                     $(".task-list-container").text("")
                 }
                 subTaskList.push(content)
-                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask' id='subtask${taskNbr}${subTaskNbr}'></li>`).html(`${content}  <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask('subtask${taskNbr}${subTaskNbr}')"></i></div>`))
+                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask' id='subtask${taskNbr}${subTaskNbr}'></li>`).html(`${content}  <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`))
             }
         }
         subTaskNbr += 1
@@ -86,16 +86,17 @@ $(document).ready(function() {
                     $("#startDate").val("")
                     $("#endDate").val("")
                     $(".overlay, .modal").fadeOut(); // Close modal
+                    showNotification("success", responseData.message)
                 } else {
-                    $("#error").text(responseData.error)
+                    showNotification("error", responseData.error)
                 }
 
             } catch (error) {
-                $("#error").text(error)
+                showNotification("error", responseData.error)
             }
 
         }else{
-            alert("Please complete the blank fields or cancel")
+            showNotification("error", "Empty required fields")
         }
     })
 })
@@ -129,13 +130,13 @@ async function  removeTask(id){
             const responseData = await response.json();
     
             if (response.ok) {  //Response with status code 200
-                alert(responseData.message)
+                showNotification("success", responseData.message)
                 document.getElementById(`${id}`).remove()
             } else {
-                alert(responseData.error)
+                showNotification("error", responseData.error)
             }
         } catch (error) {
-            alert(error)
+            showNotification("error", responseData.error)
         }
     }
 }
@@ -157,20 +158,20 @@ async function removeSubTask(id){
     
             const responseData = await response.json();
     
-            if (response.ok) {  //Response with status code 200
-                alert(responseData.message)
+            if (response.ok) {  //Response with status code 200   
+                showNotification("success", responseData.message)
                 document.getElementById(`${id}`).remove()
             } else {
-                alert(responseData.error)
+                showNotification("error", responseData.error)
             }
         } catch (error) {
-            alert(error)
+            showNotification("error", responseData.error)
         }
     }
 }
 
 async function addSubTask(id){
-    const newValue = prompt(``)
+    const newValue = prompt(`Add task to ${id}`)
     task_id = id
     if(newValue.trim()){
         newSubtask = {
@@ -187,30 +188,32 @@ async function addSubTask(id){
             const responseData = await response.json();
     
             if (response.ok) {  //Response with status code 200
-
-                alert(responseData.message)
+                showNotification("success", responseData.message)
                 const subtask = responseData.data
                 let subtaskElement = $(`<li class='text-dark justify-content-between align-items-center subTask' id='${subtask.subtask_id}'></li>`).html(`${subtask.subtask_title} <div class="w-25 d-flex justify-content-center gap-3 bg-transparent"><i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i></div>`)
-
-                console.log(subtaskElement)
-
                 $(`#subtaskContainer${task_id}`).append(subtaskElement)
             } else {
-                alert(responseData.error)
+                showNotification("error", responseData.error)
             }
         } catch (error) {
-            alert(error)
+            showNotification("error", responseData.error)
         }
     }else{
-        alert("Invalid value")
+        showNotification("error", "Invalid value")
     }
 }
 
-function editSubTask(id){
-    alert(`edit ${id}`)
+function editSubTask_on_adding(id){
+    showNotification("success", `Edit subtask ${id}?`)
 }
 
+function removeSubTask_on_adding(id){
+    showNotification("success", `Remove subtask ${id}?`)
+}
 
+function editSubTask(id){
+    showNotification("success", `Edit ${id}?`)
+}
 
 /* Show menu  */
 let menuStat = false
@@ -263,7 +266,7 @@ const fetchTasks = async () => {
             responseData = responseData.data
             $("#taskNbr").text(taskcount + responseData.length)
             taskcount = responseData.length
-            // Loop through the tasks and display them
+            showNotification("success", `You have ${taskcount} task${taskcount > 1 ? "s" : ""} to do`)
             responseData.forEach(task => {
                 const id = task.task_id
                 const title = task.title
@@ -277,10 +280,10 @@ const fetchTasks = async () => {
             });
             return responseData.length
         } else {
-            console.log("No task found")
+            showNotification("error", `You don't have any task yet`)
         }
     } catch (error) {
-        console.error(error.message);
+        showNotification("error", error.message)
     }
 };
 
@@ -326,3 +329,29 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
     `)
     $(".task").before(taskContainer)
 }
+
+//Notification displayer
+function showNotification(type, message) {
+    const notification = document.getElementById('notification');
+    const messageBox = document.getElementById('notification-message');
+    const icon = document.getElementById('notification-icon');
+
+    // Reset classes
+    notification.className = 'position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2';
+    icon.className = '';
+
+    if (type === 'error') {
+      notification.classList.add('bg-danger');
+      icon.classList.add('fas', 'fa-circle-exclamation');
+    } else if (type === 'success') {
+      notification.classList.add('bg-success');
+      icon.classList.add('fas', 'fa-check-circle');
+    }
+
+    messageBox.textContent = message;
+    notification.classList.remove('d-none');
+
+    setTimeout(() => {
+      notification.classList.add('d-none');
+    }, 5000);
+  }

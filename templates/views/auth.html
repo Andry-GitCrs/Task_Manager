@@ -48,11 +48,6 @@
                         <div class="py-0 px-4">
                             <i class="fas fa-key"></i>
                             <input class="text-dark" type="password" placeholder="Password" id="password" name="password" value="{{ password }}" required>
-                            
-                        </div>
-                        <div class="m-0 py-0 px-4 bg-light text-center">
-                            <span class="text-danger" id="login_error"></span>
-                            <span class="text-success" id="login_info"></span>
                         </div>
                     </div>
                     <button class="btn fw-bold text-light" id="log-in">
@@ -77,10 +72,6 @@
                         <div class="py-0 px-4">
                             <i class="fas fa-key"></i>
                             <input class="text-dark" type="password" placeholder="Confirm password" name="new_confirmation_password" id="new_confirmation_password" required>
-                        </div>
-                        <div class="m-0 py-0 px-4 bg-light text-center">
-                            <span class="text-danger" id="register_error"></span>
-                            <span class="text-success" id="register_info"></span>
                         </div>
                     </div>
                     <button class="btn fw-bold text-light">
@@ -107,6 +98,10 @@
                     <img src="{{ url_for('static', filename='images/whatsapp.svg') }}" alt="whatsapp logo" width="30" height="30">
                 </a>
             </div>
+        </div>
+        <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
+            <i id="notification-icon" class=""></i>
+            <span id="notification-message"></span>
         </div>
     </header>
     <script src="{{ url_for('static', filename='js/auth.script.js') }}"></script>
