@@ -1,7 +1,6 @@
 let taskcount = 0
 let taskList = []
 
-
 $(document).ready(function() {
     let addTask = null
     let subTaskList = []
@@ -113,24 +112,105 @@ $("#title").on("keyup", () => {
 })
 
 //Remove task
-function removeTask(id){
+async function  removeTask(id){
     const confirmation = confirm('Do u want to really remove this task')
+    task_id = id
     if(confirmation){
-        alert("Task deleted")
+        task = {
+            "task_id": task_id
+        }
+        try {
+            const response = await fetch("/api/user/deleteTask", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(task)
+            });
+    
+            const responseData = await response.json();
+    
+            if (response.ok) {  //Response with status code 200
+                alert(responseData.message)
+                document.getElementById(`${id}`).remove()
+            } else {
+                alert(responseData.error)
+            }
+        } catch (error) {
+            alert(error)
+        }
     }
 }
 
-function removeSubTask(id){
-    alert(`remove ${id}`)
+// Remove subtask
+async function removeSubTask(id){
+    const confirmation = confirm('Do u want to realy remove this subtask')
+    subtask_id = id
+    if(confirmation){
+        subtask = {
+            "subtask_id": subtask_id
+        }
+        try {
+            const response = await fetch("/api/user/deleteSubTask", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(subtask)
+            });
+    
+            const responseData = await response.json();
+    
+            if (response.ok) {  //Response with status code 200
+                alert(responseData.message)
+                document.getElementById(`${id}`).remove()
+            } else {
+                alert(responseData.error)
+            }
+        } catch (error) {
+            alert(error)
+        }
+    }
+}
+
+async function addSubTask(id){
+    const newValue = prompt(``)
+    task_id = id
+    if(newValue.trim()){
+        newSubtask = {
+            "task_id": task_id,
+            "subtask_title": newValue
+        }
+        try {
+            const response = await fetch("/api/user/addSubTask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newSubtask)
+            });
+    
+            const responseData = await response.json();
+    
+            if (response.ok) {  //Response with status code 200
+
+                alert(responseData.message)
+                const subtask = responseData.data
+                let subtaskElement = $(`<li class='text-dark justify-content-between align-items-center subTask' id='${subtask.subtask_id}'></li>`).html(`${subtask.subtask_title} <div class="w-25 d-flex justify-content-center gap-3 bg-transparent"><i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i></div>`)
+
+                console.log(subtaskElement)
+
+                $(`#subtaskContainer${task_id}`).append(subtaskElement)
+            } else {
+                alert(responseData.error)
+            }
+        } catch (error) {
+            alert(error)
+        }
+    }else{
+        alert("Invalid value")
+    }
 }
 
 function editSubTask(id){
     alert(`edit ${id}`)
 }
 
-function addSubTask(id){
-    alert(`add to ${id}`)
-}
+
 
 /* Show menu  */
 let menuStat = false
@@ -218,25 +298,25 @@ const formatDate = (date) => {
 
 // Create display card
 function addNewTask(id, title, start_date, end_date, description, bg_color,  subtasks){
-    let taskContainer = $(`<div class="col-4 p-1 taskBox" id=""></div>`)
+    let taskContainer = $(`<div class="col-4 p-1 taskBox" id="${id}"></div>`)
     taskContainer.html(`    
-        <div class=" h-100 p-2 rounded-3" style='background-color: ${bg_color}' id='task${id}'>
+        <div class=" h-100 p-2 rounded-3" style='background-color: ${bg_color}'>
             <h3 class="text-dark task-title">
                 ${title}
                 <span class="text-dark date">
                     ${start_date} to ${end_date}
                 </span>
-                <i class="fas fa-add text-success" onclick="addSubTask('task${id}')"></i> 
-                <i class="fas fa-trash text-danger" onclick="removeTask('task${id}')"></i>
+                <i class="fas fa-add text-success" onclick="addSubTask('${id}')"></i> 
+                <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
             </h3>
-            <ul class="p-0">
+            <ul class="p-0" id='subtaskContainer${id}'>
                 ${
                     subtasks.map( subtask => `
-                        <li class='text-dark justify-content-between align-items-center subTask' id='subtask${subtask.subtask_id}'>
+                        <li class='text-dark justify-content-between align-items-center subTask' id='${subtask.subtask_id}'>
                             ${subtask.subtask_title}
                             <div class="w-25 d-flex justify-content-center gap-3 bg-transparent">
-                                <i class="fas fa-pen" onclick="editSubTask('subtask${subtask.subtask_id}')"></i>
-                                <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask${subtask.subtask_id}')"></i>
+                                <i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i>
+                                <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
                             </div>
                         </li>
                     `).join('')

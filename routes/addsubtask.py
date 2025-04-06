@@ -29,12 +29,19 @@ def add_subtask(app, database):
                 )
                 db.session.add(subtask)
                 db.session.commit()
+                newSubtask = {
+                    "subtask_id": subtask.subtask_id,
+                    "subtask_title": subtask.subtask_title
+                }
                 
             except sqlalchemy.exc.IntegrityError:
                 db.session.rollback()
                 return jsonify({'error': f'Task {task_id} not found'}), 400
 
-            return jsonify({'message': 'Subtask added successfully'}), 201
+            return jsonify({
+                'message': 'Subtask added successfully',
+                'data': newSubtask
+            }), 201
         
         else:
             return jsonify({'error': 'Missing required fields'}), 400
