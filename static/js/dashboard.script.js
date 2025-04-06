@@ -23,16 +23,18 @@ $(document).ready(function() {
     // Add task
     $(".add").on("click", (e) => {
         e.preventDefault()
-        let content = $("#content").val()
+        let content = $("#content").val().trim()
         $("#content").val("")
-        if( content.trim() !== ""){
+        if( content !== ""){
             
-            if( content !== subTaskList[subTaskList.length - 1]){
+            if( !subTaskList.includes(content) ){
                 if(subTaskNbr == 1){
                     $(".task-list-container").text("")
                 }
                 subTaskList.push(content)
                 $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask' id='subtask${taskNbr}${subTaskNbr}'></li>`).html(`${content}  <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`))
+            }else{
+                showNotification("error", `This taks already have "${content}" subtask`)
             }
         }
         subTaskNbr += 1
@@ -40,11 +42,11 @@ $(document).ready(function() {
     // Handle form submission
     $("#add_task_form").on("submit", async function(e) {
         e.preventDefault()
-        let title = $("#title").val()
+        let title = $("#title").val().trim()
         let startDate = $("#startDate").val()
         let endDate = $("#endDate").val()
         let bgColor = $("#bg-color-piker").val()
-        let description = $("#description").val()
+        let description = $("#description").val().trim()
 
         if (title.trim() !== "" && startDate !== "" && endDate !== "") {
             task = {
@@ -86,6 +88,8 @@ $(document).ready(function() {
                     $("#content").val("")
                     $("#startDate").val("")
                     $("#endDate").val("")
+                    $("#description").val("")
+                    $("#bg-color-piker").val("#95ce83")
                     $(".overlay, .modal").fadeOut(); // Close modal
                     showNotification("success", responseData.message)
                 } else {
@@ -171,8 +175,9 @@ async function removeSubTask(id){
     }
 }
 
+// Add subtask
 async function addSubTask(id){
-    const newValue = prompt(`Add task to ${id}`)
+    const newValue = prompt(`Add task to ${id}`).trim()
     task_id = id
     if(newValue.trim()){
         newSubtask = {
