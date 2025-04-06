@@ -10,8 +10,8 @@ def userModel(db):
         user_id = Column(Integer, primary_key=True)
         email = Column(String(120), unique=True, nullable=False)
         password = Column(String(200), nullable=False)
-        created_at = Column(DateTime, default=datetime.utcnow)
-        updated_at = Column(DateTime, default=datetime.utcnow)
+        created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+        updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
         admin = Column(Boolean, default=False)
         stat = Column(Boolean, default=True)
 

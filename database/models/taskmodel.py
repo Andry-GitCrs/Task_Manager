@@ -12,8 +12,8 @@ def taskModel(db, User):
         task_end_date = Column(DateTime, nullable=False)
         task_background_color = Column(String(120), nullable=False)
         description = Column(Text)
-        created_at = Column(DateTime, default=datetime.utcnow)
-        updated_at = Column(DateTime, default=datetime.utcnow)
+        created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+        updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
         stat = Column(Boolean, default=True)
         user_id = Column(Integer, ForeignKey('users.user_id', ondelete='CASCADE'), nullable=False)
 

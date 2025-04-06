@@ -8,8 +8,8 @@ def subtaskModel(db, Task):
 
         subtask_id = Column(Integer, primary_key=True)
         subtask_title = Column(String(120), nullable=False)
-        created_at = Column(DateTime, default=datetime.utcnow)
-        updated_at = Column(DateTime, default=datetime.utcnow)
+        created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+        updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
         stat = Column(Boolean, default=True)
         task_id = Column(Integer, ForeignKey('tasks.task_id', ondelete='CASCADE'), nullable=False)
 

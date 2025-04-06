@@ -106,9 +106,6 @@
     </aside>
     <!-- Task list in Sticky Wall -->
     <main class="sticky-wall-main p-3 py-4">
-        <div id="error" style="color: red;"></div>
-        <div id="info" style="color: green;"></div>
-
         <h1 class="text-dark d-flex align-items-center justify-content-between">
             <button class="btn menu-btn float-left menu-btn-mobile">
                 <hr><hr><hr>
@@ -117,7 +114,7 @@
         </h1>
         <div class="container py-3">
             <div class="row justify-content-start" id="allTaskContainer">
-                <div class=" col-4 p-1 taskBox" id="task0">
+                <!-- <div class=" col-4 p-1 taskBox" id="task0">
                     <div class=" h-100  p-2 rounded-3">
                         <h3 class="text-dark">
                             Task title                            
@@ -135,7 +132,7 @@
                             <li class="text-dark justify-content-between align-items-center subTask" id="subtask05">Task n <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask05')" ></i> <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask05')"></i></div></li>
                         </ul>
                     </div>
-                </div>
+                </div> -->
                 <!--Create task-->
                 <div class="col-4 p-1 rounded-3 task taskBox">
                     <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
@@ -146,7 +143,7 @@
                 <!-- Modal -->
                 <div class="overlay"></div>
                 <div class="modal">
-                    <form class="d-flex flex-column justify-content-between h-100">
+                    <form class="d-flex flex-column justify-content-between h-100" id="add_task_form">
                         <div>
                             <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
                                 <label class="text-dark" name="tastTitle" >Task title</label>
@@ -180,6 +177,10 @@
                             <ul class="text-dark task-list-container text-center">
                                 <span id="subTaskIndicator">No subtask added </br> all subtask will appear here</span>
                             </ul>
+                            <div class="text-center">
+                                <span class="text-danger" id="error"></span>
+                                <span class="text-success" id="info"></span>
+                            </div>
                         </div>
                         
                         <div class="btn-container">

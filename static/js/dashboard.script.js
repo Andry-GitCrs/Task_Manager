@@ -1,4 +1,4 @@
-let taskcount = 1
+let taskcount = 0
 let taskList = []
 
 
@@ -28,21 +28,18 @@ $(document).ready(function() {
         $("#content").val("")
         if( content.trim() !== ""){
             
-            if( subTaskList.map( subTask => subTask.tirm()  == content.trim() )){
-                
+            if( content !== subTaskList[subTaskList.length - 1]){
                 if(subTaskNbr == 1){
                     $(".task-list-container").text("")
                 }
                 subTaskList.push(content)
                 $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask' id='subtask${taskNbr}${subTaskNbr}'></li>`).html(`${content}  <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask('subtask${taskNbr}${subTaskNbr}')"></i></div>`))
-            }else{
-                alert("Subtask already exist")
             }
         }
         subTaskNbr += 1
     })
     // Handle form submission
-    $("#submit").on("click", function(e) {
+    $("#add_task_form").on("submit", async function(e) {
         e.preventDefault()
         let title = $("#title").val()
         let startDate = $("#startDate").val()
@@ -50,26 +47,7 @@ $(document).ready(function() {
         let bgColor = $("#bg-color-piker").val()
         let description = $("#description").val()
 
-        if (title.trim() !== "" && subTaskList.length !== 0 && startDate !== "" && endDate !== "") {
-            let taskContainer = $(`<div class="col-4 p-1 taskBox" id="task${taskNbr}"></div>`)
-            
-            taskContainer.html(`    
-                <div class=" h-100 p-2 rounded-3" style='background-color: ${(bgColor !== "#000000")?bgColor:"#95ce83"}'>
-                    <h3 class="text-dark task-title">
-                        ${title} 
-
-                        <span class="text-dark date ">
-                            ${startDate} to ${endDate}
-                        </span>
-                        <i class="fas fa-add text-success" onclick="addTask('task${taskNbr}')"></i> 
-                        <i class="fas fa-trash text-danger" onclick="removeTask('task${taskNbr}')"></i>
-                    </h3>
-                    <ul class="p-0" id="subTaskContainer${taskNbr}">
-                        ${$(".task-list-container").html()}
-                    </ul>
-                </div>
-            `)
-
+        if (title.trim() !== "" && startDate !== "" && endDate !== "") {
             task = {
                 "task_title": title,
                 "task_start_date": startDate,
@@ -79,21 +57,44 @@ $(document).ready(function() {
                 "subtasks": [...subTaskList]
             }
 
-            console.log(task)
+            
+            try {
+                const response = await fetch("/api/user/addTask", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(task)
+                });
+        
+                const responseData = await response.json();
+        
+                if (response.ok) {  //Response with status code 200
+                    const response_data = responseData.data
+                    $("#info").text(responseData.message)
+                    console.log(responseData.data)
 
-            taskcount += 1
-            taskNbr += 1
-            subTaskNbr = 1
-            taskList.push([...subTaskList])
-            subTaskList.splice(0, subTaskList.length)
-            $(".task-list-container").html("<span id='subTaskIndicator'>No subtask added </br> all subtask will appear here</span>")
-            $("#taskNbr").text(taskcount)
-            $(".task").before(taskContainer)
-            $("#title").val("")
-            $("#content").val("")
-            $("#startDate").val("")
-            $("#endDate").val("")
-            $(".overlay, .modal").fadeOut(); // Close modal
+                    const id = response_data.task_id
+                    const title = response_data.title
+                    const start_date = response_data.start_date
+                    const end_date = response_data.end_date
+                    const subtasks = response_data.subtasks
+                    const description = response_data.description
+                    const bg_color = response_data.bg_color
+
+                    addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color,  subtasks)
+
+                    $("#title").val("")
+                    $("#content").val("")
+                    $("#startDate").val("")
+                    $("#endDate").val("")
+                    $(".overlay, .modal").fadeOut(); // Close modal
+                } else {
+                    $("#error").text(responseData.error)
+                }
+
+            } catch (error) {
+                $("#error").text(error)
+            }
+
         }else{
             alert("Please complete the blank fields or cancel")
         }
@@ -113,31 +114,22 @@ $("#title").on("keyup", () => {
 
 //Remove task
 function removeTask(id){
-    taskcount -= 1
-    $("#taskNbr").text(taskcount)
-    $(`#${id}`).css("display", "none")
+    const confirmation = confirm('Do u want to really remove this task')
+    if(confirmation){
+        alert("Task deleted")
+    }
 }
 
 function removeSubTask(id){
-    $(`#${id}`).css("display", "none")
+    alert(`remove ${id}`)
 }
 
 function editSubTask(id){
-    let oldContent = $(`#${id}`).text()
-    let newContent = prompt(`Old task : ${oldContent},\n Enter new task :`)
-    if(newContent && newContent.trim() !== ""){
-        $(`#${id}`).html(`${newContent} <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('${id}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask('${id}')"></i></div>`)
-    }
+    alert(`edit ${id}`)
 }
 
-function addTask(id){
-    let idd = id
-    id = id[4] - 1
-    let newTask = prompt(`Enter new task to add`)
-    if(newTask !== ""){
-        $(`#subTaskContainer${idd[4]}`).append($(`<li class='text-dark justify-content-between align-items-center subTask' id='subtask${id[4]}${taskList[id].length}'></li>`).html(`${newTask}  <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask('subtask${id[4]}${taskList[id].length}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask('subtask${id[4]}${taskList[id].length}')"></i></div>`))
-        taskList[id].push(newTask)
-    }
+function addSubTask(id){
+    alert(`add to ${id}`)
 }
 
 /* Show menu  */
@@ -189,8 +181,6 @@ const fetchTasks = async () => {
 
         if (response.ok) {
             responseData = responseData.data
-            document.getElementById("error").textContent = ""; 
-            document.getElementById("info").textContent = `Found ${responseData.length} tasks.`;
             $("#taskNbr").text(taskcount + responseData.length)
             taskcount = responseData.length
             // Loop through the tasks and display them
@@ -207,10 +197,10 @@ const fetchTasks = async () => {
             });
             return responseData.length
         } else {
-            document.getElementById("info").textContent = "No task found";
+            console.log("No task found")
         }
     } catch (error) {
-        document.getElementById("error").textContent = error.message;
+        console.error(error.message);
     }
 };
 
@@ -226,6 +216,7 @@ const formatDate = (date) => {
     return `${day}-${month}-${year}`;
 }
 
+// Create display card
 function addNewTask(id, title, start_date, end_date, description, bg_color,  subtasks){
     let taskContainer = $(`<div class="col-4 p-1 taskBox" id=""></div>`)
     taskContainer.html(`    
@@ -235,8 +226,8 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
                 <span class="text-dark date">
                     ${start_date} to ${end_date}
                 </span>
-                <i class="fas fa-add text-success" onclick="alert('Edit task${id} ?')"></i> 
-                <i class="fas fa-trash text-danger" onclick="alert('Delete task${id} ?')"></i>
+                <i class="fas fa-add text-success" onclick="addSubTask('task${id}')"></i> 
+                <i class="fas fa-trash text-danger" onclick="removeTask('task${id}')"></i>
             </h3>
             <ul class="p-0">
                 ${
@@ -244,8 +235,8 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
                         <li class='text-dark justify-content-between align-items-center subTask' id='subtask${subtask.subtask_id}'>
                             ${subtask.subtask_title}
                             <div class="w-25 d-flex justify-content-center gap-3 bg-transparent">
-                                <i class="fas fa-pen" onclick="alert('Edit subtask${subtask.subtask_id}')"></i>
-                                <i class="fas fa-trash text-danger"  onclick="alert('Delete subtask${subtask.subtask_id}')"></i>
+                                <i class="fas fa-pen" onclick="editSubTask('subtask${subtask.subtask_id}')"></i>
+                                <i class="fas fa-trash text-danger" onclick="removeSubTask('subtask${subtask.subtask_id}')"></i>
                             </div>
                         </li>
                     `).join('')
