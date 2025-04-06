@@ -3,4 +3,4 @@ def subtaskModel(app, db):
         class Subtask(db.Model):
             __table__ = db.Table('subtasks', db.metadata, autoload_with = db.engine)
             
-    return Subtask
+        return Subtask

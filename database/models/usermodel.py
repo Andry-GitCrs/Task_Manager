@@ -5,4 +5,4 @@ def userModel(app, UserMixin, db):
             def get_id(self):
                 return str(self.user_id)
             
-    return User 
+        return User 

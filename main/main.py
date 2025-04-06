@@ -4,13 +4,15 @@ from flask_login import login_required, current_user
 from flask_login import LoginManager, login_required, logout_user, current_user
 import os
 
-## App config 
+## Dir config 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
+## Dependence module
 from routes import addsubtask, auth, deletesubtask, deletetask, login, register, gettasks, addtask
 from database import pgconnexion
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
+## App config
 app = Flask(__name__, template_folder = f'{script_dir}/../templates', static_folder = f'{script_dir}/../static')
 app.secret_key = "secret-key"
 
@@ -19,7 +21,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'login_route'
 login_manager.init_app(app)
 
-# Database Setup
+# Database Connection
 database = pgconnexion.connect(app)
 User = database["tables"]["User"] 
 
@@ -41,11 +43,12 @@ def about():
 def contact():
     return render_template('views/contact.html')
 
-auth.auth(app)
 ## Auth route
+auth.auth(app)
 
 ## Protected routes
 login.login(app, database) # Login
+
 @app.route('/auth/logout') # Logout
 @login_required
 def logout():
@@ -73,6 +76,8 @@ def today():
 @login_required
 def upcoming():
     return render_template('views/upcoming.html')
+
+## API
 
 ## Get task
 gettasks.get_tasks(app, database)

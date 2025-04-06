@@ -9,7 +9,7 @@ class Database :
             self.host = host
             self.db_name = db_name
 
-# Database Configuration
+# Database Setup
 def config(app, databaseConfig):
     app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{databaseConfig.user}:{databaseConfig.password}@{databaseConfig.host}/{databaseConfig.db_name}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
