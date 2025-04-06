@@ -24,7 +24,8 @@
         </div>
         <form class="d-flex justify-content-between align-items-center border px-3 py-2 rounded-2" action="">
             <i class="text-primary fa fa-search"></i>
-            <input class="text-dark" type="search" placeholder="Find task">
+            <input class="text-dark" type="search" id="findTask" onkeyup="findTaskk()" placeholder="Find task">
+            <div id="searchResultsContainer" class="mt-3 p-2"></div>
         </form>
         <div class="my-3">
             <h4 class="text-dark fw-bold" >TASKS</h4>
@@ -34,14 +35,14 @@
                         <i class="text-warning fas fa-clock"></i>
                         <a  class="text-dark text-decoration-none" href="/dashboard/upcoming">Upcoming</a>
                     </div>
-                    <span class="text-dark">1</span>
+                    <span class="text-dark">0</span>
                 </li>
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center  active-page ">
                     <div>
                         <i class="text-success fas fa-list"></i>
                         <a  class="text-dark text-decoration-none" href="/dashboard/today">Today</a>
                     </div>
-                    <span class="text-dark">2</span>
+                    <span class="text-dark" id="todayTaskNbr">0</span>
                 </li>
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -54,7 +55,7 @@
                         <i class="text-info fas fa-grip"></i>
                         <a  class="text-dark text-decoration-none " href="/dashboard">Sticky Wall</a>
                     </div>
-                    <span class="text-dark bg-light" id="taskNbr">1</span>
+                    <span class="text-dark bg-light" id="taskNbr">0</span>
                 </li>
             </ul>
         </div>
@@ -113,50 +114,105 @@
             Today tasks
         </h1>
         <div class="container py-3">
-            <div class="row justify-content-start">
-                <!--Task 1-->
-                <div class=" col-4 p-1 taskBox" id="todayTask0">
-                    <div class=" h-100  p-2 rounded-3 bg-secondary">
-                        <h3 class="text-light">
-                            Dusk
-                            <span class="text-light" style="font-size: 15px;">
-                                10/02/25 to 25/02/25
-                            </span> 
-                            <i class="fas fa-trash text-danger" onclick="removeTask('todayTask0')"></i>
-                        </h3>
-                        <ul class="p-0">
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask00">Task 1 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask00')"></i></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask01">Task 2 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask01')"></i></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask02">Task 3 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask02')"></i></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask03">... <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask03')"></i></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask04">... <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask04')"></i></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask05">Task n <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask05')"></i></li>
-                        </ul>
-                    </div>
-                </div>
-                <!--Task 2-->
-                <div class=" col-4 p-1 taskBox" id="todayTask1">
-                    <div class=" h-100 p-2 rounded-3">
-                        <h3 class="text-dark">
-                            Evening
-                            <span class="text-dark" style="font-size: 15px;">
-                                10/02/25 to 25/02/25
-                            </span> 
-                            <i class="fas fa-trash text-danger" onclick="removeTask('todayTask1')"></i>
-                        </h3>
-                        <ul class="p-0">
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask10">Task 1 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask10')"></i></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask11">Task 2 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask11')"></i></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask12">Task 3 <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask12')"></i></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask13">... <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask13')"></i></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask14">... <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask14')"></i></li>
-                            <li class="text-dark justify-content-between align-items-center subTask" id="todaySubtask15">Task n <i class="fas fa-trash text-danger" onclick="removeSubTask('todaySubtask15')"></i></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            <div class="row justify-content-start" id="todayTaskContainer"></div>
         </div>
     </main>
+    <!-- nofitication displayer -->
+    <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
+        <i id="notification-icon" class=""></i>
+        <span id="notification-message"></span>
+    </div>
     <script src="{{ url_for('static', filename='js/dashboard.script.js') }}"></script>
+    <script>
+
+        async function fetchTodayTasks() {
+            try {
+                const response = await fetch("/api/user/getTodayTask", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (!response.ok) {
+                    showNotification('error', "Failed to fetch today's task")
+                }
+
+                let responseData = await response.json();
+
+                if (response.ok && responseData.data.length > 0) {
+                    const todayTasks = responseData.data;
+                    $("#todayTaskNbr").text(responseData.data.length);
+                    showNotification("success", `You have ${taskcount} task${taskcount > 1 ? "s" : ""} to do today`);
+
+                    todayTasks.forEach(task => {
+                        const {
+                            task_id: id,
+                            title,
+                            start_date,
+                            end_date,
+                            description,
+                            bg_color,
+                            subtasks
+                        } = task;
+                        const taskElement = addTodayTask(
+                            id,
+                            title,
+                            formatDate(start_date),
+                            formatDate(end_date),
+                            description,
+                            bg_color,
+                            subtasks
+                        );
+                        
+                        $("#todayTaskContainer").append(taskElement);
+                    });
+
+                    return todayTasks.length;
+                } else {
+                    showNotification("error", "You don't have any task for today");
+                }
+            } catch (error) {
+                showNotification("error", error.message);
+            }
+        }
+
+        fetchTodayTasks()
+        
+
+
+        function addTodayTask(id, title, start_date, end_date, description, bg_color, subtasks) {
+            let taskContainer = $(`<div class="col-4 p-1 taskBox" id="${id}"></div>`);
+            taskContainer.html(`    
+                <div class="h-100 p-2 rounded-3" style='background-color: ${bg_color}'>
+                    <h3 class="text-dark task-title">
+                        ${title}
+                        <span class="text-dark date">
+                        ${start_date} to ${end_date}
+                        </span>
+                        <i class="fas fa-add text-success" onclick="addSubTask('${id}')"></i> 
+                        <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
+                    </h3>
+                    <ul class="p-0" id='subtaskContainer${id}'>
+                    ${
+                        subtasks.map(subtask => `
+                            <li class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' id='${subtask.subtask_id}'>
+                                ${subtask.title}
+                                <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
+                                    <i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i>
+                                    <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                                    <input clicked=false class="from-control mx-2 my-0" type="checkbox" name="subtask_status" id="input${subtask.subtask_id}" onchange="check(${subtask.subtask_id})"/>
+                                    <i class="fas fa-check-circle text-warning" style='display: none' id='check_icon${subtask.subtask_id}'></i>
+                                </div>
+                            </li>
+                        `).join('')
+                    }
+                    </ul>
+                </div>
+            `);
+            $("#todayTaskContainer").append(taskContainer);
+        }
+
+    </script>
 </body>
 </html>

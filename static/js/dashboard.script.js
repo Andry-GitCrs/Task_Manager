@@ -4,7 +4,7 @@ let taskList = []
 $(document).ready(function() {
     let addTask = null
     let subTaskList = []
-    let taskNbr = 1
+    let taskNbr = 0
     let subTaskNbr = 1
     /* Task number */
 
@@ -91,6 +91,8 @@ $(document).ready(function() {
                     $("#description").val("")
                     $("#bg-color-piker").val("#95ce83")
                     $(".overlay, .modal").fadeOut(); // Close modal
+                    taskNbr += 1
+                    $("#taskNbr").text(taskNbr)
                     showNotification("success", responseData.message)
                 } else {
                     showNotification("error", responseData.error)
@@ -136,6 +138,8 @@ async function  removeTask(id){
     
             if (response.ok) {  //Response with status code 200
                 showNotification("success", responseData.message)
+                taskcount -= 1
+                $("#taskNbr").text(taskcount)
                 document.getElementById(`${id}`).remove()
             } else {
                 showNotification("error", responseData.error)
@@ -374,4 +378,69 @@ function check(id){
         $(`#check_icon${id}`).css("display", 'none')
         $(`#input${id}`).val("on")
     }
-} 
+}
+
+// Check task
+function checkTask(id){
+    if( $(`#inputTask${id}`).val() == "on" ){
+        showNotification('success', `Checked task`)
+        $(`#inputTask${id}`).val("off")
+    }else{
+        showNotification('success', `Unchecked task`)
+        $(`#inputTask${id}`).val("on")
+    }
+}
+// Find task
+async function findTaskk(){
+    let title = $('#findTask').val().trim()
+    let searchResult = $('#searchResultsContainer')
+    searchResult.css('display', 'block')
+    searchResult.html("")
+    if(title){
+        let response = await fetch(`/api/user/findTask/${title}`)
+        let responseData = await response.json()
+        if(response.ok){  //Response with status code 200
+            responseData.data.forEach(task => {
+                const {
+                    task_id: id,
+                    title,
+                    start_date,
+                    end_date,
+                    description,
+                    bg_color,
+                    subtasks
+                } = task;
+                searchResult.append(`
+                    <li class='my-2 p-2 rounded justify-content-between align-items-center subTask task${id}' id='${id}' style='background-color: ${bg_color}'>
+                        ${title}
+                        <span style='font-size: 12px'>${formatDate(start_date)} to ${formatDate(end_date)}</span>
+                        <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
+                            <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
+                            <input clicked=false class="from-control mx-2 my-0" type="checkbox" name="task_status" id="inputTask${id}" onchange="checkTask(${id})"/>
+                            <i class="fas fa-check-circle text-warning " style='display: none'  id='check_task_icon${id}'></i>
+                        </div>
+                    </li> 
+                `)
+            })
+
+            
+        }else{
+            showNotification('error', "Task not found")
+        }
+    }else{
+        searchResult.html("")
+        searchResult.css('display', 'none')
+    }
+}
+
+$(document).on('click', function(event) {
+    // Check if the click is outside the search input and the search results container
+    if (!$(event.target).closest('#findTask, #searchResultsContainer').length) {
+        $('#searchResultsContainer').hide();
+    }
+});
+
+// Optional: show the results container when the input is focused
+$('#findTask').on('focus', function() {
+    $('#searchResultsContainer').show();
+});

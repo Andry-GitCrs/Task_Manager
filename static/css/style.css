@@ -480,3 +480,18 @@ main .container li:hover{
     top: 10px;
     background-color: antiquewhite;
 }
+
+/* End Welcome modal */
+#searchResultsContainer{
+    transition: 2s all;
+    position: absolute;
+    background-color: var(--grey);
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    top: 94px;
+    left: 0;
+    z-index: 9999;
+    display: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15)
+}
