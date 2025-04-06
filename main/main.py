@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, deletesubtask, deletetask, login, register, gettasks, addtask
+from routes import addsubtask, auth, deletesubtask, deletetask, login, register, gettasks, addtask, suspenduser
 from database import pgconnexion
 
 ## App config
@@ -93,3 +93,8 @@ deletetask.deleteTask(app, database)
 
 ## Delete subtask
 deletesubtask.deleteSubTask(app, database)
+
+
+## Admin action
+## Suspend user
+suspenduser.suspendUser(app, database)

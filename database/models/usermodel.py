@@ -12,11 +12,15 @@ def userModel(db):
         password = Column(String(200), nullable=False)
         created_at = Column(DateTime, default=datetime.utcnow)
         updated_at = Column(DateTime, default=datetime.utcnow)
+        admin = Column(Boolean, default=False)
         stat = Column(Boolean, default=True)
 
         tasks = None
 
         def get_id(self):
             return str(self.user_id)
+        
+        def deactivate(self):
+            self.stat = False
 
     return User

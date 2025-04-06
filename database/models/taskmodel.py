@@ -19,6 +19,9 @@ def taskModel(db, User):
 
         user = relationship("User", back_populates="tasks")
 
+        def deactivate(self):
+            self.stat = False
+
     User.tasks = relationship("Task", back_populates="user", cascade="all, delete-orphan")
 
     return Task

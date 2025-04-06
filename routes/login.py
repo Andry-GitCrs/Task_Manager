@@ -14,7 +14,8 @@ def login(app, database):
             email = data.get('email')
             password = data.get('password')
 
-            user = User.query.filter_by(email=email).first()
+            user = User.query.filter_by(email=email, stat = True).first()
+            suspended = User.query.filter_by(email=email, stat = False).first()
 
             if not user:
                 return jsonify({"error": "Invalid email or password"}), 401
@@ -22,10 +23,16 @@ def login(app, database):
             if not bcrypt.check_password_hash(user.password, password):
                 return jsonify({"error": "Incorrect password"}), 400
 
-            login_user(user)
-            return jsonify({
-                "message": f"User {user.email} logged in successfully"
-            }), 200
+            if not suspended:
+                login_user(user)
+                return jsonify({
+                    "message": f"User {user.email} logged in successfully"
+                }), 200
+            
+            elif suspended:
+                return jsonify({
+                    "error": f"User {user.email} is suspended by admin"
+                }), 401
 
         except Exception as e:
             print("Login error:", str(e))  # for debug

@@ -20,7 +20,7 @@ def get_tasks(app, database):
             Task.task_end_date,
             Task.task_background_color,
             Task.description
-        ).filter(Task.user_id == user_id).all()
+        ).filter(Task.user_id == user_id, Task.stat == True).all()
 
         for result in results:
             subtasksArray = []
@@ -28,7 +28,7 @@ def get_tasks(app, database):
             subtasks = db.session.query(
                 Subtask.subtask_id,
                 Subtask.subtask_title
-            ).filter(Subtask.task_id == task_id).all()
+            ).filter(Subtask.task_id == task_id, Subtask.stat == True).all()
 
             for subtask in subtasks:
                 subtasksArray.append({

@@ -13,13 +13,13 @@ def deleteTask(app, database):
         user_id = current_user.user_id
         task_id = data['task_id']
 
-        task = Task.query.filter_by(task_id = task_id).first()
-        subtasks = Subtask.query.filter_by(task_id = task_id).all()
+        task = Task.query.filter_by(task_id = task_id, stat = True).first()
+        subtasks = Subtask.query.filter_by(task_id = task_id, stat = True).all()
 
         if task and task.user_id == user_id:
             for subtask in subtasks:
-                db.session.delete(subtask)
-            db.session.delete(task)
+                subtask.deactivate()
+            task.deactivate()
             db.session.commit()
             return jsonify({"message": "Task deleted successfully"}), 200
         

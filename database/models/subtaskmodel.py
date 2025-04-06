@@ -15,6 +15,10 @@ def subtaskModel(db, Task):
 
         task = relationship("Task", back_populates="subtasks")
 
+        def deactivate(self):
+            self.stat = False
+
+
     Task.subtasks = relationship("Subask", back_populates="task", cascade="all, delete-orphan")
 
     return Subask

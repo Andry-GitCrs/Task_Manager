@@ -1,0 +1,16 @@
+
+// Add new task
+{
+    "task_title": "Task for admin",
+    "task_start_date": "2025-04-06",
+    "task_end_date": "2025-04-08",
+    "task_background_color": "#fefefe",
+    "description": "Test",
+    "subtasks": ["Update task", "Front_end config"]
+}
+
+// Add subtask
+{
+    "subtask_title": "Push project",
+    "task_id": 1
+}
