@@ -1,4 +1,3 @@
-from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from .models import usermodel, taskmodel, subtaskmodel
 
@@ -22,9 +21,11 @@ def connect(app):
     db = SQLAlchemy(app)
 
     ## Tables
-    User = usermodel.userModel(app, UserMixin, db)
-    Task = taskmodel.taskModel(app, db)
-    Subtask = subtaskmodel.subtaskModel(app, db)
+    with app.app_context():
+        User = usermodel.userModel(db)
+        Task = taskmodel.taskModel(db, User)
+        Subtask = subtaskmodel.subtaskModel(db, Task)
+        db.create_all()
     
     return {
         "message": "Database connected",

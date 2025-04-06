@@ -1,8 +1,22 @@
-def userModel(app, UserMixin, db):
-    with app.app_context():
-        class User(UserMixin, db.Model):
-            __table__ = db.Table('users', db.metadata, autoload_with = db.engine)
-            def get_id(self):
-                return str(self.user_id)
-            
-        return User 
+from datetime import datetime
+from flask_login import UserMixin
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
+
+def userModel(db):
+    class User(UserMixin, db.Model):
+        __tablename__ = 'users'
+
+        user_id = Column(Integer, primary_key=True)
+        email = Column(String(120), unique=True, nullable=False)
+        password = Column(String(200), nullable=False)
+        created_at = Column(DateTime, default=datetime.utcnow)
+        updated_at = Column(DateTime, default=datetime.utcnow)
+        stat = Column(Boolean, default=True)
+
+        tasks = None
+
+        def get_id(self):
+            return str(self.user_id)
+
+    return User
