@@ -1,7 +1,6 @@
 import sys
-from flask import Flask, jsonify, redirect, render_template, request
-from flask_login import login_required, current_user
-from flask_login import LoginManager, login_required, logout_user, current_user
+from flask import Flask, redirect, render_template
+from flask_login import login_required, current_user, LoginManager, login_required, logout_user, current_user
 import os
 
 ## Dir config 
@@ -45,17 +44,15 @@ def contact():
 
 ## Auth route
 auth.auth(app)
+login.login(app, database) # Login
+register.register(app, database) # Register
 
 ## Protected routes
-login.login(app, database) # Login
-
 @app.route('/auth/logout') # Logout
 @login_required
 def logout():
     logout_user()
     return redirect('/auth')
-
-register.register(app, database) # Register
 
 @app.route('/dashboard') # Dashboard
 @login_required
@@ -93,7 +90,6 @@ deletetask.deleteTask(app, database)
 
 ## Delete subtask
 deletesubtask.deleteSubTask(app, database)
-
 
 ## Admin action
 ## Suspend user
