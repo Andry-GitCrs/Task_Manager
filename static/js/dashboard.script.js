@@ -207,7 +207,7 @@ async function addSubTask(id){
                         style="background-color: '#f8f9fa'"
                     >
                     <span 
-                    
+
                     > 
                         ${subtask.subtask_title}
                     </span>
@@ -501,7 +501,6 @@ async function findTaskk(){
                         <span style='font-size: 12px'>${formatDate(start_date)} to ${formatDate(end_date)}</span>
                         <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
                             <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
-                            <input clicked=false class="from-control mx-2 my-0" type="checkbox" name="task_status" id="inputTask${id}" onchange="checkTask(${id})"/>
                             <i class="fas fa-check-circle text-warning " style='display: none'  id='check_task_icon${id}'></i>
                         </div>
                     </li> 

@@ -183,6 +183,7 @@
 
         function addTodayTask(id, title, start_date, end_date, description, bg_color, subtasks) {
             let taskContainer = $(`<div class="col-4 p-1 taskBox" id="${id}"></div>`);
+
             taskContainer.html(`    
                 <div class="h-100 p-2 rounded-3" style='background-color: ${bg_color}'>
                     <h3 class="text-dark task-title">
@@ -196,15 +197,35 @@
                     <ul class="p-0" id='subtaskContainer${id}'>
                     ${
                         subtasks.map(subtask => `
-                            <li class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' id='${subtask.subtask_id}'>
+                            <li 
+                                class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
+                                id='subtask${subtask.subtask_id}'
+                                style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
+                            >
+                            <span 
+                                style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
+                            > 
                                 ${subtask.title}
-                                <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                                    <i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i>
-                                    <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
-                                    <input clicked=false class="from-control mx-2 my-0" type="checkbox" name="subtask_status" id="input${subtask.subtask_id}" onchange="check(${subtask.subtask_id})"/>
-                                    <i class="fas fa-check-circle text-warning" style='display: none' id='check_icon${subtask.subtask_id}'></i>
-                                </div>
-                            </li>
+                            </span>
+                            <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
+                                <i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i>
+                                <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                                <input
+                                    ${subtask.finished ? "checked" : ""}
+                                    value=${subtask.finished ? "off" : "on"}
+                                    class="from-control mx-2 my-0"
+                                    type="checkbox" name="subtask_status" 
+                                    id="input${subtask.subtask_id}" 
+                                    onchange="check(${subtask.subtask_id})"
+                                />
+                                <i 
+                                    class="fas fa-check-circle text-warning"
+                                    style="display: ${(subtask.finished)?'inline' : 'none'}" 
+                                    id='check_icon${subtask.subtask_id}'
+                                >
+                                </i>
+                            </div>
+                        </li>
                         `).join('')
                     }
                     </ul>
