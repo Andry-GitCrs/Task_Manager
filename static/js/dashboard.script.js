@@ -32,7 +32,7 @@ $(document).ready(function() {
                     $(".task-list-container").text("")
                 }
                 subTaskList.push(content)
-                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask' id='subtask${taskNbr}${subTaskNbr}'></li>`).html(`${content}  <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`))
+                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask' id='subtask${taskNbr}${subTaskNbr}' ondblclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></li>`).html(`${content}  <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`))
             }else{
                 showNotification("error", `This taks already have "${content}" subtask`)
             }
@@ -170,6 +170,7 @@ async function removeSubTask(id){
             if (response.ok) {  //Response with status code 200   
                 showNotification("success", responseData.message)
                 document.getElementById(`subtask${id}`).remove()
+                $('#taskNbr').text($('#taskNbr').text() - 1)
             } else {
                 showNotification("error", responseData.error)
             }
@@ -243,14 +244,62 @@ async function addSubTask(id){
 
 function editSubTask_on_adding(id){
     showNotification("success", `Edit subtask ${id}?`)
+    let old_value = $(`#${id}`).text()
+    $(`#${id}`).html(`
+        <input
+            value='${old_value}'
+            class="form-control mx-2 my-0 d-block"
+            type="text" name="subtask_status"
+        />
+    `)
 }
+
+// Write change
+
 
 function removeSubTask_on_adding(id){
     showNotification("success", `Remove subtask ${id}?`)
 }
 
-function editSubTask(id){
-    showNotification("success", `Edit ${id}?`)
+function editSubTask(id, subtask_id){
+    showNotification("success", `Edit subtask ${id}?`)
+    let old_value = $(`#${id}`).text().trim()
+    $(`#${id}`).html(`
+        <input
+            value='${old_value}'
+            class="form-control mx-2 my-0 d-block py-0"
+            type="text" name="subtask_status"
+            id="inputEdit${id}"
+        />
+    `)
+
+    $(`#inputEdit${id}`).on('mouseleave', () => {
+        let newValue = $(`#inputEdit${id}`).val()
+        if(!newValue.trim()){
+            newValue = old_value
+        }
+        $(`#${id}`).html($(`
+            <span> 
+            ${newValue}
+            </span>
+            <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
+                <i class="fas fa-pen" onclick="editSubTask('${subtask_id}')"></i>
+                <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask_id}')"></i>
+                <input
+                    class="from-control mx-2 my-0"
+                    type="checkbox" name="subtask_status" 
+                    id="input${subtask_id}" 
+                    onchange="check(${subtask_id})"
+                />
+                <i 
+                    class="fas fa-check-circle text-warning"
+                    style="display: none" 
+                    id='check_icon${subtask_id}'
+                >
+                </i>
+            </div>
+        `))
+    })
 }
 
 /* Show menu  */
@@ -289,16 +338,12 @@ const fetchTasks = async () => {
             }
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch tasks');
-        }
-
         let responseData = await response.json();
 
         if (response.ok) {
             responseData = responseData.data
-            $("#taskNbr").text(taskcount + responseData.length)
             taskcount = responseData.length
+            $("#taskNbr").text(taskcount)
             showNotification("success", `You have ${taskcount} task${taskcount > 1 ? "s" : ""} to do`)
             responseData.forEach(task => {
                 const id = task.task_id
@@ -312,7 +357,7 @@ const fetchTasks = async () => {
             });
             return responseData.length
         } else {
-            showNotification("error", `You don't have any task yet`)
+            showNotification("error", responseData.message)
         }
     } catch (error) {
         showNotification("error", error.message)
@@ -351,11 +396,12 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
                             class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
                             id='subtask${subtask.subtask_id}'
                             style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
+                            ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
                         >
                             <span 
                                 style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
                             > 
-                                ${subtask.subtask_title}
+                                ${subtask.subtask_title.trim()}
                             </span>
                             <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
                                 <i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i>

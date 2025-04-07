@@ -22,34 +22,40 @@ def get_tasks(app, database):
             Task.description
         ).filter(Task.user_id == user_id, Task.stat == True).all()
 
-        for result in results:
-            subtasksArray = []
-            task_id = result.task_id
-            subtasks = db.session.query(
-                Subtask.subtask_id,
-                Subtask.subtask_title,
-                Subtask.finished
-            ).filter(Subtask.task_id == task_id, Subtask.stat == True).all()
+        if results:
+            for result in results:
+                subtasksArray = []
+                task_id = result.task_id
+                subtasks = db.session.query(
+                    Subtask.subtask_id,
+                    Subtask.subtask_title,
+                    Subtask.finished
+                ).filter(Subtask.task_id == task_id, Subtask.stat == True).all()
 
-            for subtask in subtasks:
-                subtasksArray.append({
-                    "subtask_id": subtask.subtask_id,
-                    "subtask_title": subtask.subtask_title,
-                    "finished": subtask.finished
-                })
+                for subtask in subtasks:
+                    subtasksArray.append({
+                        "subtask_id": subtask.subtask_id,
+                        "subtask_title": subtask.subtask_title,
+                        "finished": subtask.finished
+                    })
 
-            task = {
-                "task_id": result.task_id,
-                "title": result.task_title,
-                "start_date": result.task_start_date,
-                "end_date": result.task_end_date,
-                "description": result.description,
-                "bg_color": result.task_background_color,
-                "subtasks": subtasksArray
-            }
-            tasks.append(task)
+                task = {
+                    "task_id": result.task_id,
+                    "title": result.task_title,
+                    "start_date": result.task_start_date,
+                    "end_date": result.task_end_date,
+                    "description": result.description,
+                    "bg_color": result.task_background_color,
+                    "subtasks": subtasksArray
+                }
+                tasks.append(task)
 
+            return jsonify({
+                "message": f"Task fetched successfully",
+                "data": tasks
+            }), 200
+        
         return jsonify({
-            "message": f"Task fetched successfully",
-            "data": tasks
-        }), 200
+                "message": f"You don't have any task yet",
+                "data": tasks
+            }), 404
