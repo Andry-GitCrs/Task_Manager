@@ -62,25 +62,25 @@
         <div class="my-3">
             <h4 class="text-dark fw-bold" >LISTS</h4>
             <ul class="p-0">
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
                         <i class="text-dark fas fa-user"></i>
                         <a  class="text-dark text-decoration-none" href="#">Personal</a>
                     </div>
                 </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
                         <i class="text-danger fas fa-circle"></i>
                         <a  class="text-dark text-decoration-none" href="#">Work</a>
                     </div>
                 </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
                         <i class="text-secondary fas fa-square"></i>
                         <a  class="text-dark text-decoration-none" href="#">List 1</a>
                     </div>
                 </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
                         <i class="text-success fas fa-add"></i>
                         <a  class="text-dark text-decoration-none" href="#">Add new list</a>
@@ -117,6 +117,11 @@
             <div id='calendar'></div>
         </div>
     </main>
+    <!-- nofitication displayer -->
+    <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
+        <i id="notification-icon" class=""></i>
+        <span id="notification-message"></span>
+    </div>
     <script src="{{ url_for('static', filename='js/calendar.script.js') }}"></script>
 </body>
 </html>

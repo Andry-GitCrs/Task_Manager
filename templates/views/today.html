@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
+    
     <script src="{{ url_for('static', filename='js/jQuery-3.7.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.script.js') }}"></script>
     <title>Today task</title>
 </head>
 <body>
@@ -35,7 +37,6 @@
                         <i class="text-warning fas fa-clock"></i>
                         <a  class="text-dark text-decoration-none" href="/dashboard/upcoming">Upcoming</a>
                     </div>
-                    <span class="text-dark">0</span>
                 </li>
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center  active-page ">
                     <div>
@@ -62,25 +63,25 @@
         <div class="my-3">
             <h4 class="text-dark fw-bold" >LISTS</h4>
             <ul class="p-0">
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
                         <i class="text-dark fas fa-user"></i>
                         <a  class="text-dark text-decoration-none" href="#">Personal</a>
                     </div>
                 </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
                         <i class="text-danger fas fa-circle"></i>
                         <a  class="text-dark text-decoration-none" href="#">Work</a>
                     </div>
                 </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
                         <i class="text-secondary fas fa-square"></i>
                         <a  class="text-dark text-decoration-none" href="#">List 1</a>
                     </div>
                 </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="alert('Sorry this feature is not available right now')">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
                         <i class="text-success fas fa-add"></i>
                         <a  class="text-dark text-decoration-none" href="#">Add new list</a>
@@ -122,118 +123,6 @@
         <i id="notification-icon" class=""></i>
         <span id="notification-message"></span>
     </div>
-    <script src="{{ url_for('static', filename='js/dashboard.script.js') }}"></script>
-    <script>
-
-        async function fetchTodayTasks() {
-            try {
-                const response = await fetch("/api/user/getTodayTask", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-
-                if (!response.ok) {
-                    showNotification('error', "Failed to fetch today's task")
-                }
-
-                let responseData = await response.json();
-
-                if (response.ok && responseData.data.length > 0) {
-                    const todayTasks = responseData.data;
-                    $("#todayTaskNbr").text(responseData.data.length);
-                    showNotification("success", `You have ${taskcount} task${taskcount > 1 ? "s" : ""} to do today`);
-
-                    todayTasks.forEach(task => {
-                        const {
-                            task_id: id,
-                            title,
-                            start_date,
-                            end_date,
-                            description,
-                            bg_color,
-                            subtasks
-                        } = task;
-                        const taskElement = addTodayTask(
-                            id,
-                            title,
-                            formatDate(start_date),
-                            formatDate(end_date),
-                            description,
-                            bg_color,
-                            subtasks
-                        );
-                        
-                        $("#todayTaskContainer").append(taskElement);
-                    });
-
-                    return todayTasks.length;
-                } else {
-                    showNotification("error", "You don't have any task for today");
-                }
-            } catch (error) {
-                showNotification("error", error.message);
-            }
-        }
-
-        fetchTodayTasks()
-        
-
-
-        function addTodayTask(id, title, start_date, end_date, description, bg_color, subtasks) {
-            let taskContainer = $(`<div class="col-4 p-1 taskBox" id="${id}"></div>`);
-
-            taskContainer.html(`    
-                <div class="h-100 p-2 rounded-3" style='background-color: ${bg_color}'>
-                    <h3 class="text-dark task-title">
-                        ${title}
-                        <span class="text-dark date">
-                        ${start_date} to ${end_date}
-                        </span>
-                        <i class="fas fa-add text-success" onclick="addSubTask('${id}')"></i> 
-                        <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
-                    </h3>
-                    <ul class="p-0" id='subtaskContainer${id}'>
-                    ${
-                        subtasks.map(subtask => `
-                            <li 
-                                class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
-                                id='subtask${subtask.subtask_id}'
-                                style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
-                            >
-                            <span 
-                                style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
-                            > 
-                                ${subtask.title}
-                            </span>
-                            <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                                <i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i>
-                                <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
-                                <input
-                                    ${subtask.finished ? "checked" : ""}
-                                    value=${subtask.finished ? "off" : "on"}
-                                    class="from-control mx-2 my-0"
-                                    type="checkbox" name="subtask_status" 
-                                    id="input${subtask.subtask_id}" 
-                                    onchange="check(${subtask.subtask_id})"
-                                />
-                                <i 
-                                    class="fas fa-check-circle text-warning"
-                                    style="display: ${(subtask.finished)?'inline' : 'none'}" 
-                                    id='check_icon${subtask.subtask_id}'
-                                >
-                                </i>
-                            </div>
-                        </li>
-                        `).join('')
-                    }
-                    </ul>
-                </div>
-            `);
-            $("#todayTaskContainer").append(taskContainer);
-        }
-
-    </script>
+    <script type="module" src="{{ url_for('static', filename='js/todayTask.script.js') }}"></script>
 </body>
 </html>

@@ -1,0 +1,59 @@
+// Fetch upcoming tasks
+async function fetchUpcomingTasks(element_id, condition, day, message) {
+    try {
+        const response = await fetch(`/api/user/getUpcomingTask/${condition}/${day}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        let responseData = await response.json();
+
+        if (response.ok && responseData.data.length > 0) {
+            const upComingTasks = responseData.data;
+            const date = formatDate(responseData.date);
+            //$("#upcomingTaskNbr").text(upComingTasks.length);
+            showNotification("success", `You have ${upComingTasks.length} task${upComingTasks.length > 1 ? "s" : ""} to do ${condition} ${date}`);
+            $(`#${element_id}`).append($("<h3></h3>").text(`${upComingTasks.length} task${upComingTasks.length > 1 ? "s" : ""} to do ${condition} ${date}, ${message}`))
+            upComingTasks.forEach(task => {
+                const {
+                    task_id: id,
+                    title,
+                    start_date,
+                    end_date,
+                    description,
+                    bg_color,
+                    subtasks
+                } = task;
+                
+                addUpcomingTask(element_id, id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks)
+            });
+        } else {
+            $(`#${element_id}`).append($("<h3></h3>").text(`No task to do ${condition} ${day} ${day > 1 ? "days" : "day"}, ${message}`))
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function addUpcomingTask(element_id, id, title, start_date, end_date, description, bg_color, subtasks) {
+    let taskContainer = $(`<div class="col-4 p-1 taskBox" id="${id}"></div>`);
+    let newTaskCard = genTaskCard(bg_color, description, start_date, end_date, title, id, subtasks)
+    taskContainer.html(newTaskCard);
+    $(`#${element_id}`).append(taskContainer);
+}
+
+$('.menu-btn').on('click', () => {
+    if(!menuStat){
+        $("aside").css("left", "0")
+        menuStat = true
+    }else{
+        $("aside").css("left", "-600px")
+        menuStat = false
+    }
+})
+
+fetchUpcomingTasks('upComingTaskContainer', 'before', 7, "next week");
+fetchUpcomingTasks('upComingTaskContainer1', 'on', 1, "tomorrow");
+fetchUpcomingTasks('upComingTaskContainer1', 'after', 2, "after tomorrow");

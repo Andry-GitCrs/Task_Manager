@@ -140,12 +140,12 @@ async function  removeTask(id){
                 showNotification("success", responseData.message)
                 taskcount -= 1
                 $("#taskNbr").text(taskcount)
-                document.getElementById(`task${id}`).remove()
+                $(`#task${id}`).remove()
             } else {
                 showNotification("error", responseData.error)
             }
         } catch (error) {
-            showNotification("error", responseData.error)
+            showNotification("error", error)
         }
     }
 }
@@ -255,8 +255,6 @@ function editSubTask_on_adding(id){
 }
 
 // Write change
-
-
 function removeSubTask_on_adding(id){
     showNotification("success", `Remove subtask ${id}?`)
 }
@@ -313,7 +311,6 @@ $('.menu-btn').on('click', () => {
         menuStat = false
     }
 })
-
 /* Welcome Modal */
 
 $(document).ready(function() {
@@ -369,61 +366,72 @@ fetchTasks()
 
 const formatDate = (date) => {
     const d = new Date(date);
-    const year = d.getFullYear().toString().slice(-2); // Get last two digits of the year
-    const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed, pad with 0 if single digit
-    const day = d.getDate().toString().padStart(2, '0'); // Pad day with 0 if single digit
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
 
-    return `${day}-${month}-${year}`;
-}
+    const dayName = days[d.getDay()];
+    const day = d.getDate().toString().padStart(2, '0');
+    const monthName = months[d.getMonth()];
+    const year = d.getFullYear().toString();
+
+    return `${dayName} ${day} ${monthName} ${year}`;
+};
 
 // Create display card
 function addNewTask(id, title, start_date, end_date, description, bg_color,  subtasks){
     let taskContainer = $(`<div class="col-4 p-1 taskBox" id="task${id}"></div>`)
     taskContainer.html(`    
-        <div class=" h-100 p-2 rounded-3" style='background-color: ${bg_color}' onmouseover="showNotification('success', 'Description: ${description}')">
+        <div class=" h-100 p-2 rounded-3" style='background-color: ${bg_color}' title="${(description !== 'None')?description:'No description'}">
+            <span class="text-dark date date-range w-auto ">
+                <i class="fa-solid fa-calendar-days text-success"></i>
+                ${start_date}
+                <i class="fa-solid fa-arrow-right text-warning"></i>
+                ${end_date}
+            </span>
             <h3 class="text-dark task-title">
                 ${title}
-                <span class="text-dark date">
-                    ${start_date} to ${end_date}
-                </span>
-                <i class="fas fa-add text-success" onclick="addSubTask('${id}')"></i> 
-                <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
+                <div class='d-flex justify-content-center gap-3 bg-transparent'>
+                    <i class="fas fa-add text-success" onclick="addSubTask('${id}')"></i> 
+                    <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
+                </div>
             </h3>
             <ul class="p-0" id='subtaskContainer${id}'>
-                ${
-                    subtasks.map( subtask => `
-                        <li 
-                            class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
-                            id='subtask${subtask.subtask_id}'
-                            style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
-                            ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
-                        >
-                            <span 
-                                style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
-                            > 
-                                ${subtask.subtask_title.trim()}
-                            </span>
-                            <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                                <i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i>
-                                <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
-                                <input
-                                    ${subtask.finished ? "checked" : ""}
-                                    value=${subtask.finished ? "off" : "on"}
-                                    class="from-control mx-2 my-0"
-                                    type="checkbox" name="subtask_status" 
-                                    id="input${subtask.subtask_id}" 
-                                    onchange="check(${subtask.subtask_id})"
-                                />
-                                <i 
-                                    class="fas fa-check-circle text-warning"
-                                    style="display: ${(subtask.finished)?'inline' : 'none'}" 
-                                    id='check_icon${subtask.subtask_id}'
-                                >
-                                </i>
-                            </div>
-                        </li>
-                    `).join('')
-                }
+            ${
+                subtasks.map( subtask => `
+                    <li 
+                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
+                        id='subtask${subtask.subtask_id}'
+                        style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
+                        ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
+                    >
+                        <span 
+                            style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
+                        > 
+                        ${subtask.subtask_title.trim()}
+                        </span>
+                        <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
+                            <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                            <input
+                                ${subtask.finished ? "checked" : ""}
+                                value=${subtask.finished ? "off" : "on"}
+                                class="from-control mx-2 my-0"
+                                type="checkbox" name="subtask_status" 
+                                id="input${subtask.subtask_id}" 
+                                onchange="check(${subtask.subtask_id})"
+                            />
+                            <i 
+                                class="fas fa-check-circle text-warning"
+                                style="display: ${(subtask.finished)?'inline' : 'none'}" 
+                                id='check_icon${subtask.subtask_id}'
+                            >
+                            </i>
+                        </div>
+                    </li>
+                `).join('')
+            }
             </ul>
         </div>
     `)
@@ -454,7 +462,7 @@ function showNotification(type, message) {
     setTimeout(() => {
       notification.classList.add('d-none');
     }, 5000);
-  }
+}
 
 // Check Subtask
 async function check(id){
@@ -574,3 +582,59 @@ $(document).on('click', function(event) {
 $('#findTask').on('focus', function() {
     $('#searchResultsContainer').show();
 });
+
+// Task card generator
+function genTaskCard(bg_color, description, start_date, end_date, title, id, subtasks){
+    const card = `   
+        <div class="h-100 p-2 rounded-3" style='background-color: ${bg_color}' title="${(description !== 'None')?description:'No description'}">
+            <span class="text-dark date date-range w-auto ">
+                <i class="fa-solid fa-calendar-days text-success"></i>
+                ${start_date}
+                <i class="fa-solid fa-arrow-right text-warning"></i>
+                ${end_date}
+            </span>
+            <h3 class="text-dark task-title">
+                ${title}
+                <div class='d-flex justify-content-center gap-3 bg-transparent'>
+                    <i class="fas fa-add text-success" onclick="addSubTask('${id}')"></i> 
+                    <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
+                </div>
+            </h3>
+            <ul class="p-0" id='subtaskContainer${id}'>
+            ${
+                subtasks.map(subtask => `
+                    <li 
+                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
+                        id='subtask${subtask.subtask_id}'
+                        style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
+                    >
+                        <span 
+                            style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
+                        > 
+                        ${subtask.title}
+                        </span>
+                        <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
+                            <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                            <input
+                                ${subtask.finished ? "checked" : ""}
+                                value=${subtask.finished ? "off" : "on"}
+                                class="from-control mx-2 my-0"
+                                type="checkbox" name="subtask_status" 
+                                id="input${subtask.subtask_id}" 
+                                onchange="check(${subtask.subtask_id})"
+                            />
+                            <i 
+                                class="fas fa-check-circle text-warning"
+                                style="display: ${(subtask.finished)?'inline' : 'none'}" 
+                                id='check_icon${subtask.subtask_id}'
+                            >
+                            </i>
+                        </div>
+                    </li>
+                `).join('')
+            }
+            </ul>
+        </div>
+    ` 
+    return card
+}

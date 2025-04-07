@@ -399,10 +399,6 @@ main .container li:hover{
     align-items: center;
 }
 
-.taskBox:hover h3{
-    transition: .2s ease-in;
-    font-size: 14px;
-}
 
 .taskBox div h3 i{
     font-size: 20px;
@@ -495,3 +491,25 @@ main .container li:hover{
     display: none;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15)
 }
+
+/* Style date */
+.date-range {
+    display: inline-flex;
+    align-items: center;
+    align-items: center;
+    gap: 8px;
+    background-color: #f0f4ff;
+    color: #1a237e;
+    font-weight: 500;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #c3d4ff;
+    white-space: nowrap;
+    margin: auto;
+}
+  
+.date-range i {
+color: #1a237e;
+}
+  
