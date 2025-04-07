@@ -15,7 +15,7 @@ async function fetchUpcomingTasks(element_id, condition, day, message) {
             const date = formatDate(responseData.date);
             //$("#upcomingTaskNbr").text(upComingTasks.length);
             showNotification("success", `You have ${upComingTasks.length} task${upComingTasks.length > 1 ? "s" : ""} to do ${condition} ${date}`);
-            $(`#${element_id}`).append($("<h3></h3>").text(`${upComingTasks.length} task${upComingTasks.length > 1 ? "s" : ""} to do ${condition} ${date}, ${message}`))
+            $(`#${element_id}`).append($("<h3></h3>").html(`<span class="event p-1 px-3 text-dark rounded-pill">${message}</span> ${upComingTasks.length} task${upComingTasks.length > 1 ? "s" : ""} to do ${condition} ${date}`))
             upComingTasks.forEach(task => {
                 const {
                     task_id: id,
@@ -54,6 +54,6 @@ $('.menu-btn').on('click', () => {
     }
 })
 
-fetchUpcomingTasks('upComingTaskContainer', 'before', 7, "next week");
-fetchUpcomingTasks('upComingTaskContainer1', 'on', 1, "tomorrow");
-fetchUpcomingTasks('upComingTaskContainer1', 'after', 2, "after tomorrow");
+fetchUpcomingTasks('upComingTaskContainer', 'before', 7, "Next week");
+fetchUpcomingTasks('upComingTaskContainer1', 'on', 1, "Tomorrow");
+fetchUpcomingTasks('upComingTaskContainer2', 'after', 2, "After tomorrow");

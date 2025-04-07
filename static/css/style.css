@@ -496,7 +496,6 @@ main .container li:hover{
 .date-range {
     display: inline-flex;
     align-items: center;
-    align-items: center;
     gap: 8px;
     background-color: #f0f4ff;
     color: #1a237e;
@@ -510,6 +509,13 @@ main .container li:hover{
 }
   
 .date-range i {
-color: #1a237e;
+    color: #1a237e;
+}
+
+.event{
+    border: 1px solid #c3d4ff;
+    background-color: #f0f4ff;
+    display: inline-flex;
+    align-items: center;
 }
   
