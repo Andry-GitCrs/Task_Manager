@@ -10,12 +10,15 @@ def checktask(app, database):
     def check_subtask(subtask_id):
 
         subtask = Subtask.query.filter_by(subtask_id = subtask_id, stat = True).first()
+        message = "Subtask not found"
 
         if subtask:
             if subtask.finished:
                 subtask.uncheck()
+                message = "Subtask unchecked successfully"
             else:
                 subtask.check()
+                message = "Subtask checked successfully"
                 
             db.session.commit()
             
@@ -24,12 +27,13 @@ def checktask(app, database):
                 "subtask_title": subtask.subtask_title,
                 "finished": subtask.finished
             }
+            
 
             return jsonify({
-                "message": "Subtask cheked successfully",
+                "message": message,
                 "data": subtaskData
-            })
+            }), 200
          
         return jsonify({
-            "message": "Subtask not found"
-        }) 
+            "error": message
+        }), 404

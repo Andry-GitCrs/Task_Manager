@@ -280,7 +280,6 @@ const fetchTasks = async () => {
                 const subtasks = task.subtasks
                 const description = task.description
                 const bg_color = task.bg_color
-
                 addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color,  subtasks)
             });
             return responseData.length
@@ -320,13 +319,33 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
             <ul class="p-0" id='subtaskContainer${id}'>
                 ${
                     subtasks.map( subtask => `
-                        <li class=' justify-content-between align-items-center subTask subtask${subtask.subtask_id}' id='${subtask.subtask_id}'>
-                            ${subtask.subtask_title}
+                        <li 
+                            class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
+                            id='${subtask.subtask_id}'
+                            style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
+                        >
+                            <span 
+                                style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
+                            > 
+                                ${subtask.subtask_title}
+                            </span>
                             <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
                                 <i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i>
                                 <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
-                                <input clicked=false class="from-control mx-2 my-0" type="checkbox" name="subtask_status" id="input${subtask.subtask_id}" onchange="check(${subtask.subtask_id})"/>
-                                <i class="fas fa-check-circle text-warning " style='display: none'  id='check_icon${subtask.subtask_id}'></i>
+                                <input
+                                    ${subtask.finished ? "checked" : ""}
+                                    value=${subtask.finished ? "off" : "on"}
+                                    class="from-control mx-2 my-0"
+                                    type="checkbox" name="subtask_status" 
+                                    id="input${subtask.subtask_id}" 
+                                    onchange="check(${subtask.subtask_id})"
+                                />
+                                <i 
+                                    class="fas fa-check-circle text-warning"
+                                    style="display: ${(subtask.finished)?'inline' : 'none'}" 
+                                    id='check_icon${subtask.subtask_id}'
+                                >
+                                </i>
                             </div>
                         </li>
                     `).join('')
@@ -334,6 +353,22 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
             </ul>
         </div>
     `)
+    // $(`.subtask${id}`).css("background-color", '#198754')
+    // $(`.subtask${id}`).css("color", '#f8f9fa')
+    // $(`#check_icon${id}`).css("display", 'inline')
+    // $(`#input${id}`).val("off")
+
+    // console.log("Subtask : " + id)
+    // subtasks.map(sub => {
+    //     if(sub.finished){
+    //         console.log(sub.subtask_id)
+    //         $(`#subtaskSpan${sub.subtask_id}`).css("display", '#f8f9fa')
+    //     }else{
+    //         console.log(sub.subtask_id)
+    //         $(`#subtaskSpan${sub.subtask_id}`).css("color", '#000')
+    //     }
+    // })
+
     $(".task").before(taskContainer)
 }
 
@@ -364,19 +399,57 @@ function showNotification(type, message) {
   }
 
 // Check Subtask
-function check(id){
-    if( $(`#input${id}`).val() == "on" ){
-        showNotification('success', `Checked subtask`)
-        $(`.subtask${id}`).css("background-color", '#198754')
-        $(`.subtask${id}`).css("color", '#f8f9fa')
-        $(`#check_icon${id}`).css("display", 'inline')
-        $(`#input${id}`).val("off")
-    }else{
-        showNotification('success', `Unchecked subtask`)
-        $(`.subtask${id}`).css("background-color", '#f8f9fa')
-        $(`.subtask${id}`).css("color", '#000')
-        $(`#check_icon${id}`).css("display", 'none')
-        $(`#input${id}`).val("on")
+async function check(id){
+    if( $(`#input${id}`).val() == "on" ){ //Check
+
+        try {
+            const response = await fetch(`/api/user/checkSubTask/${id}`, {
+                method: "POST",
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to check subtask');
+            }
+    
+            let responseData = await response.json();
+    
+            if (response.ok) {
+                showNotification("success", responseData.message)
+                $(`.subtask${id}`).css("background-color", '#198754')
+                $(`.subtask${id} span`).css("color", '#f8f9fa')
+                $(`#check_icon${id}`).css("display", 'inline')
+                $(`#input${id}`).val("off")
+            } else {
+                showNotification("error", responseData.error)
+            }
+        } catch (error) {
+            showNotification("error", error.message)
+        }
+    }else{ //Uncheck
+        try {
+            const response = await fetch(`/api/user/checkSubTask/${id}`, {
+                method: "POST",
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to check subtask');
+            }
+    
+            let responseData = await response.json();
+    
+            if (response.ok) {
+                showNotification("success", responseData.message)
+                $(`.subtask${id}`).css("background-color", '#f8f9fa')
+                $(`.subtask${id} span`).css("color", '#000')
+                $(`#check_icon${id}`).css("display", 'none')
+                $(`#input${id}`).val("on")
+
+            } else {
+                showNotification("error", responseData.error)
+            }
+        } catch (error) {
+            showNotification("error", error.message)
+        }
     }
 }
 

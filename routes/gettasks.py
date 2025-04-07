@@ -27,13 +27,15 @@ def get_tasks(app, database):
             task_id = result.task_id
             subtasks = db.session.query(
                 Subtask.subtask_id,
-                Subtask.subtask_title
+                Subtask.subtask_title,
+                Subtask.finished
             ).filter(Subtask.task_id == task_id, Subtask.stat == True).all()
 
             for subtask in subtasks:
                 subtasksArray.append({
                     "subtask_id": subtask.subtask_id,
-                    "subtask_title": subtask.subtask_title
+                    "subtask_title": subtask.subtask_title,
+                    "finished": subtask.finished
                 })
 
             task = {
