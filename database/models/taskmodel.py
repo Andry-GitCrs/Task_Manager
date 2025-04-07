@@ -15,12 +15,19 @@ def taskModel(db, User):
         created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
         updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
         stat = Column(Boolean, default=True)
+        finished = Column(Boolean, default=False)
         user_id = Column(Integer, ForeignKey('users.user_id', ondelete='CASCADE'), nullable=False)
 
         user = relationship("User", back_populates="tasks")
 
         def deactivate(self):
             self.stat = False
+        
+        def check(self):
+            self.finished = True
+        
+        def uncheck(self):
+            self.finished = False
 
     User.tasks = relationship("Task", back_populates="user", cascade="all, delete-orphan")
 

@@ -11,12 +11,19 @@ def subtaskModel(db, Task):
         created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
         updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
         stat = Column(Boolean, default=True)
+        finished = Column(Boolean, default=False)
         task_id = Column(Integer, ForeignKey('tasks.task_id', ondelete='CASCADE'), nullable=False)
 
         task = relationship("Task", back_populates="subtasks")
 
         def deactivate(self):
             self.stat = False
+        
+        def check(self):
+            self.finished = True
+        
+        def uncheck(self):
+            self.finished = False
 
 
     Task.subtasks = relationship("Subask", back_populates="task", cascade="all, delete-orphan")
