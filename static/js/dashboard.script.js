@@ -140,7 +140,7 @@ async function  removeTask(id){
                 showNotification("success", responseData.message)
                 taskcount -= 1
                 $("#taskNbr").text(taskcount)
-                document.getElementById(`${id}`).remove()
+                document.getElementById(`task${id}`).remove()
             } else {
                 showNotification("error", responseData.error)
             }
@@ -169,7 +169,7 @@ async function removeSubTask(id){
     
             if (response.ok) {  //Response with status code 200   
                 showNotification("success", responseData.message)
-                document.getElementById(`${id}`).remove()
+                document.getElementById(`subtask${id}`).remove()
             } else {
                 showNotification("error", responseData.error)
             }
@@ -200,7 +200,35 @@ async function addSubTask(id){
             if (response.ok) {  //Response with status code 200
                 showNotification("success", responseData.message)
                 const subtask = responseData.data
-                let subtaskElement = $(`<li class='text-dark justify-content-between align-items-center subTask' id='${subtask.subtask_id}'></li>`).html(`${subtask.subtask_title} <div class="w-25 d-flex justify-content-center gap-3 bg-transparent"><i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i></div>`)
+                let subtaskElement = $(`
+                    <li 
+                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
+                        id='subtask${subtask.subtask_id}'
+                        style="background-color: '#f8f9fa'"
+                    >
+                    <span 
+                    
+                    > 
+                        ${subtask.subtask_title}
+                    </span>
+                    <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
+                        <i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i>
+                        <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                        <input
+                            class="from-control mx-2 my-0"
+                            type="checkbox" name="subtask_status" 
+                            id="input${subtask.subtask_id}" 
+                            onchange="check(${subtask.subtask_id})"
+                        />
+                        <i 
+                            class="fas fa-check-circle text-warning"
+                            style="display: none" 
+                            id='check_icon${subtask.subtask_id}'
+                        >
+                        </i>
+                    </div>
+                </li>
+                `)
                 $(`#subtaskContainer${task_id}`).append(subtaskElement)
             } else {
                 showNotification("error", responseData.error)
@@ -305,7 +333,7 @@ const formatDate = (date) => {
 
 // Create display card
 function addNewTask(id, title, start_date, end_date, description, bg_color,  subtasks){
-    let taskContainer = $(`<div class="col-4 p-1 taskBox" id="${id}"></div>`)
+    let taskContainer = $(`<div class="col-4 p-1 taskBox" id="task${id}"></div>`)
     taskContainer.html(`    
         <div class=" h-100 p-2 rounded-3" style='background-color: ${bg_color}' onmouseover="showNotification('success', 'Description: ${description}')">
             <h3 class="text-dark task-title">
@@ -321,7 +349,7 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
                     subtasks.map( subtask => `
                         <li 
                             class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
-                            id='${subtask.subtask_id}'
+                            id='subtask${subtask.subtask_id}'
                             style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
                         >
                             <span 
@@ -353,22 +381,6 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
             </ul>
         </div>
     `)
-    // $(`.subtask${id}`).css("background-color", '#198754')
-    // $(`.subtask${id}`).css("color", '#f8f9fa')
-    // $(`#check_icon${id}`).css("display", 'inline')
-    // $(`#input${id}`).val("off")
-
-    // console.log("Subtask : " + id)
-    // subtasks.map(sub => {
-    //     if(sub.finished){
-    //         console.log(sub.subtask_id)
-    //         $(`#subtaskSpan${sub.subtask_id}`).css("display", '#f8f9fa')
-    //     }else{
-    //         console.log(sub.subtask_id)
-    //         $(`#subtaskSpan${sub.subtask_id}`).css("color", '#000')
-    //     }
-    // })
-
     $(".task").before(taskContainer)
 }
 
