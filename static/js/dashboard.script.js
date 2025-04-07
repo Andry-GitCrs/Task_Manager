@@ -307,7 +307,7 @@ const formatDate = (date) => {
 function addNewTask(id, title, start_date, end_date, description, bg_color,  subtasks){
     let taskContainer = $(`<div class="col-4 p-1 taskBox" id="${id}"></div>`)
     taskContainer.html(`    
-        <div class=" h-100 p-2 rounded-3" style='background-color: ${bg_color}'>
+        <div class=" h-100 p-2 rounded-3" style='background-color: ${bg_color}' onmouseover="showNotification('success', 'Description: ${description}')">
             <h3 class="text-dark task-title">
                 ${title}
                 <span class="text-dark date">
