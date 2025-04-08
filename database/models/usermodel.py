@@ -23,4 +23,7 @@ def userModel(db):
         def deactivate(self):
             self.stat = False
 
+        def activate(self):
+            self.stat = True
+
     return User

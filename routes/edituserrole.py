@@ -10,25 +10,29 @@ def edit_user_role(app, database):
     @login_required
     def edit_user_role(user_id):
         admin_id = current_user.user_id
+        admin = current_user.admin
         message = ""
 
         user = User.query.filter_by(user_id = user_id).first()
 
-        if user and admin_id != user_id:
-            if user.admin:
-                user.admin = False
-                message = "an admin"
-
+        if admin:
+            if admin_id != user_id:
+                if user:
+                    if user.admin:
+                        user.admin = False
+                        message = "a simple user"
+                    else:
+                        user.admin = True
+                        message = "an admin"
+                    user.modified_at = datetime.utcnow()
+                    db.session.commit()
+                    return jsonify({f"message": f"User switched as {message}"})
+                else:
+                    return jsonify({"error": "User not found"})
             else:
-                user.admin = True
-                message = "a simple user"
+                return jsonify({"error": "You can not change your own role"}), 404
 
-            user.updated_at = datetime.utcnow()
-            db.session.commit()
-            return jsonify({"message": f"User role updated successfully as {message}"}), 200
-
-        elif user and admin_id == user_id:
-            return jsonify({"error": "You cannot change your own role"}), 400
-                
         else:
-            return jsonify({"error": "User not found"}), 404
+            return jsonify({"error": "You are not an admin member"}), 401
+
+        
