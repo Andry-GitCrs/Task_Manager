@@ -505,7 +505,6 @@ main .container li:hover{
     border-radius: 20px;
     border: 1px solid #c3d4ff;
     white-space: nowrap;
-    margin: auto;
 }
   
 .date-range i {

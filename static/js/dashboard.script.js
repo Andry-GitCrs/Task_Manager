@@ -384,7 +384,7 @@ const formatDate = (date) => {
 function addNewTask(id, title, start_date, end_date, description, bg_color,  subtasks){
     let taskContainer = $(`<div class="col-4 p-1 taskBox" id="task${id}"></div>`)
     taskContainer.html(`    
-        <div class=" h-100 p-2 rounded-3" style='background-color: ${bg_color}' title="${(description !== 'None')?description:'No description'}">
+        <div class=" h-100 p-2 rounded-3 d-flex flex-column justify-content-start" style='background-color: ${bg_color}' title="${(description !== 'None')?description:'No description'}">
             <span class="text-dark date date-range w-auto ">
                 <i class="fa-solid fa-calendar-days text-success"></i>
                 ${start_date}
@@ -586,7 +586,7 @@ $('#findTask').on('focus', function() {
 // Task card generator
 function genTaskCard(bg_color, description, start_date, end_date, title, id, subtasks){
     const card = `   
-        <div class="h-100 p-2 rounded-3" style='background-color: ${bg_color}' title="${(description !== 'None')?description:'No description'}">
+        <div class="h-100 p-2 rounded-3 d-flex flex-column justify-content-start" style='background-color: ${bg_color}' title="${(description !== 'None')?description:'No description'}">
             <span class="text-dark date date-range w-auto ">
                 <i class="fa-solid fa-calendar-days text-success"></i>
                 ${start_date}
