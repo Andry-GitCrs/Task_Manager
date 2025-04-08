@@ -57,6 +57,7 @@ function addTodayTask(id, title, start_date, end_date, description, bg_color, su
     $("#todayTaskContainer").append(taskContainer);
 }
 
+
 $('.menu-btn').on('click', () => {
     if(!menuStat){
         $("aside").css("left", "0")

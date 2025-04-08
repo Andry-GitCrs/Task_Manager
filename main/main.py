@@ -1,6 +1,7 @@
+from functools import wraps
 import sys
-from flask import Flask, redirect, render_template
-from flask_login import login_required, current_user, LoginManager, login_required, logout_user, current_user
+from flask import Flask, abort, redirect, render_template
+from flask_login import login_required, current_user, LoginManager, login_required, login_user, logout_user, current_user
 import os
 
 ## Dir config 
@@ -22,7 +23,8 @@ login_manager.init_app(app)
 
 # Database Connection
 database = pgconnexion.connect(app)
-User = database["tables"]["User"] 
+User = database["tables"]["User"]
+db = database["db"]
 
 # Flask-Login User Loader
 @login_manager.user_loader
@@ -47,6 +49,17 @@ auth.auth(app)
 login.login(app, database) # Login
 register.register(app, database) # Register
 
+## Admin page login route
+@app.route('/auth/admin/login')
+def admin_login_route():
+    try:
+        admin = current_user.admin
+        if admin:
+            return render_template('views/admin_login.html')
+        abort(404)
+    except AttributeError:
+        abort(404)
+
 ## Protected routes
 @app.route('/auth/logout') # Logout
 @login_required
@@ -57,6 +70,8 @@ def logout():
 @app.route('/dashboard') # Dashboard
 @login_required
 def dashboard():
+    test = current_user.admin
+    print(test)
     return render_template('views/dashboard.html', message = current_user.email)
 
 @app.route('/dashboard/calendar') # Calendar
@@ -104,13 +119,8 @@ checksubtask.checktask(app, database)
 getupcomingtasks.get_upcoming_task(app, database)
 
 ## Admin action
-## Login as admin
-@app.route('/auth/admin/login')
-@login_required
-def admin_login_route():
-    return render_template('views/admin_login.html')
-
 loginadmin.login_admin(app, database)
+loginadmin.verify_admin(app, database)
 
 ## Fetch users
 fetchusers.fetch_users(app, database)

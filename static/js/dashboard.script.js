@@ -529,6 +529,32 @@ function checkTask(id){
         $(`#inputTask${id}`).val("on")
     }
 }
+
+// Verify user role
+var verify = async () => {
+    try {
+        const response = await fetch(`/api/verify_user`, {
+            method: "GET",
+        });
+    
+        let responseData = await response.json();
+    
+        if (response.ok) {
+            $('._user_action').append(`
+                <li class="my-0 pb-0">
+                    <i class="text-success fas fa-key"></i>
+                    <a class="text-dark text-decoration-none" href="/auth/admin/login">Login as admin</a>
+                </li>
+            `)
+        }
+    } catch (error) {
+       console.error(error.message)
+    }
+}
+
+verify()
+
+
 // Find task
 async function findTaskk(){
     let title = $('#findTask').val().trim()

@@ -1,6 +1,5 @@
 from flask import jsonify
 from flask_login import login_required, current_user
-from flask_login import current_user
 
 def get_tasks(app, database):
     Task = database["tables"]["Task"]

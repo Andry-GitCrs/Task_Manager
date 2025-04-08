@@ -42,3 +42,23 @@ def login_admin(app, database):
         except Exception as e:
             print("Login error:", str(e))  # for debug
             return jsonify({"error": "Something went wrong", "details": str(e)}), 500
+
+from flask_login import login_required, current_user
+def verify_admin(app, database):
+    User = database["tables"]["User"]
+    db = database["db"]
+    @app.route('/api/verify_user')
+    @login_required
+    def verify_admin():
+        admin = current_user.admin
+
+        if admin:
+            return jsonify({
+                "message": "User have admin privilege",
+                "privilege": admin
+            }), 200
+            
+        return jsonify({
+            "error": f"User is not an admin member",
+            "privilege": admin
+        }), 401
