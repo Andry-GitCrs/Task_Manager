@@ -14,3 +14,34 @@
     "subtask_title": "Push project",
     "task_id": 1
 }
+
+// Fetch user format
+{
+	"data": {
+		"active_users": [
+			{
+				"created_at": "Mon, 07 Apr 2025 08:43:09 GMT",
+				"email": "test@gmail.com",
+				"stat": true,
+				"updated_at": "Mon, 07 Apr 2025 08:43:09 GMT",
+				"user_id": 1
+			},
+			{
+				"created_at": "Mon, 07 Apr 2025 10:14:45 GMT",
+				"email": "test1@gmail.com",
+				"stat": true,
+				"updated_at": "Mon, 07 Apr 2025 10:14:45 GMT",
+				"user_id": 3
+			},
+			{
+				"created_at": "Mon, 07 Apr 2025 11:24:34 GMT",
+				"email": "andrianaivonoe403@gmail.com",
+				"stat": true,
+				"updated_at": "Mon, 07 Apr 2025 11:24:34 GMT",
+				"user_id": 4
+			}
+		],
+		"deleted_users": []
+	},
+	"message": "User fetched successfully"
+}
