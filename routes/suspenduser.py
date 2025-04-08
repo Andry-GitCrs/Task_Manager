@@ -6,7 +6,7 @@ def suspendUser(app, database):
     db = database["db"]
     User = database["tables"]["User"]
 
-    @app.route('/api/admin/suspendUser/<int:user_id>', methods=['POST'])
+    @app.route('/api/admin/suspendUser/<int:user_id>', methods=['PUT'])
     @login_required
     def suspend_user(user_id):
         admin = current_user.admin

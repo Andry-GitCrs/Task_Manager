@@ -6,7 +6,7 @@ def edit_user_role(app, database):
     db = database["db"]
     User = database["tables"]["User"]
 
-    @app.route('/admin/api/editUserRole/<int:user_id>', methods=['POST'])
+    @app.route('/admin/api/editUserRole/<int:user_id>', methods=['PUT'])
     @login_required
     def edit_user_role(user_id):
         admin_id = current_user.user_id
