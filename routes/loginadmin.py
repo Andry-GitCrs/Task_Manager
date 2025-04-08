@@ -19,7 +19,7 @@ def login_admin(app, database):
 
             if user and not user.admin:
                 return jsonify({
-                    "error": f"User with {user.email} is not an admin member"
+                    "error": f"User is not an admin member"
                 }), 401
 
             if not user:

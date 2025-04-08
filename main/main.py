@@ -105,6 +105,11 @@ getupcomingtasks.get_upcoming_task(app, database)
 
 ## Admin action
 ## Login as admin
+@app.route('/auth/admin/login')
+@login_required
+def admin_login_route():
+    return render_template('views/admin_login.html')
+
 loginadmin.login_admin(app, database)
 
 ## Fetch users
