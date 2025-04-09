@@ -51,6 +51,7 @@ register.register(app, database) # Register
 
 ## Admin page login route
 @app.route('/auth/admin/login')
+@login_required
 def admin_login_route():
     try:
         admin = current_user.admin
