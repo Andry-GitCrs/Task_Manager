@@ -81,8 +81,9 @@ def admin_dashboard():
     try:
         admin = current_user.admin
         stat = current_user.stat
+        email = current_user.email
         if admin and stat:
-            return render_template('views/admin_dashboard.html')
+            return render_template('views/admin_dashboard.html', email = email)
         abort(404)
     except AttributeError:
         abort(404)

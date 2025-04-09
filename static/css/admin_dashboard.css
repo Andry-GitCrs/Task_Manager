@@ -1,5 +1,48 @@
+aside{
+    width: 20%;
+    z-index: 9999;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+aside ul a{
+    border: 1px solid transparent;
+}
+
+aside ul a:hover, .admin_profile{
+    transition: .5s all;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-color: #dee2e6;
+}
+
+.admin_profile{
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+.admin_profile_container{
+    height: 50px;
+    border-radius: 25px;
+}
+
+.charts_container{
+    height: 86%;
+}
+
+main{
+    width: 80%;
+    z-index: 1;
+    margin-left: 20%;
+    overflow-y: auto;
+}
+
+
+
 th {
     text-align: center;
     vertical-align: middle;
     background-color: #343a40;
 }
+

@@ -35,9 +35,16 @@ const fetchUserData = async () => {
                         <button class="btn btn-sm" onclick="editUser(${user.user_id})"><i class="fas fa-pen text-success"></i></button>
                         <button class="btn btn-sm" onclick="deleteUser(${user.user_id})"><i class="fas fa-trash text-danger"></i></button>
                     </td>
-                `;
+                `;              
+
                 tableBody.appendChild(row);
+
+           
+
             });
+            makeLineChart(userData)
+            makeCircularChart(userData)
+            makeBarChart(userData)
         }else{
             showNotification("success", data.message)
         }
@@ -107,14 +114,110 @@ function showNotification(type, message) {
     }, 5000);
 }
 
+function makeLineChart(userData) {
+    const lineCtx = document.getElementById('user_activity_lineChart').getContext('2d');
+    const lineLabels = userData.data.active_users.map(user => user.email);
+    const taskData = userData.data.active_users.map(user => user.tasks_count);
+    const finishedSubtaskData = userData.data.active_users.map(user => user.finished_subtasks_count);
+    // Charts
+
+    new Chart(lineCtx, {
+        type: 'line',
+        data: {
+            labels: lineLabels,
+            datasets: [
+                {
+                    label: 'Tasks',
+                    data: taskData,
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13,110,253,0.1)',
+                    tension: 0.3,
+                    fill: true
+                },
+                {
+                    label: 'Finished Subtasks',
+                    data: finishedSubtaskData,
+                    borderColor: '#198754',
+                    backgroundColor: 'rgba(25,135,84,0.1)',
+                    tension: 0.3,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'User Activities Over Time'
+                }
+            }
+        }
+    });
+}
+
+function makeCircularChart(userData){
+    const circularCtx = document.getElementById('user_circularChart').getContext('2d');
+    const finishedTotal = userData.data.finished_subtask_count + userData.data.finished_tasks_count;
+    const totalAll = userData.data.total_subtask_count + userData.data.total_task_count;
+    const completionPercent = ((finishedTotal / totalAll) * 100).toFixed(2);
+
+    new Chart(circularCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Completed', 'Remaining'],
+            datasets: [{
+                label: 'Completion %',
+                data: [finishedTotal, totalAll - finishedTotal],
+                backgroundColor: ['#198754', '#dee2e6'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.raw + ' (' + ((context.raw / totalAll * 100).toFixed(1)) + '%)';
+                        }
+                    }
+                },
+                legend: { display: true, position: 'bottom' },
+                title: { display: true, text: `Total Task/Subtask Completion: ${completionPercent}%` }
+            },
+            cutout: '70%'
+        }
+    });
+}
 
 
+function makeBarChart(userData){
+    const chartCtx = document.getElementById('usersChart').getContext('2d');
+    const labels = userData.data.active_users.map(user => user.email);
+    const data = userData.data.active_users.map(user => user.finished_subtasks_count);
 
-
-
-
-
-
+    new Chart(chartCtx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Finished Subtasks Count',
+                data: data,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Finished Subtasks per User' }
+            },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+}
 
 
 
