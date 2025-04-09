@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, abort
 from flask_login import login_required, current_user
 from flask_login import current_user
 from sqlalchemy import func
@@ -19,14 +19,14 @@ def fetch_users(app, database):
         suspended_users = []
         all_users = []
 
-        if admin:
+        if admin and current_user.stat:
             results = db.session.query(
                 User.user_id,
                 User.email,
                 User.stat,
                 User.created_at,
                 User.updated_at
-            ).filter(User.user_id != user_id, User.admin == False).all()
+            ).filter(User.user_id != user_id).all()
 
             if results:
                 for result in results:
@@ -102,6 +102,4 @@ def fetch_users(app, database):
                     "data": data
                 }), 404
 
-        return jsonify({
-            "message": f"User is not an admin member"
-        }), 401
+        abort(404)

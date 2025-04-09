@@ -3,9 +3,9 @@ from flask_login import login_user
 from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt()
-
 def login(app, database):
     User = database["tables"]["User"]
+    db = database["db"]
 
     @app.route('/auth/login', methods=['POST'])
     def login_route():
@@ -24,6 +24,9 @@ def login(app, database):
                 return jsonify({"error": "Incorrect password"}), 400
 
             if not suspended and user:
+                if user.admin:
+                    user.deactivate()
+                    db.session.commit()
                 login_user(user)
                 return jsonify({
                     "message": f"User {user.email} logged in successfully"

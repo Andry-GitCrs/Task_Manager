@@ -6,8 +6,9 @@ bcrypt = Bcrypt()
 
 def login_admin(app, database):
     User = database["tables"]["User"]
+    db = database["db"]
 
-    @app.route('/admin/auth/login', methods = ['POST'])
+    @app.route('/admin/auth/login', methods = ['POST']) ## Login api
     def login_admin_route():
         try:
             data = request.get_json()
@@ -28,15 +29,17 @@ def login_admin(app, database):
             if not bcrypt.check_password_hash(user.password, password):
                 return jsonify({"error": "Incorrect password"}), 400
 
-            if not suspended and user and user.admin:
+            if suspended and user and user.admin:
+                user.activate()
+                db.session.commit()
                 login_user(user)
                 return jsonify({
                     "message": f"User {user.email} logged in successfully (as admin)"
                 }), 200
 
-            elif suspended:
+            elif not suspended:
                 return jsonify({
-                    "error": f"User {user.email} is suspended"
+                    "error": f"Unauthorized login"
                 }), 401
 
         except Exception as e:

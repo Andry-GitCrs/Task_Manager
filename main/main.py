@@ -63,15 +63,16 @@ def admin_login_route():
 
 ## Admin page logout route
 @app.route('/auth/admin/logout')
+@login_required
 def admin_logout_route():
-    try:
-        admin = current_user.admin
-        if admin:
-            logout_user()
-            return render_template('views/auth.html')
-        abort(404)
-    except AttributeError:
-        abort(404)
+    admin = current_user.admin
+    if admin:
+        user = User.query.filter_by(user_id = current_user.user_id).first()
+        user.activate()
+        db.session.commit()
+        logout_user()
+        render_template('views/main.html')
+    abort(404)
 
 ## Admin page login route
 @app.route('/admin/dashboard')
@@ -80,7 +81,7 @@ def admin_dashboard():
     try:
         admin = current_user.admin
         stat = current_user.stat
-        if stat and admin:
+        if admin and stat:
             return render_template('views/admin_dashboard.html')
         abort(404)
     except AttributeError:
@@ -90,6 +91,10 @@ def admin_dashboard():
 @app.route('/auth/logout') # Logout
 @login_required
 def logout():
+    if current_user.admin:
+        user = User.query.filter_by(user_id = current_user.user_id).first()
+        user.activate()
+        db.session.commit()
     logout_user()
     return redirect('/auth')
 

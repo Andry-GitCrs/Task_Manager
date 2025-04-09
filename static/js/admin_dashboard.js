@@ -22,9 +22,9 @@ const fetchUserData = async () => {
                     <td class='text-center'>${user.finished_tasks_count}</td>
                     <td class='text-center'>${user.user_subtasks_count}</td>
                     <td class='text-center'>${user.finished_subtasks_count}</td>
-                    <td>${formatDate(user.created_at)}</td>
-                    <td>${formatDate(user.updated_at)}</td>
-                    <td><span class="badge bg-${activityColor}">${activityText}</span></td>
+                    <td class='text-center'>${formatDate(user.created_at)}</td>
+                    <td class='text-center'>${formatDate(user.updated_at)}</td>
+                    <td class='text-center'><span class="badge bg-${activityColor}">${activityText}</span></td>
                     <td>
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" ${user.stat ? 'checked' : ''} onchange="toggleStatus(${user.user_id}, this.checked)">
