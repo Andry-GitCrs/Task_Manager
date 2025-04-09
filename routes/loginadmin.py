@@ -7,7 +7,7 @@ bcrypt = Bcrypt()
 def login_admin(app, database):
     User = database["tables"]["User"]
 
-    @app.route('/admin/auth/login', methods=['POST'])
+    @app.route('/admin/auth/login', methods = ['POST'])
     def login_admin_route():
         try:
             data = request.get_json()
@@ -15,7 +15,7 @@ def login_admin(app, database):
             password = data.get('password')
 
             user = User.query.filter_by(email = email).first()
-            suspended = User.query.filter_by(email=email, stat = False).first()
+            suspended = User.query.filter_by(email = email, stat = False).first()
 
             if user and not user.admin:
                 return jsonify({

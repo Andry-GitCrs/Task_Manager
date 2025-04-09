@@ -1,7 +1,7 @@
 from functools import wraps
 import sys
 from flask import Flask, abort, redirect, render_template
-from flask_login import login_required, current_user, LoginManager, login_required, login_user, logout_user, current_user
+from flask_login import login_required, current_user, LoginManager, login_user, logout_user, current_user
 import os
 
 ## Dir config 
@@ -60,6 +60,31 @@ def admin_login_route():
     except AttributeError:
         abort(404)
 
+## Admin page logout route
+@app.route('/auth/admin/logout')
+def admin_logout_route():
+    try:
+        admin = current_user.admin
+        if admin:
+            logout_user()
+            return render_template('views/auth.html')
+        abort(404)
+    except AttributeError:
+        abort(404)
+
+## Admin page login route
+@app.route('/admin/dashboard')
+@login_required
+def admin_dashboard():
+    try:
+        admin = current_user.admin
+        stat = current_user.stat
+        if stat and admin:
+            return render_template('views/admin_dashboard.html')
+        abort(404)
+    except AttributeError:
+        abort(404)
+
 ## Protected routes
 @app.route('/auth/logout') # Logout
 @login_required
@@ -70,8 +95,8 @@ def logout():
 @app.route('/dashboard') # Dashboard
 @login_required
 def dashboard():
-    test = current_user.admin
-    print(test)
+    if current_user.admin:
+        current_user.stat = False
     return render_template('views/dashboard.html', message = current_user.email)
 
 @app.route('/dashboard/calendar') # Calendar

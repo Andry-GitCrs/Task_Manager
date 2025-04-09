@@ -53,7 +53,7 @@ $("#adminLoginForm").on("submit", async function (e) {
             showNotification("success", responseData.message)
             $("#email").val('')
             $("#password").val('')
-            // location.href = '/dashboard'
+            window.location.href = '/admin/dashboard'
         } else {
             showNotification("error", responseData.error)
         }
