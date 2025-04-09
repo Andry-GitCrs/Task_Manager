@@ -17,6 +17,7 @@ def fetch_users(app, database):
         data = []
         active_users = []
         suspended_users = []
+        all_users = []
 
         if admin:
             results = db.session.query(
@@ -60,6 +61,7 @@ def fetch_users(app, database):
                         "user_active_tasks_count": user_active_tasks_count
                     }
 
+                    all_users.append(user)
                     if user["stat"] == False:
                         suspended_users.append(user)
                         continue
@@ -77,6 +79,7 @@ def fetch_users(app, database):
                 total_admin = db.session.query(User).filter_by(admin = True).count()
                 
                 data = {
+                    "all_users": all_users,
                     "active_users": active_users,
                     "suspended_users": suspended_users,
                     "finished_subtask_count": finished_subtasks_count,
@@ -100,5 +103,5 @@ def fetch_users(app, database):
                 }), 404
 
         return jsonify({
-            "error": f"User is not an admin member"
+            "message": f"User is not an admin member"
         }), 401

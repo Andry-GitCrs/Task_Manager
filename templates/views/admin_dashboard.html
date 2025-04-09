@@ -3,11 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+    <script src="{{ url_for('static', filename='js/chart.js') }}" ></script>
     <title>Admin dashboard</title>
 </head>
 <body>
-    <h1>Hello admin</h1>
+    <div class="container-fluid py-5">
+        <div class="my-4">
+            <h2 class="mb-0 text-center"><i class="fas fa-users text-secondary"></i> Active Users</h2>
+            <p class="text-muted text-center">List of users currently active in the system</p>
+        </div>
+    
+        <table class="table table-bordered table-striped">
+            <thead class="-dark">
+            <tr>
+                <th><i class="fas fa-id-badge text-danger"></i> ID</th>
+                <th><i class="fas fa-envelope text-secondary"></i> Email</th>
+                <th><i class="fas fa-tasks text-success"></i> Tasks</th>
+                <th><i class="fas fa-check-circle text-success"></i> Finished Tasks</th>
+                <th><i class="fas fa-stream"></i> Subtasks</th>
+                <th><i class="fas fa-check-double text-success"></i> Finished Subtasks</th>
+                <th><i class="fas fa-calendar-plus text-warning"></i> Created At</th>
+                <th><i class="fas fa-calendar-check text-success"></i> Updated At</th>
+                <th><i class="fas fa-bolt text-warning"></i> Activity</th>
+                <th><i class="fas fa-toggle-on text-success"></i> Status</th>
+                <th><i class="fas fa-gear text-secondary"></i> Actions</th>
+            </tr>
+            </thead>
+            <tbody id="userTableBody">
+            <!-- Filled by JS -->
+            </tbody>
+        </table>
+        <a href="/auth/admin/logout" class="btn btn-danger">Logout</a>  
+    </div>
+    <!-- nofitication displayer -->
+    <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
+        <i id="notification-icon" class=""></i>
+        <span id="notification-message"></span>
+    </div>
     <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}" ></script>
 </body>
 </html>

@@ -30,4 +30,3 @@ def register(app, database):
         
         else :
             return jsonify({"error": "Passwords do not match"}), 400
-
