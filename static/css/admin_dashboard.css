@@ -38,11 +38,18 @@ main{
     overflow-y: auto;
 }
 
-
-
 th {
     text-align: center;
     vertical-align: middle;
     background-color: #343a40;
 }
 
+tr td{
+    text-align: center;
+    vertical-align: middle;
+}
+
+thead tr th{
+    text-align: center;
+    vertical-align: middle;
+}

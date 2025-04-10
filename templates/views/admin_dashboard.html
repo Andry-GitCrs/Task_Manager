@@ -25,7 +25,7 @@
             <ul class="nav flex-column gap-3">
                 <a  href="/admin/dashboard" class="ms-2 p-2 text-decoration-none text-dark rounded-3 border shadow"><i class="fas fa-dashboard mx-2 text-primary"></i>Dashboard</a>
                 <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-chart-line mx-2 text-secondary"></i>Users Analytics</a>
-                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-hand mx-2 text-warning shadow"></i>Manage Users</a>
+                <a  href="/admin/manage_users" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-hand mx-2 text-warning shadow"></i>Manage Users</a>
                 <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-th-large mx-2 text-success"></i>Users Tasks</a>
                 <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-list mx-2 text-danger"></i>Subtasks</a>
             </ul>
@@ -39,13 +39,13 @@
             </ul>
         </div>
         <div class="pt-4 text-center">
-            <a href="/auth/logout" class="btn bg-danger text-light "><i class="fas fa-power-off mx-2"></i>Logout</a>
+            <a href="/auth/logout" class="text-decoration-none text-dark"><i class="btn bg-danger fas fa-power-off mx-2 text-light"></i>Logout</a>
         </div>
 
     </aside>
     <main class="h-100 position-fixed ps-2 pt-1 p-3">
         <nav class="nav w-100 bg-light shadow p-2 rounded-3 justify-content-between mb-3">
-            <h1 class="text-secondary"><i class="fas fa-dashboard mx-2 text-primary"></i>Dashboard</h1>
+            <h1 class="text-secondary"><i class="fas fa-dashboard mx-2 text-primary"></i>{{ title }}</h1>
             <div class="w-auto d-flex align-items-center justify-content-between border gap-2 mx-2 admin_profile_container">
                 
                 <span class="mx-3 text-secondary">
@@ -83,33 +83,6 @@
         </div>
 
     </main>
-    <div class="container-fluid py-5 d-none">
-        <div class="my-4">
-            <h2 class="mb-0 text-center"><i class="fas fa-users text-secondary"></i> All Users</h2>
-            <p class="text-muted text-center">List of all users in the system</p>
-        </div>
-    
-        <table class="table table-bordered table-striped">
-            <thead class="-dark">
-            <tr>
-                <th><i class="fas fa-id-badge text-danger"></i> ID</th>
-                <th><i class="fas fa-envelope text-secondary"></i> Email</th>
-                <th><i class="fas fa-tasks text-success"></i> Tasks</th>
-                <th><i class="fas fa-check-circle text-success"></i> Finished Tasks</th>
-                <th><i class="fas fa-stream"></i> Subtasks</th>
-                <th><i class="fas fa-check-double text-success"></i> Finished Subtasks</th>
-                <th><i class="fas fa-calendar-plus text-warning"></i> Created At</th>
-                <th><i class="fas fa-calendar-check text-success"></i> Updated At</th>
-                <th><i class="fas fa-bolt text-warning"></i> Activity</th>
-                <th><i class="fas fa-toggle-on text-success"></i> Status</th>
-                <th><i class="fas fa-gear text-secondary"></i> Actions</th>
-            </tr>
-            </thead>
-            <tbody id="userTableBody">
-            <!-- Filled by JS -->
-            </tbody>
-        </table>  
-    </div>
     <!-- nofitication displayer -->
     <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
         <i id="notification-icon" class=""></i>

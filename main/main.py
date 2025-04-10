@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, edituserrole, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, suspenduser
+from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, suspenduser
 from database import pgconnexion
 
 ## App config
@@ -83,10 +83,19 @@ def admin_dashboard():
         stat = current_user.stat
         email = current_user.email
         if admin and stat:
-            return render_template('views/admin_dashboard.html', email = email)
+            return render_template('views/admin_dashboard.html', email = email, title = "Dashboard")
         abort(404)
     except AttributeError:
         abort(404)
+
+@app.route('/admin/manage_users')
+@login_required
+def manage_users():
+    admin = current_user.admin
+    email = current_user.email
+    if admin and current_user.stat:
+        return render_template('views/admin/admin_manage_users.html', email = email, title = "Manage users")
+    abort(404)
 
 ## Protected routes
 @app.route('/auth/logout') # Logout
@@ -159,6 +168,9 @@ fetchusers.fetch_users(app, database)
 
 ## Suspend user
 suspenduser.suspendUser(app, database)
+
+## Delete user
+deleteuser.delete_user(app, database)
 
 ## Edit user role
 edituserrole.edit_user_role(app, database)

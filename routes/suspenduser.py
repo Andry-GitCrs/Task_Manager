@@ -29,9 +29,9 @@ def suspendUser(app, database):
                 user.updated_at = datetime.utcnow()
                 user.activate()
                 db.session.commit()
-                return jsonify({"message": f"User unsuspended successfully"}), 400
+                return jsonify({"message": f"User unsuspended successfully"}), 200
             
             else:
-                return jsonify({"message": "User not found"}), 404
+                return jsonify({"error": "You don't have permission to suspend this user"}), 404
         else:
-            return jsonify({"message": "You are not an admin member"}), 401
+            return jsonify({"error": "You are not an admin member"}), 401

@@ -26,7 +26,7 @@ def fetch_users(app, database):
                 User.stat,
                 User.created_at,
                 User.updated_at
-            ).filter(User.user_id != user_id).all()
+            ).all()
 
             if results:
                 for result in results:
