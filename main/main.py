@@ -97,7 +97,26 @@ def manage_users():
         return render_template('views/admin/admin_manage_users.html', email = email, title = "Manage users")
     abort(404)
 
+
+@app.route('/admin/manage_tasks')
+@login_required
+def manage_tasks():
+    admin = current_user.admin
+    email = current_user.email
+    if admin and current_user.stat:
+        return render_template('views/admin/admin_manage_task.html', email = email, title = "Manage tasks")
+    abort(404)
+
 ## Protected routes
+@app.route('/admin/manage_subtasks')
+@login_required
+def manage_subtasks():
+    admin = current_user.admin
+    email = current_user.email
+    if admin and current_user.stat:
+        return render_template('views/admin/admin_manage_subtask.html', email = email, title = "Manage subtasks")
+    abort(404)
+
 @app.route('/auth/logout') # Logout
 @login_required
 def logout():

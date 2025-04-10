@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
     <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
-    <script src="{{ url_for('static', filename='js/chart.js') }}" ></script>
+    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
     <title>Admin manage users</title>
 </head>
 <body>
@@ -26,8 +26,8 @@
                 <a  href="/admin/dashboard" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-dashboard mx-2 text-primary"></i>Dashboard</a>
                 <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-chart-line mx-2 text-secondary"></i>Users Analytics</a>
                 <a  href="/admin/manage_users" class="ms-2 p-2 text-decoration-none text-dark rounded-3 border shadow"><i class="fas fa-hand mx-2 text-warning shadow"></i>Manage Users</a>
-                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-th-large mx-2 text-success"></i>Users Tasks</a>
-                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-list mx-2 text-danger"></i>Subtasks</a>
+                <a  href="/admin/manage_tasks" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-th-large mx-2 text-success"></i>Users Tasks</a>
+                <a  href="/admin/manage_tasks" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-list mx-2 text-danger"></i>Subtasks</a>
             </ul>
         </div>
 
