@@ -11,39 +11,46 @@
     <title>Admin manage users</title>
 </head>
 <body>
-    <aside class="position-fixed bg-light shadow h-100 p-3">
+    <aside class="position-fixed bg-light shadow h-100 p-3 sidebar" id="sidebar">
         <h4 class="text-center">
-            <i class="fas fa-user-shield me-2 text-success"></i>Task manager <br> Admin space
+            <i class="fas fa-user-shield me-2 text-success"></i>Task manager <br> 
         </h4>
-        
+        <div class="my-2">
+            <div class="d-flex justify-content-center align-items-center gap-2">
+                <span class="col-6 text-center text-dark fs-5">Admin space</span>
+                <button class="toggle-btn" onclick="toggleSidebar()">
+                    <i class="fas fa-angle-left"></i>
+                </button>
+            </div>
+        </div>
         <form action="">
             <input class="form-control " type="search" name="search_user" id="search_user" placeholder="Find user">
         </form>
 
         <div class="pt-4">
             <h6>Managing & Analytics</h6>
-            <ul class="nav flex-column gap-3">
-                <a  href="/admin/dashboard" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-dashboard mx-2 text-primary"></i>Dashboard</a>
-                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-chart-line mx-2 text-secondary"></i>Users Analytics</a>
-                <a  href="/admin/manage_users" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-hand mx-2 text-warning shadow"></i>Manage Users</a>
-                <a  href="/admin/manage_tasks" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-th-large mx-2 text-success"></i>Users Tasks</a>
-                <a  href="/admin/manage_subtasks" class="ms-2 p-2 text-decoration-none text-dark rounded-3 border shadow"><i class="fas fa-list mx-2 text-danger"></i>Subtasks</a>
+            <ul class="nav flex-column gap-2">
+                <a  href="/admin/dashboard" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-dashboard mx-2 text-primary"></i><span>Dashboard</span></a>
+                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-chart-line mx-2 text-secondary"></i><span>Users Analytics</span></a>
+                <a  href="/admin/manage_users" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-hand mx-2 text-warning shadow"></i><span>Manage Users</span></a>
+                <a  href="/admin/manage_tasks" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-th-large mx-2 text-success"></i><span>Users Tasks</span></a>
+                <a  href="/admin/manage_tasks" class="ms-2 p-2 text-decoration-none text-dark rounded-3 border shadow"><i class="fas fa-list mx-2 text-danger"></i><span>Subtasks</span></a>
             </ul>
         </div>
 
         <div class="pt-4">
             <h6>Admins</h6>
-            <ul  class="nav flex-column gap-3">
-                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-users mx-2 text-secondary"></i>Manage admins</a>
-                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-home mx-2 text-secondary"></i>Admins room</a>
+            <ul  class="nav flex-column gap-1">
+                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-users mx-2 text-secondary"></i><span>Manage admins</span></a>
+                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-home mx-2 text-secondary"></i><span>Admins room</span></a>
             </ul>
         </div>
         <div class="pt-4 text-center">
-            <a href="/auth/logout" class="text-decoration-none text-dark"><i class="btn bg-danger fas fa-power-off mx-2 text-light"></i>Logout</a>
+            <a href="/auth/logout" class="text-decoration-none text-dark"><i class="btn bg-danger fas fa-power-off mx-2 text-light"></i><span>Logout</span></a>
         </div>
 
     </aside>
-    <main class="h-100 position-fixed ps-2 pt-1 p-3">
+    <main class="h-100 position-fixed ps-2 pt-1 p-3 main" id="main">
         <nav class="nav w-100 bg-light shadow p-2 rounded-3 justify-content-between mb-3">
             <h1 class="text-secondary"><i class="fas fa-list mx-2 text-danger"></i>{{ title }}</h1>
             <div class="w-auto d-flex align-items-center justify-content-between border gap-2 mx-2 admin_profile_container">

@@ -28,6 +28,7 @@ def fetch_task(app, database):
 
             for result in results:
                 subtask_nbr = db.session.query(Subtask.subtask_id).filter_by(task_id = result.task_id).count()
+                finished_subtask_nbr = db.session.query(Subtask.subtask_id).filter_by(task_id = result.task_id, finished = True).count()
                 owner = db.session.query(User.email).filter_by(user_id = result.user_id).first()
                 data.append({
                     "task_id": result.task_id,
@@ -37,7 +38,8 @@ def fetch_task(app, database):
                     "updated_at": result.updated_at,
                     "finished": result.finished,
                     "subtask_nbr": subtask_nbr,
-                    "owner": owner.email
+                    "owner": owner.email,
+                    "finished_subtask_nbr": finished_subtask_nbr
                 })
 
             if results:

@@ -1,8 +1,9 @@
 aside{
     width: 20%;
-    z-index: 9999;
+    z-index: 10000;
     overflow-y: auto;
     overflow-x: auto;
+    transition: .5s ease-in-out;
 }
 
 aside ul a{
@@ -10,7 +11,7 @@ aside ul a{
 }
 
 aside ul a:hover, .admin_profile{
-    transition: .5s all;
+    transition: .5s ease-in-out;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     border-color: #dee2e6;
 }
@@ -34,8 +35,9 @@ aside ul a:hover, .admin_profile{
 main{
     width: 80%;
     z-index: 1;
-    margin-left: 20%;
     overflow-y: auto;
+    transition: .5s ease-in-out;
+    margin-left: 20%;
 }
 
 th {
@@ -53,3 +55,60 @@ thead tr th{
     text-align: center;
     vertical-align: middle;
 }
+
+
+
+/* Toggler */
+.sidebar.hidden {
+    width: 80px;
+    padding: auto 0;
+    display: flex;
+    gap: 3rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+    overflow-x: hidden;
+}
+
+.sidebar.hidden form, .sidebar.hidden span, .sidebar.hidden h4, .sidebar.hidden h6{
+    display: none!important;
+}
+
+.sidebar.hidden a{
+    margin: .5rem 0!important;
+    padding: 0!important;
+    text-align: center;
+}
+
+.sidebar.hidden a i{
+    font-size: 1rem;
+    box-shadow: none;
+}
+
+.sidebar.hidden .toggle-btn{
+    transform: rotate(-180deg);
+}
+
+/* Main content */
+.main {
+    margin-left: 20%;
+    padding: 1rem;
+    transition: margin-left 0.3s ease;
+}
+
+.main.full {
+    width: calc(100% - 80px);
+    margin-left: 80px;
+}
+
+/* Toggle button */
+.toggle-btn {
+    z-index: 1000;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #28a745;
+    cursor: pointer;
+  }

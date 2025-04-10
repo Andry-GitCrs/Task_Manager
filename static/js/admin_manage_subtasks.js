@@ -25,3 +25,11 @@ function showNotification(type, message) {
 }
 
 showNotification("success", "Subtask manager")
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const main = document.getElementById('main');
+  sidebar.classList.toggle('hidden');
+  main.classList.toggle('full');
+  $(".toggle-btn").css("margin-left", "20%")
+}

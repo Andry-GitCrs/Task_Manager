@@ -141,3 +141,11 @@ function editUser(user) {
     // Close modal after saving
     bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
   });
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('main');
+    sidebar.classList.toggle('hidden');
+    main.classList.toggle('full');
+    $(".toggle-btn").css("margin-left", "20%")
+}

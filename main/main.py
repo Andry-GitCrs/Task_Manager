@@ -196,3 +196,5 @@ deleteuser.delete_user(app, database)
 
 ## Edit user role
 edituserrole.edit_user_role(app, database)
+
+app.run(debug=True)
