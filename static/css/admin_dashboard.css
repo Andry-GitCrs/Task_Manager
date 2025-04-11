@@ -117,3 +117,51 @@ thead tr th{
     min-width: 300px;
     padding: 15px;
 }
+
+.card {
+    border: none;
+    border-radius: 12px;
+}
+
+.total_users{
+    background-color: #00ff3ca1!important;
+}
+
+.users_tasks{
+    background-color: #ff9900a8!important;
+}
+
+.users_subtasks{
+    background-color: #555a57a6!important;
+}
+
+.finished_subtasks{
+    background-color: #1c915a81!important;
+}
+
+hr{
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 10px;
+}
+
+.card p{
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.card i {
+    font-size: 2rem;
+    color: #1c915a94;
+}
+
+#percentage{
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 45px;
+    top: calc(50%);
+    left: calc(50% - 25px);
+}

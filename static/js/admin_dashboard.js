@@ -6,6 +6,12 @@ const fetchUserData = async () => {
         if(response.ok){
             userData = data
             showNotification("success", "Data Fetched successffully")
+            document.getElementById('total_users').textContent = userData.data.total_users
+            document.getElementById('users_tasks').textContent = userData.data.total_task_count
+            document.getElementById('users_subtasks').textContent = userData.data.total_subtask_count
+            document.getElementById('finished_subtasks').textContent = userData.data.finished_subtask_count
+            const progress_bar_subtask = (userData.data.total_subtask_count * userData.data.finished_subtask_count ) / 100
+            document.getElementById("users_subtasks_percent").style.width = progress_bar_subtask + '%'
             makeLineChart(userData)
             makeCircularChart(userData)
             makeBarChart(userData)
@@ -49,7 +55,7 @@ function showNotification(type, message) {
 
 function makeLineChart(userData) {
     const lineCtx = document.getElementById('user_activity_lineChart').getContext('2d');
-    const lineLabels = userData.data.active_users.map(user => user.email);
+    const lineLabels = userData.data.active_users.map(user => user.user_id);
     const taskData = userData.data.active_users.map(user => user.tasks_count);
     const finishedSubtaskData = userData.data.active_users.map(user => user.finished_subtasks_count);
     // Charts
@@ -94,6 +100,7 @@ function makeCircularChart(userData){
     const finishedTotal = userData.data.finished_subtask_count + userData.data.finished_tasks_count;
     const totalAll = userData.data.total_subtask_count + userData.data.total_task_count;
     const completionPercent = ((finishedTotal / totalAll) * 100).toFixed(2);
+    document.getElementById('percentage_nbr').textContent = completionPercent
 
     new Chart(circularCtx, {
         type: 'doughnut',
@@ -102,7 +109,7 @@ function makeCircularChart(userData){
             datasets: [{
                 label: 'Completion %',
                 data: [finishedTotal, totalAll - finishedTotal],
-                backgroundColor: ['#198754', '#dee2e6'],
+                backgroundColor: ['#eaec45', '#1c915a94' ],
                 borderWidth: 1
             }]
         },
@@ -126,11 +133,11 @@ function makeCircularChart(userData){
 
 function makeBarChart(userData){
     const chartCtx = document.getElementById('usersChart').getContext('2d');
-    const labels = userData.data.active_users.map(user => user.email);
+    const labels = userData.data.active_users.map(user => user.user_id);
     const data = userData.data.active_users.map(user => user.finished_subtasks_count);
 
     new Chart(chartCtx, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: labels,
             datasets: [{

@@ -203,4 +203,4 @@ edituserrole.edit_user_role(app, database)
 ## Update user
 updateprofile.update_profile(app, database)
 
-app.run(debug=True)
+app.run(debug = False)

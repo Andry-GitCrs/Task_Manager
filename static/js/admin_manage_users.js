@@ -12,6 +12,8 @@ const fetchUserData = async () => {
                 const percent = total > 0 ? Math.round((finished / total) * 100) : 0;
                 const activityColor = percent >= 20 ? 'success' : percent >= 50 ? 'warning' : 'danger';
                 const activityText = `${percent}%`;
+                document.getElementById('simple_users_nbr').textContent = userData.data.total_users
+                document.getElementById('admin_nbr').textContent = userData.data.total_admin
 
                 const row = document.createElement('tr');
                 row.id = `row${user.user_id}`
