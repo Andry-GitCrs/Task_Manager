@@ -147,5 +147,4 @@ function editUser(user) {
     const main = document.getElementById('main');
     sidebar.classList.toggle('hidden');
     main.classList.toggle('full');
-    $(".toggle-btn").css("margin-left", "20%")
 }
