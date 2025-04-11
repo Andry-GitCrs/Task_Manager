@@ -14,7 +14,7 @@ def register(app, database):
         confirmation_password = data['confirmation_password']
 
         newUser = User.query.filter_by(email = email).first()
-        suspended = User.query.filter_by(email=email, stat = False).first()
+        suspended = User.query.filter_by(email = email, stat = False).first()
         
         if newUser:
             return jsonify({"error": "Email already taken"}), 400 # User already registered

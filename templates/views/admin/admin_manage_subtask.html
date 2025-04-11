@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
     <script src="{{ url_for('static', filename='js/chart.js') }}" ></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
     <title>Admin manage users</title>
 </head>
 <body>
@@ -35,7 +34,7 @@
                 <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-chart-line mx-2 text-secondary"></i><span>Users Analytics</span></a>
                 <a  href="/admin/manage_users" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-hand mx-2 text-warning shadow"></i><span>Manage Users</span></a>
                 <a  href="/admin/manage_tasks" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-th-large mx-2 text-success"></i><span>Users Tasks</span></a>
-                <a  href="/admin/manage_tasks" class="ms-2 p-2 text-decoration-none text-dark rounded-3 border shadow"><i class="fas fa-list mx-2 text-danger"></i><span>Subtasks</span></a>
+                <a  href="/admin/manage_subtasks" class="ms-2 p-2 text-decoration-none text-dark rounded-3 border shadow"><i class="fas fa-list mx-2 text-danger"></i><span>Subtasks</span></a>
             </ul>
         </div>
 
@@ -59,8 +58,38 @@
                 <span class="mx-3 text-secondary">
                     {{ email }}
                 </span>
-                <div class="border admin_profile d-flex justify-content-center align-items-center">
-                    <i class="fas fa-user text-secondary fs-4"></i>
+                <div class="dropdown">
+                    <div class="border admin_profile d-flex justify-content-center align-items-center dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user text-secondary fs-4"></i>
+                    </div>
+                    <!-- Dropdown Form -->
+                    <div class="dropdown-menu p-3 dropdown-form">
+                      <form id="updateForm">
+                        <div class="mb-3">
+                          <label for="email" class="form-label">User Email</label>
+                          <input type="email" value="{{ email }}" class="form-control" id="email" placeholder="example@mail.com" >
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="oldconfirmPassword" class="form-label">Confirm old Password</label>
+                            <input type="password" class="form-control" id="oldconfirmPassword" required>
+                        </div>
+                
+                        <div class="mb-3">
+                          <label for="newPassword" class="form-label">New Password</label>
+                          <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                
+                        <div class="mb-3">
+                          <label for="confirmPassword" class="form-label">Confirm Password</label>
+                          <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+                
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success w-50">Validate</button>
+                        </div>
+                      </form>
+                    </div>
                 </div>
             </div>
         </nav> 
@@ -71,6 +100,7 @@
         <i id="notification-icon" class=""></i>
         <span id="notification-message"></span>
     </div>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/admin_manage_subtasks.js') }}" ></script>
 </body>
 </html>

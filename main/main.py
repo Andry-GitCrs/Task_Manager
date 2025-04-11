@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, suspenduser, deteteTaskPermanentely
+from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, suspenduser, deteteTaskPermanentely, updateprofile
 from database import pgconnexion
 
 ## App config
@@ -132,22 +132,22 @@ def logout():
 def dashboard():
     if current_user.admin:
         current_user.stat = False
-    return render_template('views/dashboard.html', message = current_user.email)
+    return render_template('views/dashboard.html', message = current_user.email,  email = current_user.email)
 
 @app.route('/dashboard/calendar') # Calendar
 @login_required
 def calendar():
-    return render_template('views/calendar.html')
+    return render_template('views/calendar.html', email = current_user.email)
 
 @app.route('/dashboard/today') # Today tasks
 @login_required
 def today():
-    return render_template('views/today.html')
+    return render_template('views/today.html', email = current_user.email)
 
 @app.route('/dashboard/upcoming') # Upcoming tasks
 @login_required
 def upcoming():
-    return render_template('views/upcoming.html')
+    return render_template('views/upcoming.html', email = current_user.email)
 
 ## API
 
@@ -199,5 +199,8 @@ deteteTaskPermanentely.deleteTaskPermanentely(app, database)
 
 ## Edit user role
 edituserrole.edit_user_role(app, database)
+
+## Update user
+updateprofile.update_profile(app, database)
 
 app.run(debug=True)

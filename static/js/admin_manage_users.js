@@ -22,8 +22,8 @@ const fetchUserData = async () => {
                     <td>${user.finished_tasks_count}</td>
                     <td>${user.user_subtasks_count}</td>
                     <td>${user.finished_subtasks_count}</td>
-                    <td>${formatDate(user.created_at)}</td>
-                    <td>${formatDate(user.updated_at)}</td>
+                    <td class='date'>${formatDate(user.created_at)}</td>
+                    <td class='date'>${formatDate(user.updated_at)}</td>
                     <td><span class="badge bg-${activityColor}">${activityText}</span></td>
                     <td>
                         <div class="form-check form-switch d-flex justify-content-center">
@@ -56,7 +56,6 @@ const fetchUserData = async () => {
                     </td>
                 `;
                             
-
                 tableBody.appendChild(row);
 
             });
@@ -69,7 +68,6 @@ const fetchUserData = async () => {
 }
 
 fetchUserData()
-
 function formatDate(dateStr) {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-GB'); // dd/mm/yyyy format
@@ -162,7 +160,7 @@ async function toggleAdmin(user_id) {
         if(response.ok){
             showNotification("success", data.message)
         }else{
-            showNotification("error", data.message)
+            showNotification("error", data.error)
         }
     } catch (error) {
         showNotification("error", error)

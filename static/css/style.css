@@ -57,7 +57,7 @@ header::before{
     height: 100%;
     background-color: #2c7286be;
     mix-blend-mode: multiply;
-    backdrop-filter: saturate(180%) blur(5px);
+    backdrop-filter: saturate(180%);
     z-index: 0;
 }
 
@@ -517,4 +517,8 @@ main .container li:hover{
     display: inline-flex;
     align-items: center;
 }
-  
+
+.dropdown-form {
+    min-width: 300px;
+    padding: 15px;
+}

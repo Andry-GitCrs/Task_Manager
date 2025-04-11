@@ -94,8 +94,40 @@
                     <a class="text-dark text-decoration-none" href="mailto:andrianaivonoe403@gmail.com">Bug report</a>
                 </li>
                 <li class="my-2 py-1">
-                    <i class="text-dark fas fa-cog"></i>
-                    <a class="text-dark text-decoration-none" href="#">User account</a>
+                    <div class="dropdown">
+                        <div class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="text-dark fas fa-cog"></i>
+                            User account
+                        </div>
+                        <!-- Dropdown Form -->
+                        <div class="dropdown-menu p-3 dropdown-form">
+                          <form class="updateForm">
+                            <div class="mb-3">
+                              <label for="email" class="form-label">User Email</label>
+                              <input name="email" type="email" value="{{ email }}" class="form-control" id="email" placeholder="example@mail.com" >
+                            </div>
+    
+                            <div class="mb-3">
+                                <label for="oldconfirmPassword" class="form-label">Confirm old Password</label>
+                                <input name="oldconfirmPassword" type="password" class="form-control" id="oldconfirmPassword" required>
+                            </div>
+                    
+                            <div class="mb-3">
+                              <label for="newPassword" class="form-label">New Password</label>
+                              <input name="newPassword" type="password" class="form-control" id="newPassword" required>
+                            </div>
+                    
+                            <div class="mb-3">
+                              <label for="confirmPassword" class="form-label">Confirm Password</label>
+                              <input name="confirmPassword" type="password" class="form-control" id="confirmPassword" required>
+                            </div>
+                    
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success w-50">Validate</button>
+                            </div>
+                          </form>
+                        </div>
+                    </div>
                 </li>
                 <li class="my-2 py-1">
                     <i class="text-secondary fas fa-power-off"></i>
@@ -198,6 +230,7 @@
           <p>Start managing your tasks efficiently! <br><span class="fw-bold fs-6">Click outside the pop-up window to close it</span>.</p>
         </div>
     </div>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dashboard.script.js') }}"></script>
 </body>
 </html>

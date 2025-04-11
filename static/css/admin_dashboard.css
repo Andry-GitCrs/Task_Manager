@@ -17,7 +17,7 @@ aside ul a:hover, .admin_profile{
 }
 
 .admin_profile{
-    width: 50px;
+    width: 100px;
     height: 50px;
     border-radius: 25px;
     cursor: pointer;
@@ -112,3 +112,8 @@ thead tr th{
     color: #28a745;
     cursor: pointer;
   }
+
+.dropdown-form {
+    min-width: 300px;
+    padding: 15px;
+}
