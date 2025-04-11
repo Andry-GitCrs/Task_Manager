@@ -15,27 +15,45 @@ const fetchTasks = async () => {
               const row = document.createElement('tr');
               row.id = `row${task.task_id}`
               row.innerHTML = `
-                  <td class='fw-bold'>${task.task_id}</td>
-                  <td class='text-start'>${task.task_title}</td>
-                  <td class='text-start'>${task.owner}</td>
-                  <td class=''>${formatDate(task.created_at)}</td>
-                  <td class=''>${formatDate(task.updated_at)}</td>
-                  <td class="${percent == 100 ? 'text-success':'text-danger'}">${percent == 100 ? "Yes" : "No"}</td>
-                  <td class=''>${task.subtask_nbr}</td>
-                  <td class=''>${task.finished_subtask_nbr}</td>
-                  <td class=''><span class="badge bg-${activityColor}">${activityText}</span></td>
-                  <td class=''>
-                      <div class="form-check form-switch d-flex justify-content-center">
-                          <input class="form-check-input" type="checkbox" ${task.stat ? 'checked' : ''} onchange="">
-                      </div>
-                  </td>
-                  <td class=''>
-                      <button class="btn" onclick="editTask(${task.task_id})"><i class="fas fa-pen text-success"></i></button>
-                      <button class="btn" onclick="deleteTask(${task.task_id})"><i class="fas fa-trash text-danger"></i></button>
-                  </td>
-              `;              
-
-              tableBody.appendChild(row);
+                <td class='fw-bold'>${task.task_id}</td>
+                <td class='text-start'>${task.task_title}</td>
+                <td class='text-start'>${task.owner}</td>
+                <td class=''>${formatDate(task.created_at)}</td>
+                <td class=''>${formatDate(task.updated_at)}</td>
+                <td class="${percent == 100 ? 'text-success' : 'text-danger'}">${percent == 100 ? "Yes" : "No"}</td>
+                <td class=''>${task.subtask_nbr}</td>
+                <td class=''>${task.finished_subtask_nbr}</td>
+                <td class=''><span class="badge bg-${activityColor}">${activityText}</span></td>
+                <td class=''>
+                  <div class="form-check form-switch d-flex justify-content-center">
+                    <input class="form-check-input" type="checkbox" ${task.stat ? 'checked' : ''} onchange="">
+                  </div>
+                </td>
+                <td class='d-flex gap-2'>
+                  <div class="dropdown">
+                    <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-pen text-success"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" href="#" onclick="editTask(${task.task_id})">
+                          <i class="fas fa-edit me-2"></i>Edit Task
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="#" onclick="assignSubtasks(${task.task_id})">
+                          <i class="fas fa-tasks me-2"></i>Assign Subtasks
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <button class="btn btn-sm" onclick="deleteTask(${task.task_id})">
+                    <i class="fas fa-trash text-danger"></i>
+                  </button>
+                </td>
+              `;
+            
+            tableBody.appendChild(row);
 
           });
       }else{
@@ -88,4 +106,31 @@ function toggleSidebar() {
   const main = document.getElementById('main');
   sidebar.classList.toggle('hidden');
   main.classList.toggle('full');
+}
+
+function editTask(taskId) {
+  showNotification("success", `Editing task ${taskId}`)	
+}
+
+function assignSubtasks(taskId) {
+  showNotification("success", `assignSubtasks on task ${taskId}`)	
+}
+
+async function deleteTask(task_id) {
+  if (confirm(`Are you sure you want this task ${task_id}?`)) {
+      try{
+          const response = await fetch(`/api/user/deleteTaskPermanentely/${task_id}`,{
+              method: "DELETE",
+          });
+          const data = await response.json();
+          if(response.ok){
+              showNotification("success", data.message)
+              document.getElementById(`row${task_id}`).remove()
+          }else{
+              showNotification("error", data.message)
+          }
+      } catch (error) {
+          showNotification("error", error)
+      }
+  }
 }

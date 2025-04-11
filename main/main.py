@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, suspenduser
+from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, suspenduser, deteteTaskPermanentely
 from database import pgconnexion
 
 ## App config
@@ -193,6 +193,9 @@ suspenduser.suspendUser(app, database)
 
 ## Delete user
 deleteuser.delete_user(app, database)
+
+## Delete task permanently
+deteteTaskPermanentely.deleteTaskPermanentely(app, database)
 
 ## Edit user role
 edituserrole.edit_user_role(app, database)

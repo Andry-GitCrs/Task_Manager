@@ -25,7 +25,8 @@ def fetch_users(app, database):
                 User.email,
                 User.stat,
                 User.created_at,
-                User.updated_at
+                User.updated_at,
+                User.admin
             ).all()
 
             if results:
@@ -51,6 +52,7 @@ def fetch_users(app, database):
                         "user_id": result.user_id,
                         "email": result.email,
                         "stat": result.stat,
+                        "admin": result.admin,
                         "created_at": result.created_at,
                         "updated_at": result.updated_at,
                         "tasks_count": user_tasks_count,

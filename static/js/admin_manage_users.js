@@ -16,25 +16,46 @@ const fetchUserData = async () => {
                 const row = document.createElement('tr');
                 row.id = `row${user.user_id}`
                 row.innerHTML = `
-                    <td class=' fw-bold'>${user.user_id}</td>
+                    <td class='fw-bold'>${user.user_id}</td>
                     <td class='text-start'>${user.email}</td>
-                    <td class=''>${user.tasks_count}</td>
-                    <td class=''>${user.finished_tasks_count}</td>
-                    <td class=''>${user.user_subtasks_count}</td>
-                    <td class=''>${user.finished_subtasks_count}</td>
-                    <td class=''>${formatDate(user.created_at)}</td>
-                    <td class=''>${formatDate(user.updated_at)}</td>
-                    <td class=''><span class="badge bg-${activityColor}">${activityText}</span></td>
-                    <td class=''>
+                    <td>${user.tasks_count}</td>
+                    <td>${user.finished_tasks_count}</td>
+                    <td>${user.user_subtasks_count}</td>
+                    <td>${user.finished_subtasks_count}</td>
+                    <td>${formatDate(user.created_at)}</td>
+                    <td>${formatDate(user.updated_at)}</td>
+                    <td><span class="badge bg-${activityColor}">${activityText}</span></td>
+                    <td>
                         <div class="form-check form-switch d-flex justify-content-center">
                             <input class="form-check-input" type="checkbox" ${user.stat ? 'checked' : ''} onchange="toggleStatus(${user.user_id}, this.checked)">
                         </div>
                     </td>
-                    <td class=''>
-                        <button class="btn" onclick="editUser(${user.user_id})"><i class="fas fa-pen text-success"></i></button>
-                        <button class="btn" onclick="deleteUser(${user.user_id})"><i class="fas fa-trash text-danger"></i></button>
+                    <td class='d-flex gap-2'>
+                        <div class="dropdown">
+                            <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-pen text-success"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="text-center d-flex justify-content-between align-items-center gap-2 px-2">
+                                    <i class="fas fa-user-shield ${user.admin ? 'text-success' : 'text-danger'}"></i>
+                                    <h6 class="m-0">Admin</h6>
+                                    <div class="form-check form-switch d-flex justify-content-center">
+                                        <input class="form-check-input" type="checkbox" ${user.admin ? 'checked' : ''} onchange="toggleAdmin(${user.user_id}, this.checked)">
+                                    </div>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="editProfile(${user.user_id})">
+                                        <i class="fas fa-id-badge me-2"></i> Edit Profile
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-sm" onclick="deleteUser(${user.user_id})">
+                            <i class="fas fa-trash text-danger"></i>
+                        </button>
                     </td>
-                `;              
+                `;
+                            
 
                 tableBody.appendChild(row);
 
@@ -115,36 +136,35 @@ function showNotification(type, message) {
     }, 5000);
 }
 
-//Edit user feature
-function editUser(user) {
-    document.getElementById('editUserId').value = user.id;
-    document.getElementById('editEmail').value = user.email;
-    document.getElementById('editRole').value = user.role;
-    document.getElementById('editPassword').value = "";
-
-    const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
-    modal.show();
-  }
-
-  // Handle form submission
-  document.getElementById('editUserForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const userId = document.getElementById('editUserId').value;
-    const email = document.getElementById('editEmail').value;
-    const role = document.getElementById('editRole').value;
-    const password = document.getElementById('editPassword').value;
-
-    // Your logic here: send to server, update UI, etc.
-    console.log({ userId, email, role, password });
-
-    // Close modal after saving
-    bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
-  });
-
-  function toggleSidebar() {
+function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const main = document.getElementById('main');
     sidebar.classList.toggle('hidden');
     main.classList.toggle('full');
+}
+
+//Edit user feature
+function editUser(user_id) {
+    showNotification("success", `${user_id} is being edited`)   
+}
+
+//Edit profile feature
+function editProfile(user_id) {
+    showNotification("success", `${user_id} is being edited`)   
+}
+
+async function toggleAdmin(user_id) {
+    try{
+        const response = await fetch(`/admin/api/editUserRole/${user_id}`,{
+            method: "PUT",
+        });
+        const data = await response.json();
+        if(response.ok){
+            showNotification("success", data.message)
+        }else{
+            showNotification("error", data.message)
+        }
+    } catch (error) {
+        showNotification("error", error)
+    }
 }
