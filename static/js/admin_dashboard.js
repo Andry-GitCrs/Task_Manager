@@ -144,8 +144,8 @@ function makeBarChart(userData){
                 label: 'Finished Subtasks Count',
                 data: data,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
+                borderColor: '#ff9900a8',
+                borderWidth: 3
             }]
         },
         options: {

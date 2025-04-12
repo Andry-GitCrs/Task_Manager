@@ -1,4 +1,3 @@
-from functools import wraps
 import sys
 from flask import Flask, abort, redirect, render_template
 from flask_login import login_required, current_user, LoginManager, login_user, logout_user, current_user
