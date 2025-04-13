@@ -95,7 +95,7 @@ thead tr th{
 .main {
     margin-left: 20%;
     padding: 1rem;
-    transition: margin-left 0.3s ease;
+    transition: margin-left 0.5s ease-in-out;
 }
 
 .main.full {

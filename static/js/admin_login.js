@@ -34,9 +34,9 @@ function showNotification(type, message) {
     }, 5000);
   }
 
-// Optional: Handle form submission
+  
 $("#adminLoginForm").on("submit", async function (e) {
-    e.preventDefault();
+    e.preventDefault();  
     const email = $("#email").val().trim();
     const password = $("#password").val().trim();
     

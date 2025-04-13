@@ -35,7 +35,7 @@
         <div class="d-flex align-items-center justify-content-center py-5 slide-container z-1">
             <div class="bg-light shadow align-items-center gap-3 p-2 contact-form-container">
                 <!-- Contact form -->
-                <form class="p-3 w-100 h-100 d-flex flex-row" method="POST">
+                <form class="p-3 w-100 h-100 d-flex flex-row" id="contact-form">
                     <div class="side">
                         <h2>Contact Us</h2>
                         <p class="w-100" style="line-height: 25px;">Feel Free to use the form or drop us an email. Old-fashioned phone calls work too.</p>
@@ -51,27 +51,27 @@
                             <div class="bg-light p-0 my-1">
                                 <label for="name" class="m-0 d-block">Name</label>
                                 <div class="d-flex gap-2">
-                                    <input class="form-control border" type="text" placeholder="First" name="name">
-                                    <input class="form-control border" type="text" placeholder="Last" name="name">
+                                    <input class="form-control border" type="text" placeholder="First" name="first_name" id="first_name" required>
+                                    <input class="form-control border" type="text" placeholder="Last" name="last_name" id="last_name" required>
                                 </div>
                             </div>
                             
                             <!--Email input container-->
                             <div class="bg-light p-0 my-1">
                                 <label for="email" class="m-0 d-block">Email</label>
-                                <input class="form-control border" type="email" placeholder="example@email.com" name="email">
+                                <input class="form-control border" type="email" placeholder="example@email.com" name="email" id="email" required>
                             </div>
                             
                             <!--Phone input container-->
                             <div class="bg-light p-0 my-1">
                                 <label for="phone" class="m-0 d-block">Phone (optional)</label>
-                                <input class="form-control border" type="phone" placeholder="XXX-XXX-XXXX" name="phone">
+                                <input class="form-control border" type="phone" placeholder="XXX-XXX-XXXX" name="phone" id="phone">
                             </div>
                             
                             <!--Message input container-->
                             <div class="bg-light p-0 my-1">
                                 <label for="phone" class="m-0 d-block">Message</label>
-                                <textarea name="message" id="messageContent" class="from-control w-100 border" rows="2"></textarea>
+                                <textarea name="message" id="messageContent" class="from-control w-100 border" rows="2" required></textarea>
                             </div>
 
                             <!--Submit button-->
@@ -103,6 +103,12 @@
             </div>
         </div>
     </header>
+    <!-- nofitication displayer -->
+    <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
+        <i id="notification-icon" class=""></i>
+        <span id="notification-message"></span>
+    </div>
+    <script src="{{ url_for('static', filename='js/contact.script.js') }}"></script>
     <script>
         /* Menu  */
 

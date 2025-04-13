@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from .models import usermodel, taskmodel, subtaskmodel
+from dotenv import load_dotenv
+import os
 
 class Database :
         def __init__(self, user, password, host, db_name):
@@ -16,7 +18,13 @@ def config(app, databaseConfig):
 
 ## Connection
 def connect(app):
-    databaseConfig = Database('postgres', 'Andry18ans#', 'localhost', 'task_manager') # Database configuration
+    load_dotenv()
+    user = os.getenv('DATABASE_USER')
+    password = os.getenv('DATABASE_PWD')
+    host = os.getenv('DATABASE_HOST')
+    database_name = os.getenv('DATABASE_NAME')
+
+    databaseConfig = Database(user, password, host, database_name) # Database configuration
     app = config(app, databaseConfig)
     db = SQLAlchemy(app)
 
