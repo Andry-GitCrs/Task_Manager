@@ -14,6 +14,8 @@ email_form.addEventListener('submit', async function(e) {
         "email": email,
         "message": message
     }
+
+    document.getElementById('submit_feedback').textContent = 'Loading ...'
     
     const res = verify_email(email)
     if( (await res).is_valid == true ){
@@ -28,17 +30,49 @@ email_form.addEventListener('submit', async function(e) {
     
             if (response.ok) {  //Response with status code 200
                 showNotification("success", responseData.message)
-    
+                document.getElementById('submit_feedback').textContent = 'Submit'
+
             } else {
                 showNotification("error", responseData.error)
+                document.getElementById('submit_feedback').textContent = 'Submit'
             }
         } catch (error) {
-            showNotification("error", error)
+            showNotification("error", res.error)
+            document.getElementById('submit_feedback').textContent = 'Submit'
         }
     }else{
-        showNotification('error', 'Email does not exist')
+        err = (await res).error
+        showNotification('error', err)
+        document.getElementById('submit_feedback').textContent = 'Submit'
     }
 })
+
+
+async function verify_email(email) {
+    const response = await fetch('/api/verify_email', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: email
+        }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        return {
+            'is_valid': data.is_valid,
+            'message': data.message
+        }
+    } else {
+        return {
+            'is_valid': false,
+            'error': (await data).error
+        }
+    }
+}
 
 
 //Notification displayer
@@ -65,30 +99,4 @@ function showNotification(type, message) {
     setTimeout(() => {
       notification.classList.add('d-none');
     }, 5000);
-}
-
-async function verify_email(email) {
-    const response = await fetch('/api/verify_email', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email: email
-        }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-        return {
-            is_valid: data.is_valid,
-            message: data.message
-        }
-    } else {
-        return {
-            is_valid: data.is_valid,
-            message: data.message
-        }
-    }
 }

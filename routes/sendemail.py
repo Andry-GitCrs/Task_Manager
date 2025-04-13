@@ -69,19 +69,31 @@ def verifyEmail(app):
                 'email': email
             }
 
-            response = requests.get(url, params = params)
-            data = response.json()
+            try:
+                response = requests.get(url, params = params)
+                data = response.json()
 
-            if data["deliverability"] == "DELIVERABLE":
+                if data["deliverability"] == "DELIVERABLE":
+                    return jsonify({
+                        'message': "Your email is valid",
+                        'is_valid': True
+                    }), 200
+                else:
+                    return jsonify({
+                        'error': "Your email address does not exist",
+                        'is_valid': False
+                    }), 400
+            except ConnectionError as e:
                 return jsonify({
-                    'message': "Your email is valid",
-                    'is_valid': True
-                }), 200
-            else:
-                return jsonify({
-                    'error': "Your email address does not exist",
-                    'is_valid': False
-                }), 400
+                    'error': str(e)
+                }), 403
             
+            except requests.RequestException as e:
+                return jsonify({
+                    'error': 'No internet connection'
+                }), 401
+
         except Exception as e:
-            return jsonify({'error': str(e)}), 500
+            return jsonify({
+                'error': str(e)
+            }), 500
