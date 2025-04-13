@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, suspenduser, deteteTaskPermanentely, updateprofile
+from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile
 from database import pgconnexion
 
 ## App config
@@ -95,7 +95,6 @@ def manage_users():
     if admin and current_user.stat:
         return render_template('views/admin/admin_manage_users.html', email = email, title = "Manage users")
     abort(404)
-
 
 @app.route('/admin/manage_tasks')
 @login_required
@@ -201,5 +200,11 @@ edituserrole.edit_user_role(app, database)
 
 ## Update user
 updateprofile.update_profile(app, database)
+
+## Verify email
+sendemail.verifyEmail(app)
+
+## Send email
+sendemail.sendEmail(app)
 
 app.run(debug = False)
