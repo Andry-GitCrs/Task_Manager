@@ -15,7 +15,7 @@ def update_profile(app, database):
         user_id = current_user.user_id
         email = data['email']
         old_password = data['old_password']
-        new_password = bcrypt.generate_password_hash(f'{data['new_password']}').decode('utf-8')
+        new_password = bcrypt.generate_password_hash(f"{data['new_password']}").decode('utf-8')
         new_confirmation_password = data['confirmation_password']
 
         user = User.query.filter_by(user_id = user_id).first()
