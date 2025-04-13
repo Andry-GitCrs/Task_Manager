@@ -10,7 +10,7 @@ def register(app, database):
         bcrypt = Bcrypt()
         data = request.get_json()
         email = data['email']
-        password = bcrypt.generate_password_hash(f'{data['password']}').decode('utf-8')
+        password = bcrypt.generate_password_hash(f"{data['password']}").decode('utf-8')
         confirmation_password = data['confirmation_password']
 
         newUser = User.query.filter_by(email = email).first()
