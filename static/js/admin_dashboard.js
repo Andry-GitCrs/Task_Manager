@@ -1,5 +1,6 @@
 
 const fetchUserData = async () => {
+    document.getElementById("loading").style.display = 'inline'
     try {
         const response = await fetch('/admin/api/fetchUsers');
         const data = await response.json();
@@ -21,6 +22,7 @@ const fetchUserData = async () => {
     } catch (error) {
         showNotification("error", error)
     }
+    document.getElementById("loading").style.display = 'none';
 }
 
 

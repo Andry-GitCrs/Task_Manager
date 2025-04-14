@@ -1,4 +1,5 @@
 const fetchUserData = async () => {
+    document.getElementById("loading").style.display = 'inline'
     try {
         const response = await fetch('/admin/api/fetchUsers');
         const data = await response.json();
@@ -66,7 +67,9 @@ const fetchUserData = async () => {
         }
     } catch (error) {
         showNotification("error", error)
+        
     }
+    document.getElementById("loading").style.display = 'none'
 }
 
 fetchUserData()
@@ -76,6 +79,7 @@ function formatDate(dateStr) {
 }
 
 async function toggleStatus(userId) {
+    document.getElementById("loading").style.display = 'inline';
     try{
         const response = await fetch(`/api/admin/suspendUser/${userId}`,{
             method: "PUT",
@@ -89,10 +93,12 @@ async function toggleStatus(userId) {
     } catch (error) {
         showNotification("error", error)
     }
+    document.getElementById("loading").style.display = 'none';
 }
 
 async function deleteUser(userId) {
     if (confirm(`Are you sure you want to delete user ${userId}?`)) {
+        document.getElementById("loading").style.display = 'inline';
         try{
             const response = await fetch(`/api/admin/deteteUser/${userId}`,{
                 method: "DELETE",
@@ -107,6 +113,7 @@ async function deleteUser(userId) {
         } catch (error) {
             showNotification("error", error)
         }
+        document.getElementById("loading").style.display = 'none';
     }
 }
 
@@ -154,6 +161,7 @@ function editProfile(user_id) {
 }
 
 async function toggleAdmin(user_id) {
+    document.getElementById("loading").style.display = 'inline';
     try{
         const response = await fetch(`/admin/api/editUserRole/${user_id}`,{
             method: "PUT",
@@ -167,4 +175,5 @@ async function toggleAdmin(user_id) {
     } catch (error) {
         showNotification("error", error)
     }
+    document.getElementById("loading").style.display = 'none';
 }

@@ -55,6 +55,8 @@ $("#login_form").on("submit", async (e) => {
     e.preventDefault();
     const email = document.getElementById("email").value
     const password = document.getElementById("password").value
+    $("#log-in").prop("disabled", true);
+    $(".loading").css("display", 'inline');
     try {
         const response = await fetch("/auth/login", {
             method: "POST",
@@ -67,12 +69,18 @@ $("#login_form").on("submit", async (e) => {
         if (response.ok) {  //Response with status code 200
             showNotification("success", responseData.message)
             empty_login_field()
+            $("#log-in").prop("disabled", false);
+    $(".loading").css("display", 'none');
             location.href = '/dashboard'
         } else {
             showNotification("error", responseData.error)
+            $("#log-in").prop("disabled", false);
+    $(".loading").css("display", 'none');
         }
     } catch (error) {
         showNotification("error", error)
+        $("#log-in").prop("disabled", false);
+    $(".loading").css("display", 'none');
     }
 })
 
@@ -82,6 +90,9 @@ $("#register_form").on("submit", async (e) => {
     const email = document.getElementById("new_email").value
     const password = document.getElementById("new_password").value
     const confirmation_password = document.getElementById("new_confirmation_password").value
+    
+    $("#register").prop("disabled", true);
+    $(".loading").css("display", 'inline');
 
     try {
         const response = await fetch("/auth/register", {
@@ -99,11 +110,17 @@ $("#register_form").on("submit", async (e) => {
             loginImg.classList.remove("d-none")
             registerForm.classList.add("d-none")
             registerImg.classList.add("d-none")
+            $("#register").prop("disabled", false);
+            $(".loading").css("display", 'none');
         } else {
             showNotification("error", responseData.error)
+            $("#register").prop("disabled", false);
+            $(".loading").css("display", 'none');
         }
     } catch (error) {
         showNotification("error", error)
+        $("#register").prop("disabled", false);
+        $(".loading").css("display", 'none');
     }
 })
 

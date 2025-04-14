@@ -1,5 +1,6 @@
 // Fetch today tasks
 async function fetchTodayTasks() {
+    $(".loading-dash").css("display", 'inline');
     try {
         const response = await fetch("/api/user/getTodayTask", {
             method: "GET",
@@ -41,7 +42,6 @@ async function fetchTodayTasks() {
                 
                 $("#todayTaskContainer").append(taskElement);
             });
-
             return todayTasks.length;
         } else {
             showNotification("error", "You don't have any task for today");
@@ -49,6 +49,7 @@ async function fetchTodayTasks() {
     } catch (error) {
         showNotification("error", error.message);
     }
+    $(".loading-dash").css("display", 'none');
 }
 function addTodayTask(id, title, start_date, end_date, description, bg_color, subtasks) {
     let taskContainer = $(`<div class="col-4 p-1 taskBox" id="${id}"></div>`);
@@ -84,7 +85,7 @@ $('.updateForm').on('submit', async function(e) {
         "new_password": newPassword,
         "confirmation_password": confirmPassword
     }
-    
+    $(".loading-dash").css("display", 'inline');
     try {
         const response = await fetch("/api/user/update", {
             method: "PUT",
@@ -104,4 +105,5 @@ $('.updateForm').on('submit', async function(e) {
     } catch (error) {
         showNotification("error", error)
     }
+    $(".loading-dash").css("display", 'none');
 });

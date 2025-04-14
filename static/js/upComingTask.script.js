@@ -1,5 +1,6 @@
 // Fetch upcoming tasks
 async function fetchUpcomingTasks(element_id, condition, day, message) {
+    $(".loading-dash").css("display", 'inline');
     try {
         const response = await fetch(`/api/user/getUpcomingTask/${condition}/${day}`, {
             method: "GET",
@@ -35,6 +36,7 @@ async function fetchUpcomingTasks(element_id, condition, day, message) {
     } catch (error) {
         console.log(error);
     }
+    $(".loading-dash").css("display", 'none');
 }
 
 function addUpcomingTask(element_id, id, title, start_date, end_date, description, bg_color, subtasks) {
@@ -73,6 +75,7 @@ $('.updateForm').on('submit', async function(e) {
         "confirmation_password": confirmPassword
     }
     
+    $(".loading-dash").css("display", 'inline');
     try {
         const response = await fetch("/api/user/update", {
             method: "PUT",
@@ -92,4 +95,5 @@ $('.updateForm').on('submit', async function(e) {
     } catch (error) {
         showNotification("error", error)
     }
+    $(".loading-dash").css("display", 'none');
 });
