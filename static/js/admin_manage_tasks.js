@@ -1,4 +1,5 @@
 const fetchTasks = async () => {
+  document.getElementById("loading").style.display = 'inline';
   try {
       const response = await fetch('/admin/api/fetchTask');
       const data = await response.json();
@@ -62,6 +63,7 @@ const fetchTasks = async () => {
   } catch (error) {
       showNotification("error", error)
   }
+  document.getElementById("loading").style.display = 'none';
 }
 
 
@@ -118,6 +120,7 @@ function assignSubtasks(taskId) {
 
 async function deleteTask(task_id) {
   if (confirm(`Are you sure you want this task ${task_id}?`)) {
+    document.getElementById("loading").style.display = 'inline';
       try{
           const response = await fetch(`/api/user/deleteTaskPermanentely/${task_id}`,{
               method: "DELETE",
@@ -132,5 +135,6 @@ async function deleteTask(task_id) {
       } catch (error) {
           showNotification("error", error)
       }
+      document.getElementById("loading").style.display = 'none';
   }
 }

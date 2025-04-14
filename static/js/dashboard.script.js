@@ -327,6 +327,7 @@ $(document).ready(function() {
 });
 
 const fetchTasks = async () => {
+    $(".loading-dash").css("display", 'inline');
     try {
         const response = await fetch("/api/user/getTask", {
             method: "GET",
@@ -359,6 +360,7 @@ const fetchTasks = async () => {
     } catch (error) {
         showNotification("error", error.message)
     }
+    $(".loading-dash").css("display", 'none');
 };
 
 // Call the function to fetch tasks
@@ -467,7 +469,8 @@ function showNotification(type, message) {
 // Check Subtask
 async function check(id){
     if( $(`#input${id}`).val() == "on" ){ //Check
-
+        
+        $(".loading-dash").css("display", 'inline');
         try {
             const response = await fetch(`/api/user/checkSubTask/${id}`, {
                 method: "POST",
@@ -491,7 +494,11 @@ async function check(id){
         } catch (error) {
             showNotification("error", error.message)
         }
+        
+        $(".loading-dash").css("display", 'none');
     }else{ //Uncheck
+        
+        $(".loading-dash").css("display", 'inline');
         try {
             const response = await fetch(`/api/user/checkSubTask/${id}`, {
                 method: "POST",
@@ -516,6 +523,7 @@ async function check(id){
         } catch (error) {
             showNotification("error", error.message)
         }
+        $(".loading-dash").css("display", 'none');
     }
 }
 
@@ -532,6 +540,8 @@ function checkTask(id){
 
 // Verify user role
 var verify = async () => {
+    
+    $(".loading-dash").css("display", 'inline');
     try {
         const response = await fetch(`/api/verify_user`, {
             method: "GET",
@@ -550,6 +560,7 @@ var verify = async () => {
     } catch (error) {
        console.error(error.message)
     }
+    $(".loading-dash").css("display", 'none');
 }
 
 verify()
@@ -562,6 +573,8 @@ async function findTaskk(){
     searchResult.css('display', 'block')
     searchResult.html("")
     if(title){
+        
+        $(".loading-dash").css("display", 'inline');
         let response = await fetch(`/api/user/findTask/${title}`)
         let responseData = await response.json()
         if(response.ok){  //Response with status code 200
@@ -586,7 +599,8 @@ async function findTaskk(){
                     </li> 
                 `)
             })
-
+            
+            $(".loading-dash").css("display", 'none');
             
         }else{
             showNotification('error', "Task not found")
@@ -679,7 +693,7 @@ $('.updateForm').on('submit', async function(e) {
         "new_password": newPassword,
         "confirmation_password": confirmPassword
     }
-    
+    $(".loading-dash").css("display", 'inline');
     try {
         const response = await fetch("/api/user/update", {
             method: "PUT",
@@ -699,4 +713,5 @@ $('.updateForm').on('submit', async function(e) {
     } catch (error) {
         showNotification("error", error)
     }
+    $(".loading-dash").css("display", 'none');
 });

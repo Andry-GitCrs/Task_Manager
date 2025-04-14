@@ -21,6 +21,7 @@ aside ul a:hover, .admin_profile{
     height: 50px;
     border-radius: 25px;
     cursor: pointer;
+    transition: .5s ease-in-out;
 }
 
 .admin_profile_container{
@@ -164,4 +165,11 @@ hr{
     font-size: 45px;
     top: calc(50%);
     left: calc(50% - 25px);
+}
+
+#loading{
+    width: 25px;
+    height: 25px;
+    margin: auto 10px;
+    display: none;
 }

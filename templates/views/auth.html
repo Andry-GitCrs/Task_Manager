@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <button class="btn fw-bold text-light" id="log-in">
-                        Login
+                        Login <img class="loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
                     </button>
                     <a class="text-dark text-center text-decoration-none fw-bold" href="#">Forgot Password?</a>
                     <a class="text-center text-decoration-none" href="" id="register-btn"> <i class="fas fa-arrow-left mx-2"></i> Create your account</a>
@@ -74,8 +74,8 @@
                             <input class="text-dark" type="password" placeholder="Confirm password" name="new_confirmation_password" id="new_confirmation_password" required>
                         </div>
                     </div>
-                    <button class="btn fw-bold text-light">
-                        Register
+                    <button class="btn fw-bold text-light" id="register">
+                        Register <img class="loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
                     </button>
                     <a class="text-center text-decoration-none" href="" id="login-btn">Already have an account <i class="fas fa-arrow-right mx-2"></i></a>
                 </form>

@@ -54,7 +54,7 @@
         <nav class="nav w-100 bg-light shadow p-2 rounded-3 justify-content-between mb-3">
             <h1 class="text-secondary"><i class="fas fa-hand mx-2 text-warning"></i>{{ title }}</h1>
             <div class="w-auto d-flex align-items-center justify-content-between border gap-2 mx-2 admin_profile_container">
-                
+                <img id="loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
                 <span class="mx-3 text-secondary">
                     {{ email }}
                 </span>
