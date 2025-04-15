@@ -17,7 +17,7 @@ app.secret_key = "secret-key"
 
 # Login Manager
 login_manager = LoginManager()
-login_manager.login_view = 'login_route'
+login_manager.login_view = 'authentication'
 login_manager.init_app(app)
 
 # Database Connection
