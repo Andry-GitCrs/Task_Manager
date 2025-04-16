@@ -1,8 +1,8 @@
-{% extends "views/base.html" %}
+{% extends "views/users/base.html" %}
 {% block title %}
-    Upcoming tasks
+    Today tasks
 {% endblock %}
-{% block upcoming %}
+{% block today %}
     active-page
 {% endblock %}
 {% block content %}
@@ -10,15 +10,14 @@
         <button class="btn menu-btn float-left menu-btn-mobile">
             <hr><hr><hr>
         </button>
-        Upcoming tasks
+        Today tasks
+
         <img class="loading-dash loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
     </h1>
     <div class="container py-3">
-        <div class="row justify-content-start" id="upComingTaskContainer1"></div>
-        <div class="row justify-content-start" id="upComingTaskContainer2"></div>
-        <div class="row justify-content-start" id="upComingTaskContainer"></div>
+        <div class="row justify-content-start" id="todayTaskContainer"></div>
     </div>
 {% endblock %}
 {% block script %}
-    <script src="{{ url_for('static', filename='js/upComingTask.script.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/users/todayTask.script.js') }}"></script>
 {% endblock %}

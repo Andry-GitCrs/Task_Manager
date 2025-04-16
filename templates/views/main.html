@@ -1,70 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
-    <script src="{{ url_for('static', filename='js/jQuery-3.7.1.min.js') }}"></script>
-    <title>Task Manager Welcome Page</title>
-</head>
-<body>
-    <header id="header">
-        <nav class="container-fluid position-absolute w-100 top-0 welcome-navigation z-1" id="welcome-navigation">
-            <div class="d-flex px-5 py-2 justify-content-between align-items-center">
-                <div class="col-1" style="height: 100px;width: 100px;">
-                    <img class="app-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" width="100%" height="100%">
-                </div>
-                <div class="col-md-8 justify-content-between gap-3 md-pe-5 menu-list" id="menu-list">
-                    <ul class="nav col-md-8  justify-content-between">
-                        <a href="/" class="text-uppercase nav-link fw-bold active-link">home</a>
-                        <a href="/about" class="text-light text-uppercase nav-link fw-bold">about us</a>
-                        <a href="/contact" class="text-light text-uppercase nav-link fw-bold">contact</a>
-                        <a href="/auth" class="text-light text-uppercase nav-link fw-bold">login</a>
-                    </ul>
-                </div>
-                <button class="btn p-0 menu-toggler" id="button-toggler">
-                    <hr><hr><hr>
-                </button>
-            </div>
-        </nav>
-        <!--Slide-->
-        <div class="d-flex align-items-center justify-content-center py-5 slide-container z-1">
-            <div class="d-flex align-items-center flex-column gap-3 z-1 welcome-text">
-              <h1 class="text-light">Task Manager App</h1>
-              <p class="text-center text-light">
-                "Welcome to Task Manager App – Your Ultimate Productivity Companion!
-
-                Managing tasks has never been easier! With our intuitive and user-friendly interface, you can organize your daily activities, track progress, and stay productive effortlessly. Whether you're handling personal to-do lists, work projects, or long-term goals, our app is designed to help you stay on track.
-                 No more scattered notes or forgotten tasks—everything you need is in one place! Take control of your workflow and boost your productivity. Click "Get Started" now and experience the power of seamless task management!"
-              </p>
-              <a href="/auth">
-                <button class="btn rounded-5 shadow py-3 px-5 fw-bold btn-warning text-dark">
-                    GET STARTED
-                </button>
-              </a>
-              <div class="justify-content-between gap-2 position-absolute slide-btn-container" id="slide-btn-container"></div>
-            </div>
-
-            <div class="position-absolute end-0 bottom-0 mx-5 my-3 d-flex justify-content-between align-items-center gap-3 logo-container bg-light py-2 px-3 rounded-3">
-                <a href="https://github.com/Andry-GitCrs/Task_Manager.git">
-                    <i class="fa-brands fa-github fs-3 text-dark m-0"></i>
-                </a>
-                <a href="https://facebook.com">
-                    <i class="fa-brands fa-facebook fs-3 text-primary m-0"></i>
-                </a>
-                <a href="https://twitter.com">
-                    <i class="fa-brands fa-twitter fs-3 text-primary m-0"></i>
-                </a>
-                <a href="https://whatsapp.com">
-                    <i class="fa-brands fa-whatsapp fs-3 text-success m-0"></i>
-                </a>
-            </div>
-        </div>
-    </header>
+{% extends "views/base.html" %}
+{% block title %}
+    Task Manager
+{% endblock %}
+{% block homeActive %}
+    active-link
+{% endblock %}
+{% block content %}
+    <h1 class="text-light">Task Manager App</h1>
+    <p class="text-center text-light">
+        "Welcome to Task Manager App – Your Ultimate Productivity Companion!
+        Managing tasks has never been easier! With our intuitive and user-friendly interface, you can organize your daily activities, track progress, and stay productive effortlessly. Whether you're handling personal to-do lists, work projects, or long-term goals, our app is designed to help you stay on track.
+        No more scattered notes or forgotten tasks—everything you need is in one place! Take control of your workflow and boost your productivity. Click "Get Started" now and experience the power of seamless task management!"
+    </p>
+    <a href="/auth">
+        <button class="btn rounded-5 shadow py-3 px-5 fw-bold btn-warning text-dark">
+            GET STARTED
+        </button>
+    </a>
+{% endblock %}
+{% block script %}
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
+{% endblock %}

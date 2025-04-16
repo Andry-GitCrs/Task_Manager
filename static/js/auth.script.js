@@ -33,8 +33,6 @@ registerBtn.addEventListener("click", (e) => {
     registerImg.classList.remove("d-none")
     loginForm.classList.add("d-none")
     loginImg.classList.add("d-none")
-    document.getElementById("login_error").textContent = ""
-    document.getElementById("login_info").textContent = ""
     empty_login_field()
 })
 
@@ -44,8 +42,6 @@ loginBtn.addEventListener("click", (e) => {
     loginImg.classList.remove("d-none")
     registerForm.classList.add("d-none")
     registerImg.classList.add("d-none")
-    document.getElementById("register_error").textContent = ""
-    document.getElementById("register_info").textContent = ""
     empty_register_field()
 })
 
@@ -70,7 +66,7 @@ $("#login_form").on("submit", async (e) => {
             showNotification("success", responseData.message)
             empty_login_field()
             $("#log-in").prop("disabled", false);
-    $(".loading").css("display", 'none');
+            $(".loading").css("display", 'none');
             location.href = '/dashboard'
         } else {
             showNotification("error", responseData.error)

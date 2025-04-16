@@ -64,22 +64,22 @@ def logout():
 def dashboard():
     if current_user.admin:
         current_user.stat = False
-    return render_template('views/dashboard.html', message = current_user.email,  email = current_user.email)
+    return render_template('views/users/dashboard.html', message = current_user.email,  email = current_user.email)
 
 @app.route('/dashboard/calendar') # Calendar
 @login_required
 def calendar():
-    return render_template('views/calendar.html', email = current_user.email)
+    return render_template('views/users/calendar.html', email = current_user.email)
 
 @app.route('/dashboard/today') # Today tasks
 @login_required
 def today():
-    return render_template('views/today.html', email = current_user.email)
+    return render_template('views/users/today.html', email = current_user.email)
 
 @app.route('/dashboard/upcoming') # Upcoming tasks
 @login_required
 def upcoming():
-    return render_template('views/upcoming.html', email = current_user.email)
+    return render_template('views/users/upcoming.html', email = current_user.email)
 
 # Admin Routes
 @app.route('/auth/admin/login')

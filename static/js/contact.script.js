@@ -100,3 +100,5 @@ function showNotification(type, message) {
       notification.classList.add('d-none');
     }, 5000);
 }
+
+$("#header").css("background-image", "url('../../static/images/bg-4.avif')")

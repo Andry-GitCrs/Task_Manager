@@ -46,54 +46,6 @@ function addUpcomingTask(element_id, id, title, start_date, end_date, descriptio
     $(`#${element_id}`).append(taskContainer);
 }
 
-$('.menu-btn').on('click', () => {
-    if(!menuStat){
-        $("aside").css("left", "0")
-        menuStat = true
-    }else{
-        $("aside").css("left", "-600px")
-        menuStat = false
-    }
-})
-
 fetchUpcomingTasks('upComingTaskContainer', 'before', 7, "Next week");
 fetchUpcomingTasks('upComingTaskContainer1', 'on', 1, "Tomorrow");
 fetchUpcomingTasks('upComingTaskContainer2', 'after', 2, "After tomorrow");
-
-$('.updateForm').on('submit', async function(e) {
-    e.preventDefault();
-    
-    const email = document.getElementById('email').value.trim('');
-    const oldconfirmPassword = document.getElementById('oldconfirmPassword').value.trim('')
-    const newPassword = document.getElementById('newPassword').value.trim('');
-    const confirmPassword = document.getElementById('confirmPassword').value.trim('');
-
-    user = {
-        "email": email,
-        "old_password": oldconfirmPassword,
-        "new_password": newPassword,
-        "confirmation_password": confirmPassword
-    }
-    
-    $(".loading-dash").css("display", 'inline');
-    try {
-        const response = await fetch("/api/user/update", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user)
-        });
-
-        const responseData = await response.json();
-
-        if (response.ok) {  //Response with status code 200
-            showNotification("success", responseData.message)
-
-        } else {
-            showNotification("error", responseData.error)
-        }
-
-    } catch (error) {
-        showNotification("error", error)
-    }
-    $(".loading-dash").css("display", 'none');
-});

@@ -9,154 +9,65 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
     <script src="{{ url_for('static', filename='js/jQuery-3.7.1.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/dashboard.script.js') }}"></script>
-    {% block head %}
+    {%  block head %}
     {% endblock %}
-    <title>{% block title %} Base title {% endblock %}</title>
+    <title>
+        {% block title %}
+            Base title
+        {% endblock %}
+    </title>
 </head>
 <body>
-    <aside class="bg-light pt-2 rounded-2 position-fixed m-2 mb-0">
-        <div class="d-flex justify-content-between align-items-center my-1">
-            <h3 class="text-dark d-flex align-items-center justify-content-center gap-2">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="40px" height="40px">
-                Task manager
-            </h3>
-            <button class="btn menu-btn">
-                <hr><hr><hr>
-            </button>
+    <header id="header">
+        <nav class="container-fluid position-absolute w-100 top-0 welcome-navigation z-1" id="welcome-navigation">
+            <div class="d-flex px-5 py-2 justify-content-between align-items-center">
+                <div class="col-1" style="height: 100px;width: 100px;">
+                    <img class="app-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" width="100%" height="100%">
+                </div>
+                <div class="col-md-8 justify-content-between gap-3 md-pe-5 menu-list" id="menu-list">
+                    <ul class="nav col-md-8  justify-content-between">
+                        <a href="/" class="text-light text-uppercase nav-link fw-bold {% block homeActive %}{% endblock %}">home</a>
+                        <a href="/about" class="text-light text-uppercase nav-link fw-bold {% block aboutUsActive %}{% endblock %}">about us</a>
+                        <a href="/contact" class="text-light text-uppercase nav-link fw-bold {% block contactActive %}{% endblock %}">contact</a>
+                        <a href="/auth" class="text-light text-uppercase nav-link fw-bold {% block loginActive %}{% endblock %}">login</a>
+                    </ul>
+                </div>
+                <button class="btn p-0 menu-toggler" id="button-toggler">
+                    <hr><hr><hr>
+                </button>
+            </div>
+        </nav>
+        <!--Slide-->
+        <div class="d-flex align-items-center justify-content-center py-5 slide-container z-1">
+            {% block slide %}
+                <div class="d-flex align-items-center flex-column gap-3 z-1 welcome-text">
+                    {% block content %}
+                    {% endblock %}
+                <div class="justify-content-between gap-2 position-absolute slide-btn-container" id="slide-btn-container"></div>
+              </div>
+            {% endblock %}
+            <div class="position-absolute end-0 bottom-0 mx-5 my-3 d-flex justify-content-between align-items-center gap-3 logo-container bg-light py-2 px-3 rounded-3">
+                <a href="https://github.com/Andry-GitCrs/Task_Manager.git">
+                    <i class="fa-brands fa-github fs-3 text-dark m-0"></i>
+                </a>
+                <a href="https://facebook.com">
+                    <i class="fa-brands fa-facebook fs-3 text-primary m-0"></i>
+                </a>
+                <a href="https://twitter.com">
+                    <i class="fa-brands fa-twitter fs-3 text-primary m-0"></i>
+                </a>
+                <a href="https://whatsapp.com">
+                    <i class="fa-brands fa-whatsapp fs-3 text-success m-0"></i>
+                </a>
+            </div>
         </div>
-        <form class="d-flex justify-content-between align-items-center border px-3 py-2 rounded-2" action="">
-            <i class="text-primary fa fa-search"></i>
-            <input class="text-dark" type="search" id="findTask" onkeyup="findTaskk()" placeholder="Find task">
-            <div id="searchResultsContainer" class="mt-3 p-2"></div>
-        </form>
-        <div class="my-3">
-            <h4 class="text-dark fw-bold" >TASKS</h4>
-            <ul class="p-0">
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block upcoming %}{% endblock %}">
-                    <div>
-                        <i class="text-warning fas fa-clock"></i>
-                        <a  class="text-dark text-decoration-none" href="/dashboard/upcoming">Upcoming</a>
-                    </div>
-                </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block today %}{% endblock %}">
-                    <div>
-                        <i class="text-success fas fa-list"></i>
-                        <a  class="text-dark text-decoration-none" href="/dashboard/today">Today</a>
-                    </div>
-                    <span class="text-dark" id="todayTaskNbr">0</span>
-                </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block calendar %}{% endblock %}">
-                    <div>
-                        <i class="text-primary fas fa-calendar-days"></i>
-                        <a  class="text-dark text-decoration-none" href="/dashboard/calendar">Calendar</a>
-                    </div>
-                </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block stickywall %}{% endblock %}">
-                    <div>
-                        <i class="text-info fas fa-grip"></i>
-                        <a  class="text-dark text-decoration-none " href="/dashboard">Sticky Wall</a>
-                    </div>
-                    <span class="text-dark bg-light" id="taskNbr">0</span>
-                </li>
-            </ul>
-        </div>
-        <div class="my-3">
-            <h4 class="text-dark fw-bold" >LISTS</h4>
-            <ul class="p-0">
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
-                    <div>
-                        <i class="text-dark fas fa-user"></i>
-                        <a  class="text-dark text-decoration-none" href="#">Personal</a>
-                    </div>
-                </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
-                    <div>
-                        <i class="text-danger fas fa-circle"></i>
-                        <a  class="text-dark text-decoration-none" href="#">Work</a>
-                    </div>
-                </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
-                    <div>
-                        <i class="text-secondary fas fa-square"></i>
-                        <a  class="text-dark text-decoration-none" href="#">List 1</a>
-                    </div>
-                </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
-                    <div>
-                        <i class="text-success fas fa-add"></i>
-                        <a  class="text-dark text-decoration-none" href="#">Add new list</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="mt-2">
-            <ul class="p-0 _user_action">
-                <li class="my-2 py-1">
-                    <i class="text-danger fas fa-bug"></i>
-                    <a class="text-dark text-decoration-none" href="mailto:andrianaivonoe403@gmail.com">Bug report</a>
-                </li>
-                <li class="my-2 py-1">
-                    <div class="dropdown">
-                        <div class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="text-dark fas fa-cog"></i>
-                            Edit user account
-                        </div>
-                        <!-- Dropdown Form -->
-                        <div class="dropdown-menu p-3 dropdown-form">
-                          <form class="updateForm">
-                            <h4>
-                                <i class="text-dark fas fa-cog"></i>
-                                Edit user account
-                            </h4>
-                            <div class="mb-3">
-                              <label for="email" class="form-label">User Email</label>
-                              <input name="email" type="email" value="{{ email }}" class="form-control" id="email" placeholder="example@mail.com" >
-                            </div>
-    
-                            <div class="mb-3">
-                                <label for="oldconfirmPassword" class="form-label">Confirm old Password</label>
-                                <input name="oldconfirmPassword" type="password" class="form-control" id="oldconfirmPassword" required>
-                            </div>
-                    
-                            <div class="mb-3">
-                              <label for="newPassword" class="form-label">New Password</label>
-                              <input name="newPassword" type="password" class="form-control" id="newPassword" required>
-                            </div>
-                    
-                            <div class="mb-3">
-                              <label for="confirmPassword" class="form-label">Confirm Password</label>
-                              <input name="confirmPassword" type="password" class="form-control" id="confirmPassword" required>
-                            </div>
-                    
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-success w-50">Validate</button>
-                            </div>
-                          </form>
-                        </div>
-                    </div>
-                </li>
-                <li class="my-2 py-1">
-                    <i class="text-secondary fas fa-power-off"></i>
-                    <a class="text-dark text-decoration-none" href="/auth/logout">Sing out</a>
-                </li>
-            </ul>
-        </div>
-    </aside>
-    <main class="sticky-wall-main p-3 py-4">
-        {% block content %}
-            <h1>
-                Hello world
-            </h1>
-        {% endblock %}        
-    </main>
+    </header>
     <!-- nofitication displayer -->
     <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
         <i id="notification-icon" class=""></i>
         <span id="notification-message"></span>
     </div>
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-    {% block script %} 
+    {% block script %}
     {% endblock %}
 </body>
 </html>

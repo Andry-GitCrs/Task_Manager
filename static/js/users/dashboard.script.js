@@ -300,32 +300,6 @@ function editSubTask(id, subtask_id){
     })
 }
 
-/* Show menu  */
-let menuStat = false
-$('.menu-btn').on('click', () => {
-    if(!menuStat){
-        $("aside").css("left", "0")
-        menuStat = true
-    }else{
-        $("aside").css("left", "-500px")
-        menuStat = false
-    }
-})
-/* Welcome Modal */
-
-$(document).ready(function() {
-    
-    $("#welcomeModal").fadeIn();
-
-    // Close on click outside the modal box
-    $(window).click(function(event) {
-        if (event.target.id === "welcomeModal") {
-            $("#welcomeModal").fadeOut();
-        }
-    });
-
-});
-
 const fetchTasks = async () => {
     $(".loading-dash").css("display", 'inline');
     try {
@@ -708,10 +682,24 @@ $('.updateForm').on('submit', async function(e) {
 
         } else {
             showNotification("error", responseData.error)
+
         }
 
     } catch (error) {
         showNotification("error", error)
+        
     }
     $(".loading-dash").css("display", 'none');
 });
+
+/* Show menu  */
+let menuStat = false
+$('.menu-btn').on('click', () => {
+    if(!menuStat){
+        $("aside").css("left", "0")
+        menuStat = true
+    }else{
+        $("aside").css("left", "-500px")
+        menuStat = false
+    }
+})
