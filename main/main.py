@@ -55,7 +55,7 @@ def admin_login_route():
     try:
         admin = current_user.admin
         if admin:
-            return render_template('views/admin_login.html')
+            return render_template('views/admin/admin_login.html')
         abort(404)
     except AttributeError:
         abort(404)
@@ -82,7 +82,7 @@ def admin_dashboard():
         stat = current_user.stat
         email = current_user.email
         if admin and stat:
-            return render_template('views/admin_dashboard.html', email = email, title = "Dashboard")
+            return render_template('views/admin/admin_dashboard.html', email = email, title = "Dashboard")
         abort(404)
     except AttributeError:
         abort(404)
