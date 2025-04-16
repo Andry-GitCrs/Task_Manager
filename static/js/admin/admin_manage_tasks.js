@@ -7,7 +7,6 @@ const fetchTasks = async () => {
           taskData = data.data
           showNotification("success", data.message)
           const tableBody = document.getElementById('taskTableBody');
-          console.log(taskData)
           taskData.forEach(task => {
               const percent = task.subtask_nbr > 0 ? Math.round((task.finished_subtask_nbr / task.subtask_nbr) * 100) : 0;
               const activityColor = percent >= 80 ? 'success' : percent >= 50 ? 'warning' : 'danger';
