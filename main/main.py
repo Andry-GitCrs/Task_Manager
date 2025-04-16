@@ -193,5 +193,13 @@ sendemail.verifyEmail(app)
 ## Send email
 sendemail.sendEmail(app)
 
+## Test zone
+
+@app.route('/base')
+def base():
+    return render_template('views/base.html')
+
+## End test zone
+
 if __name__ == "__main__":
     app.run(debug=True)
