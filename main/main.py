@@ -48,73 +48,7 @@ auth.auth(app)
 login.login(app, database) # Login
 register.register(app, database) # Register
 
-## Admin page login route
-@app.route('/auth/admin/login')
-@login_required
-def admin_login_route():
-    try:
-        admin = current_user.admin
-        if admin:
-            return render_template('views/admin/admin_login.html')
-        abort(404)
-    except AttributeError:
-        abort(404)
-
-## Admin page logout route
-@app.route('/auth/admin/logout')
-@login_required
-def admin_logout_route():
-    admin = current_user.admin
-    if admin:
-        user = User.query.filter_by(user_id = current_user.user_id).first()
-        user.activate()
-        db.session.commit()
-        logout_user()
-        render_template('views/main.html')
-    abort(404)
-
-## Admin page login route
-@app.route('/admin/dashboard')
-@login_required
-def admin_dashboard():
-    try:
-        admin = current_user.admin
-        stat = current_user.stat
-        email = current_user.email
-        if admin and stat:
-            return render_template('views/admin/admin_dashboard.html', email = email, title = "Dashboard")
-        abort(404)
-    except AttributeError:
-        abort(404)
-
-@app.route('/admin/manage_users')
-@login_required
-def manage_users():
-    admin = current_user.admin
-    email = current_user.email
-    if admin and current_user.stat:
-        return render_template('views/admin/admin_manage_users.html', email = email, title = "Manage users")
-    abort(404)
-
-@app.route('/admin/manage_tasks')
-@login_required
-def manage_tasks():
-    admin = current_user.admin
-    email = current_user.email
-    if admin and current_user.stat:
-        return render_template('views/admin/admin_manage_task.html', email = email, title = "Manage tasks")
-    abort(404)
-
-## Protected routes
-@app.route('/admin/manage_subtasks')
-@login_required
-def manage_subtasks():
-    admin = current_user.admin
-    email = current_user.email
-    if admin and current_user.stat:
-        return render_template('views/admin/admin_manage_subtask.html', email = email, title = "Manage subtasks")
-    abort(404)
-
+# Private User Routes
 @app.route('/auth/logout') # Logout
 @login_required
 def logout():
@@ -146,6 +80,58 @@ def today():
 @login_required
 def upcoming():
     return render_template('views/upcoming.html', email = current_user.email)
+
+# Admin Routes
+@app.route('/auth/admin/login')
+@login_required
+def admin_login_route():
+    try:
+        admin = current_user.admin
+        if admin:
+            return render_template('views/admin/admin_login.html')
+        abort(404)
+    except AttributeError:
+        abort(404)
+
+@app.route('/admin/dashboard')
+@login_required
+def admin_dashboard():
+    try:
+        admin = current_user.admin
+        stat = current_user.stat
+        email = current_user.email
+        if admin and stat:
+            return render_template('views/admin/admin_dashboard.html', email = email, title = "Dashboard")
+        abort(404)
+    except AttributeError:
+        abort(404)
+
+@app.route('/admin/manage_users')
+@login_required
+def manage_users():
+    admin = current_user.admin
+    email = current_user.email
+    if admin and current_user.stat:
+        return render_template('views/admin/admin_manage_users.html', email = email, title = "Manage users")
+    abort(404)
+
+@app.route('/admin/manage_tasks')
+@login_required
+def manage_tasks():
+    admin = current_user.admin
+    email = current_user.email
+    if admin and current_user.stat:
+        return render_template('views/admin/admin_manage_task.html', email = email, title = "Manage tasks")
+    abort(404)
+
+@app.route('/admin/manage_subtasks')
+@login_required
+def manage_subtasks():
+    admin = current_user.admin
+    email = current_user.email
+    if admin and current_user.stat:
+        return render_template('views/admin/admin_manage_subtask.html', email = email, title = "Manage subtasks")
+    abort(404)
 
 ## API
 
@@ -208,4 +194,4 @@ sendemail.verifyEmail(app)
 sendemail.sendEmail(app)
 
 if __name__ == "__main__":
-    app.run(debug=True)  
+    app.run(debug=True)
