@@ -5,10 +5,14 @@
     --grey: #E6E6E6;
 }
 
+body{
+    backdrop-filter: blur(5px);
+    overflow: auto;
+}
+
 /* Welcome Page --index */
 
 #head nav{
-    background-color: #212529e1!important;
     color: #E6E6E6;
 }
 
@@ -45,11 +49,27 @@ nav ul a:hover{
 .z-1{
     z-index: 1;
 }
+
 header{
     transition: 1s ease-in-out;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+}
+
+.header-part-about::after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: 75vh;
+    background-color: #2c7286be;
+    mix-blend-mode: multiply;
+    backdrop-filter: saturate(180%);
+    z-index: 0;
 }
 
 /* header::before{
@@ -223,7 +243,7 @@ aside{
 }
 
 ::-webkit-scrollbar-thumb{
-    background-color: #6f8f75;
+    background-color: #484c49;
     border-radius: 5px;
 }
 
@@ -265,6 +285,8 @@ aside div ul li span{
 
 .sticky-wall-main{
     margin-left: 350px;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 aside{
@@ -605,6 +627,7 @@ nav li a{
 .header-part::after{
     content: "";
     position: absolute;
+    height: 75vh;
     top: 0;
     left: 0;
     right: 0;
@@ -624,7 +647,15 @@ nav li a{
 
 .get-started-btn{
     border-radius: 30px;
-    border: 1px solid var(--blue-col);
+    color: #E6E6E6!important;
+    background-color: transparent!important;
+    border: 2px solid #E6E6E6!important;
+}
+
+.get-started-btn:hover{
+    transition: .5s ease-in-out;
+    background-color: #198754!important;
+    border: 2px solid #198754!important;
 }
 
 .slide-indicator{
