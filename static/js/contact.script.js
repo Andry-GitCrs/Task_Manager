@@ -101,4 +101,4 @@ function showNotification(type, message) {
     }, 5000);
 }
 
-$("#header").css("background-image", "url('../../static/images/bg-4.avif')")
+$("#header").css("background-image", "url('../../static/images/bg-4.jpg')")

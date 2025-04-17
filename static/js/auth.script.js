@@ -158,4 +158,4 @@ function showNotification(type, message) {
   }
 
 /* End Login and Register */
-$("#header").css("background-image", "url('../../static/images/bg-4.avif')")
+$("#header").css("background-image", "url('../../static/images/bg-4.jpg')")

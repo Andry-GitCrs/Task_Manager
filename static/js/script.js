@@ -21,7 +21,7 @@ $(".menu-toggler").on("click", () => {
 /* Slide Animation */
 let headerPart = document.getElementById("header-part")
 let slideBtnContainer = document.getElementById("slide-btn-container")
-const bg = ["../../static/images/bg-1.avif", "../../static/images/bg-2.jpg", "../../static/images/bg-3.avif"]
+const bg = ["../../static/images/bg-1.jpg", "../../static/images/bg-2.jpg", "../../static/images/bg-3.jpg"]
 const buttonId = []
 let i = 1
 
