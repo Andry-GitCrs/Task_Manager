@@ -2,26 +2,97 @@
 {% block title %}
     About us
 {% endblock %}
-{% block aboutUsActive %}
-    active-link
+{% block head %}
+    <style>
+        .about-header {
+            background: linear-gradient(45deg, #0d6efd, #6f42c1);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        .team-card img {
+            object-fit: cover;
+            height: 200px;
+        }
+        .section-title {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
 {% endblock %}
+
 {% block header %}
 <header class="container-fluid h-5 px-0 header-part" id="header-part" id="head">
-    <div class="d-flex align-items-center justify-content-between py-5 slide-container">
-      <div class="d-flex justify-content-start align-items-center flex-column gap-3 z-1 w-auto">
-        
-        <div class="d-flex align-items-center flex-column gap-3 z-1 welcome-text">
-            <h1 class="text-light">About us</h1>
-            <p class="text-center text-light ">
-                Welcome to Task manager, the ultimate task management solution designed to help you stay organized, productive, and in control of your daily responsibilities.
-                Our mission is to simplify task management by providing a seamless and intuitive experience for individuals and teams. Whether you're managing personal projects or collaborating with colleagues, Task manager offers powerful features to streamline your workflow.
-            </p>
+    <div class="d-flex align-items-center justify-content-center py-5 slide-container">
+        <div class="d-flex justify-content-center align-items-center flex-column gap-3 z-1 w-auto">
+            <h1 class="text-light position-relative">About us</h1>
+            <p class="lead text-center">Helping you stay productive and organized every day.</p>
+            <div class="justify-content-between gap-2 position-absolute slide-btn-container" id="slide-btn-container"></div>
         </div>
-        
-        <div class="justify-content-between gap-2 position-absolute slide-btn-container" id="slide-btn-container"></div>
-      </div>
     </div>
 </header>  
+{% endblock %}
+{% block pub %}
+<main class="container my-5">
+    <section>
+      <h2 class="section-title">Our Mission</h2>
+      <p class="text-center">
+        Our mission is to simplify task management for individuals and teams. With a user-friendly interface,
+        customizable subtasks, and intuitive design, our goal is to boost your productivity and keep your workflow smooth.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="section-title">Features Highlight</h2>
+      <div class="row text-center">
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">Organized Tasks</h5>
+              <p class="card-text">Group tasks and subtasks to keep your work structured and clear.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">Productivity Boost</h5>
+              <p class="card-text">Stay on track with due dates, reminders, and priorities.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">User Friendly</h5>
+              <p class="card-text">Built with simplicity and speed in mind. No clutter, just results.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Meet The Developer</h2>
+      <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+          <div class="card team-card shadow-sm">
+            <img src="https://via.placeholder.com/300x200?text=Your+Photo" class="card-img-top" alt="Developer Photo">
+            <div class="card-body">
+              <h5 class="card-title">Andrianaivo Noé</h5>
+              <p class="card-text">Full-stack Dev passionate about building tools that empower users. Always learning, always coding 💻.</p>
+              <a href="mailto:andrianaivonoe403@gmail.com" class="btn btn-outline-primary btn-sm">Contact</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-light text-center p-3">
+    <small>© 2025 Task Manager Project by Andrianaivo Noé. All rights reserved.</small>
+  </footer>
 {% endblock %}
 
 {% block script %}

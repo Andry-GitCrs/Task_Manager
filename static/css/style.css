@@ -49,6 +49,7 @@ header{
     transition: 1s ease-in-out;
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
 }
 
 /* header::before{
@@ -598,9 +599,10 @@ nav li a{
     color: white;
     transition: 2s ease-in-out;
     background-size: cover;
+    min-height: 60vh;
 }
 
-.header-part::before{
+.header-part::after{
     content: "";
     position: absolute;
     top: 0;
@@ -651,3 +653,21 @@ nav li a{
 }
 
 /*end slide*/
+.total_users{
+    background-color: #00ff3ca1!important;
+}
+
+.users_tasks{
+    background-color: #ff9900a8!important;
+}
+
+.users_subtasks{
+    background-color: #555a57a6!important;
+}
+
+.finished_subtasks{
+    background-color: #1c915a81!important;
+}
+.text-first{
+    color: #1c915a81!important;
+}
