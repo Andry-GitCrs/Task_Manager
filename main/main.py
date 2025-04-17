@@ -43,6 +43,10 @@ def about():
 def contact():
     return render_template('views/contact.html')
 
+@app.route('/login')
+def login_page():
+    return render_template('views/login.html')
+
 ## Auth route
 auth.auth(app)
 login.login(app, database) # Login

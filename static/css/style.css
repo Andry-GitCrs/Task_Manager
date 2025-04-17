@@ -115,9 +115,10 @@ header{
 /* Login page  */
 
 .form-container, .contact-form-container{
-    margin-top: 64px;
     display: flex;
     flex-direction: row;
+    width: 75%;
+    margin: 100px auto;
 }
 
 .side{
@@ -139,7 +140,7 @@ textarea{
     height: 325px;
 }
 
-.contact-form-container i, .form-container i{
+.contact-form-container i, .form-container i, .contact-title, .footer-icon{
     color: rgb(233, 84, 14);
 }
 
