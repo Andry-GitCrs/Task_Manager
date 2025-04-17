@@ -5,9 +5,8 @@
 {% block loginActive %}
     active-link
 {% endblock %}
-{% block slide %}
-    <div class="bg-light shadow align-items-center gap-3 p-2 form-container py-5">
-        {% block content %}
+{% block pub %}
+    <div class=" align-items-center mx-auto gap-3 p-2 form-container w-50 py-5">
             <div class="bg-light overflow-hidden auth-img" id="login-img">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="100%" height="100%">
             </div>
@@ -56,7 +55,6 @@
             <div class="bg-light overflow-hidden auth-img d-none" id="register-img">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="100%" height="100%">
             </div>
-        {% endblock %}
     </div>
 {% endblock %}
 {% block script %}

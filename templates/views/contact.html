@@ -5,14 +5,13 @@
 {% block contactActive %}
     active-link
 {% endblock %}
-{% block slide %}
-    <div class="bg-light shadow align-items-center gap-3 p-2 contact-form-container">
-        {% block content %}
+{% block pub %}
+    <div class="py-5 bg-light align-items-center justify-content-center gap-3 p-2 contact-form-container">
             <!-- Contact form -->
-            <form class="p-3 w-100 h-100 d-flex flex-row" id="contact-form">
+            <form class="p-3 w-75 h-100 d-flex flex-row align-items-center gap-3" id="contact-form">
                 <div class="side">
                     <h2>Contact Us</h2>
-                    <p class="w-100" style="line-height: 25px;">Feel Free to use the form or drop us an email. Old-fashioned phone calls work too.</p>
+                    <p class="w-100" style="line-height: 25px;">Feel Free to use the form or drop us an email. Phone calls work too.</p>
                     <ul class="p-0">
                         <li class="list-inline-item d-block" ><i class="me-2 fas fa-phone"></i>+261 33 14 568 86</li>
                         <li class="list-inline-item d-block" ><i class="me-2 fas fa-envelope"></i>andrianaivonoe403@gmail.com</li>
@@ -49,17 +48,13 @@
                         </div>
         
                         <!--Submit button-->
-                        <div class="bg-light p-0 my-1">
-                            <button type="submit" class="btn text-light fw-bold rounded-3" id="submit_feedback">Submit</button>
+                        <div class="bg-light p-0 my-1 text-center">
+                            <button type="submit" class="btn text-light fw-bold rounded-3 w-25" id="submit_feedback">Submit</button>
                         </div>
         
                     </div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
                 </div>
             </form>
-        {% endblock %}
     </div>
 {% endblock%}
 

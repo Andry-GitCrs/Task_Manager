@@ -5,18 +5,72 @@
 {% block homeActive %}
     active-link
 {% endblock %}
-{% block content %}
-    <h1 class="text-light">Task Manager App</h1>
-    <p class="text-center text-light">
-        "Welcome to Task Manager App – Your Ultimate Productivity Companion!
-        Managing tasks has never been easier! With our intuitive and user-friendly interface, you can organize your daily activities, track progress, and stay productive effortlessly. Whether you're handling personal to-do lists, work projects, or long-term goals, our app is designed to help you stay on track.
-        No more scattered notes or forgotten tasks—everything you need is in one place! Take control of your workflow and boost your productivity. Click "Get Started" now and experience the power of seamless task management!"
-    </p>
-    <a href="/auth">
-        <button class="btn rounded-5 shadow py-3 px-5 fw-bold btn-warning text-dark">
-            GET STARTED
-        </button>
-    </a>
+{% block head %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}
+{% block header %}
+<header class="container-fluid h-5 px-0 header-part" id="header-part" id="head">
+    <div class="d-flex align-items-center justify-content-between py-5 slide-container">
+      <div class="d-flex justify-content-start align-items-center flex-column gap-3 z-1 w-auto">
+        
+        <div class="d-flex align-items-center flex-column gap-3 z-1 welcome-text">
+            <h2>Manage your task efficiently with our app</h2>
+            <p class="text-center desc-text">
+                "Welcome to Task Manager App – Your Ultimate Productivity Companion!
+                Managing tasks has never been easier! With our intuitive and user-friendly interface, you can organize your daily activities, track progress, and stay productive effortlessly. Whether you're handling personal to-do lists, work projects, or long-term goals, our app is designed to help you stay on track.
+                No more scattered notes or forgotten tasks—everything you need is in one place! Take control of your workflow and boost your productivity. Click "Get Started" now and experience the power of seamless task management!"
+            </p>
+            <a href="/auth">
+                <button class="btn rounded-5 shadow py-3 px-5 fw-bold get-started-btn bg-dark text-light">GET STARTED</button>
+            </a>
+        </div>
+        
+        <div class="justify-content-between gap-2 position-absolute slide-btn-container" id="slide-btn-container"></div>
+      </div>
+    </div>
+</header>  
+{% endblock %}
+{% block pub %}
+<div class="container-fluid">
+    <!-- Features Section -->
+    <div class="container my-5">
+        <div class="row text-center text-light">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 bg-dark border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-warning">📌 Task Organization</h5>
+                        <p class="card-text">Categorize, tag, and prioritize your tasks for smarter planning.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 bg-dark border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-warning">⏱ Progress Tracking</h5>
+                        <p class="card-text">Visualize your progress and stay motivated with real-time updates.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 bg-dark border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-warning">🧠 Simple & Smart</h5>
+                        <p class="card-text">Enjoy a clean interface and seamless task management experience.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Why Use Section -->
+    <div class="container text-center bg-warning text-dark rounded-4 py-4 px-3 shadow-sm mb-5">
+        <h4>Why use our Task Manager?</h4>
+        <p class="mb-0">Boost productivity, avoid burnout, and stay on top of your goals every single day.</p>
+    </div>
+
+</div>
+
+  
+  
 {% endblock %}
 {% block script %}
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>

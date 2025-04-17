@@ -57,7 +57,7 @@ def logout():
         user.activate()
         db.session.commit()
     logout_user()
-    return redirect('/auth')
+    return redirect('/')
 
 @app.route('/dashboard') # Dashboard
 @login_required
