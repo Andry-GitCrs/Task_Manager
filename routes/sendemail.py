@@ -38,7 +38,7 @@ def sendEmail(app):
                 subject = f'Task Manager App demand confirmation',
                 sender = app.config['MAIL_USERNAME'],
                 recipients = [user_email],
-                body = f"Mr/Ms , {user_first_name} {user_last_name}thank you for reaching out to us. Your feedback has been received. We'll respond you a soon as possible\nYour message: {user_message}"
+                body = f"Mr/Ms , {user_first_name} {user_last_name} thank you for reaching out to us. Your feedback has been received. We'll respond you a soon as possible\nYour message: {user_message}"
             )
 
             try:

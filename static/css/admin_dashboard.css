@@ -173,3 +173,7 @@ hr{
     margin: auto 10px;
     display: none;
 }
+
+.time{
+    transform: scale(0.7);
+}

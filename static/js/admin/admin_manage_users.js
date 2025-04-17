@@ -25,15 +25,21 @@ const fetchUserData = async () => {
                     <td>${user.finished_tasks_count}</td>
                     <td>${user.user_subtasks_count}</td>
                     <td>${user.finished_subtasks_count}</td>
-                    <td class='date'>${formatDate(user.created_at)}</td>
-                    <td class='date'>${formatDate(user.updated_at)}</td>
+                    <td class='date'>
+                        ${formatDate(user.created_at).date}
+                        <span class="btn text-success time rounded-pill border border-success">${formatDate(user.created_at).time}</span>
+                    </td>
+                    <td class='date'>
+                        ${formatDate(user.updated_at).date}
+                        <span class="btn text-success time rounded-pill border border-success">${formatDate(user.updated_at).time}</span>
+                    </td>
                     <td><span class="badge bg-${activityColor}">${activityText}</span></td>
                     <td>
                         <div class="form-check form-switch d-flex justify-content-center">
                             <input class="form-check-input" type="checkbox" ${user.stat ? 'checked' : ''} onchange="toggleStatus(${user.user_id}, this.checked)">
                         </div>
                     </td>
-                    <td class='d-flex gap-2'>
+                    <td class=''>
                         <div class="dropdown">
                             <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-pen text-success"></i>
@@ -75,8 +81,21 @@ const fetchUserData = async () => {
 fetchUserData()
 function formatDate(dateStr) {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-GB'); // dd/mm/yyyy format
+
+    // Format date: Jan 25 2025
+    const optionsDate = { year: 'numeric', month: 'short', day: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', optionsDate);
+
+    // Format time: 20:00
+    const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false };
+    const formattedTime = date.toLocaleTimeString('en-US', optionsTime);
+
+    return {
+        date: formattedDate,
+        time: formattedTime
+    };
 }
+
 
 async function toggleStatus(userId) {
     document.getElementById("loading").style.display = 'inline';
