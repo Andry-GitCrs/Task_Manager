@@ -346,7 +346,7 @@ const fetchTasks = async () => {
                 const bg_color = task.bg_color
                 addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color,  subtasks)
             });
-            return responseData.length
+            return responseData
         } else {
             showNotification("error", responseData.message)
         }
