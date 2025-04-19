@@ -15,6 +15,10 @@ $(".menu-toggler").on("click", () => {
     }
 })
 
+document.getElementById('menu-btn').addEventListener('click', function () {
+    document.getElementById('menu-list').classList.toggle('active');
+});
+
 
 /* End menu */
 
@@ -96,3 +100,4 @@ function goTo(dir){
         nav.style.top = "0px"
     }
 }
+

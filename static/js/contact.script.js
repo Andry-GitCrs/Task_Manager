@@ -75,6 +75,11 @@ async function verify_email(email) {
 }
 
 
+document.getElementById('menu-btn').addEventListener('click', function () {
+    document.getElementById('menu-list').classList.toggle('active');
+});
+
+
 //Notification displayer
 function showNotification(type, message) {
     const notification = document.getElementById('notification');

@@ -139,7 +139,7 @@ header{
 .form-container, .contact-form-container{
     display: flex;
     flex-direction: row;
-    width: 75%;
+    width: 60%;
     margin: 100px auto;
 }
 
@@ -648,9 +648,10 @@ nav li a{
 
 .get-started-btn{
     border-radius: 30px;
-    color: #E6E6E6!important;
+    color: #c3d4ff!important;
     background-color: transparent!important;
-    border: 2px solid #E6E6E6!important;
+    border: 2px solid #198754!important;
+    backdrop-filter: blur(5px);
 }
 
 .get-started-btn:hover{

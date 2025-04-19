@@ -6,7 +6,8 @@
     active-link
 {% endblock %}
 {% block pub %}
-    <div class="bg-light shadow align-items-center mx-auto gap-3 p-2 form-container w-50 py-5 rounded-3">
+    <div class="d-flex align-items-center justify-content-center vh-100 ">
+        <div class="bg-light shadow align-items-center mx-auto gap-3 p-2 form-container py-5 rounded-3">
             <div class="bg-light overflow-hidden auth-img" id="login-img">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="100%" height="100%">
             </div>
@@ -29,7 +30,7 @@
                 <a class="text-dark text-center text-decoration-none fw-bold" href="#">Forgot Password?</a>
                 <a class="text-center text-decoration-none" href="" id="register-btn"> <i class="fas fa-arrow-left mx-2"></i> Create your account</a>
             </form>
-
+    
             <!--Registration  form-->
             <form class="p-3 d-none" id="register_form" name="register" method="POST" action="/auth">
                 <h2 class="text-dark text-center">Member Register</h2>
@@ -55,6 +56,7 @@
             <div class="bg-light overflow-hidden auth-img d-none" id="register-img">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="100%" height="100%">
             </div>
+        </div>
     </div>
 {% endblock %}
 {% block script %}
