@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf
+from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser
 from database import pgconnexion
 
 ## App config
@@ -198,11 +198,11 @@ sendemail.verifyEmail(app)
 sendemail.sendEmail(app)
 
 ## Test zone
-
 exportcsv.export_to_csv(app, database)
 exportpdf.export_to_pdf(app, database)
 
 ## End test zone
+adduser.adduser(app, database)
 
 if __name__ == "__main__":
     app.run(debug=True)

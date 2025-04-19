@@ -111,7 +111,7 @@ function makeCircularChart(userData){
             datasets: [{
                 label: 'Completion %',
                 data: [finishedTotal, totalAll - finishedTotal],
-                backgroundColor: ['#eaec45', '#1c915a94' ],
+                backgroundColor: ['#8bfc40d0', '#74757431'],
                 borderWidth: 1
             }]
         },

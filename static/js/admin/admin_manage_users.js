@@ -16,54 +16,7 @@ const fetchUserData = async () => {
                 document.getElementById('simple_users_nbr').textContent = userData.data.total_users
                 document.getElementById('admin_nbr').textContent = userData.data.total_admin
 
-                const row = document.createElement('tr');
-                row.id = `row${user.user_id}`
-                row.innerHTML = `
-                    <td class='fw-bold'>${user.user_id}</td>
-                    <td class='text-start'>${user.email}</td>
-                    <td>${user.tasks_count}</td>
-                    <td>${user.finished_tasks_count}</td>
-                    <td>${user.user_subtasks_count}</td>
-                    <td>${user.finished_subtasks_count}</td>
-                    <td class='date'>
-                        ${formatDate(user.created_at).date}
-                        <span class="btn text-success time rounded-pill border border-success">${formatDate(user.created_at).time}</span>
-                    </td>
-                    <td class='date'>
-                        ${formatDate(user.updated_at).date}
-                        <span class="btn text-success time rounded-pill border border-success">${formatDate(user.updated_at).time}</span>
-                    </td>
-                    <td><span class="badge bg-${activityColor}">${activityText}</span></td>
-                    <td>
-                        <div class="form-check form-switch d-flex justify-content-center">
-                            <input class="form-check-input" type="checkbox" ${user.stat ? 'checked' : ''} onchange="toggleStatus(${user.user_id}, this.checked)">
-                        </div>
-                    </td>
-                    <td class=''>
-                        <div class="dropdown">
-                            <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-pen text-success"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li class="text-center d-flex justify-content-between align-items-center gap-2 px-2">
-                                    <i class="fas fa-user-shield ${user.admin ? 'text-success' : 'text-danger'}"></i>
-                                    <h6 class="m-0">Admin</h6>
-                                    <div class="form-check form-switch d-flex justify-content-center">
-                                        <input class="form-check-input" type="checkbox" ${user.admin ? 'checked' : ''} onchange="toggleAdmin(${user.user_id}, this.checked)">
-                                    </div>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#" onclick="editProfile(${user.user_id})">
-                                        <i class="fas fa-id-badge me-2"></i> Edit Profile
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <button class="btn btn-sm" onclick="deleteUser(${user.user_id})">
-                            <i class="fas fa-trash text-danger"></i>
-                        </button>
-                    </td>
-                `;
+                const row = user_row(user, activityColor, activityText)
                             
                 tableBody.appendChild(row);
 
@@ -76,6 +29,58 @@ const fetchUserData = async () => {
         
     }
     document.getElementById("loading").style.display = 'none'
+}
+
+function user_row(user, activityColor, activityText){
+    const row = document.createElement('tr');
+    row.id = `row${user.user_id}`
+    row.innerHTML = `
+        <td class='fw-bold'>${user.user_id}</td>
+        <td class='text-start'>${user.email}</td>
+        <td>${user.tasks_count}</td>
+        <td>${user.finished_tasks_count}</td>
+        <td>${user.user_subtasks_count}</td>
+        <td>${user.finished_subtasks_count}</td>
+        <td class='date'>
+            ${formatDate(user.created_at).date}
+            <span class="btn text-success time rounded-pill border border-success">${formatDate(user.created_at).time}</span>
+        </td>
+        <td class='date'>
+            ${formatDate(user.updated_at).date}
+            <span class="btn text-success time rounded-pill border border-success">${formatDate(user.updated_at).time}</span>
+        </td>
+        <td><span class="badge bg-${activityColor}">${activityText}</span></td>
+        <td>
+            <div class="form-check form-switch d-flex justify-content-center">
+                <input class="form-check-input" type="checkbox" ${user.stat ? 'checked' : ''} onchange="toggleStatus(${user.user_id}, this.checked)">
+            </div>
+        </td>
+        <td class=''>
+            <div class="dropdown">
+                <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-pen text-success"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li class="text-center d-flex justify-content-between align-items-center gap-2 px-2">
+                        <i class="fas fa-user-shield ${user.admin ? 'text-success' : 'text-danger'}"></i>
+                        <h6 class="m-0">Admin</h6>
+                        <div class="form-check form-switch d-flex justify-content-center">
+                            <input class="form-check-input" type="checkbox" ${user.admin ? 'checked' : ''} onchange="toggleAdmin(${user.user_id}, this.checked)">
+                        </div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#" onclick="editProfile(${user.user_id})">
+                            <i class="fas fa-id-badge me-2"></i> Edit Profile
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-sm" onclick="deleteUser(${user.user_id})">
+                <i class="fas fa-trash text-danger"></i>
+            </button>
+        </td>
+    `;
+    return row
 }
 
 fetchUserData()
@@ -188,11 +193,64 @@ async function toggleAdmin(user_id) {
         const data = await response.json();
         if(response.ok){
             showNotification("success", data.message)
+
         }else{
             showNotification("error", data.error)
         }
+
     } catch (error) {
         showNotification("error", error)
     }
+
     document.getElementById("loading").style.display = 'none';
 }
+
+const adduser_form = document.getElementById('adduser')
+
+adduser_form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const new_email = document.getElementById("new_email").value.trim('')
+    const new_password = document.getElementById("password").value.trim('')
+    const confirm_password = document.getElementById("confirm_password").value.trim('')
+    const admin_privilege = document.getElementById("adminSwitch").checked
+
+    new_user = {
+        "email": new_email,
+        "password": new_password,
+        "confirmation_password": confirm_password,
+        "admin_privilege": admin_privilege
+    }
+
+    try {
+        const response = await fetch("/admin/adduser", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(new_user)
+        });
+
+        const responseData = await response.json();
+
+        if (response.ok) {  //Response with status code 200
+            showNotification("success", responseData.message)
+            const user = responseData.data             
+            let simple_user_nbr = document.getElementById('simple_users_nbr')
+            let admin_nbr = document.getElementById('admin_nbr')
+            const tableBody = document.getElementById('userTableBody')
+            const row = user_row(user, 'danger', '0%')
+            simple_user_nbr = parseInt(simple_user_nbr.textContent)
+            admin_nbr = parseInt(admin_nbr.textContent)
+            simple_user_nbr += 1
+            document.getElementById('simple_users_nbr').textContent = simple_user_nbr
+            document.getElementById('admin_nbr').textContent = user.admin ? admin_nbr + 1 : admin_nbr 
+            tableBody.appendChild(row)
+
+        } else {
+            showNotification("error", responseData.error)
+        }
+
+    } catch (error) {
+        showNotification("error", error)
+    }
+
+    document.getElementById("loading").style.display = "none";
+})
