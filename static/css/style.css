@@ -236,6 +236,7 @@ aside{
     width: 25%;
     height: 100vh;
     overflow-y: auto;
+    z-index: 99;
 }
 
 ::-webkit-scrollbar{

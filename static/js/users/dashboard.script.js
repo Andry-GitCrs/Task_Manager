@@ -712,15 +712,3 @@ $('.updateForm').on('submit', async function(e) {
     }
     $(".loading-dash").css("display", 'none');
 });
-
-/* Show menu  */
-let menuStat = false
-$('.menu-btn').on('click', () => {
-    if(!menuStat){
-        $("aside").css("left", "0")
-        menuStat = true
-    }else{
-        $("aside").css("left", "-500px")
-        menuStat = false
-    }
-})
