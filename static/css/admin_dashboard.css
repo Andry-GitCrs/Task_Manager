@@ -57,8 +57,6 @@ thead tr th{
     vertical-align: middle;
 }
 
-
-
 /* Toggler */
 .sidebar.hidden {
     width: 80px;
@@ -176,4 +174,10 @@ hr{
 
 .time{
     transform: scale(0.7);
+}
+
+@media screen and (max-width: 1125px){
+    aside{
+        width: 70%!important;
+    }
 }

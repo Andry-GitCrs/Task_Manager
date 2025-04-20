@@ -1,43 +1,5 @@
 @media screen and (max-width: 1125px){
 
-    /* Welcome page responsive */
-    .menu-list{
-        display: none;
-        background-color: rgba(51, 47, 47, 0.336);;
-        position: absolute;
-        top: 78px;
-        padding: 15px 0;
-        right: 0;
-        margin-right: 0px;
-        width: 200px;
-        z-index: 9!important;
-        flex-direction: column;
-        justify-content: center!important;
-        align-items: center;
-        transition: 1s all;
-    }
-
-    .menu-list ul a{
-        text-align: center;
-        height: 50px;
-    }
-
-    .menu-list > a{
-        width: 100%;
-    } 
-
-    .menu-list ul{
-        flex-direction: column;
-    }
-
-    .menu-toggler{
-        display: block;
-    }
-
-    .welcome-text{
-        z-index: 0!important;
-    }
-
     .slide-container h1{
         text-align: center;
         font-size: 50px;
@@ -82,11 +44,6 @@
     main h1{
         text-align: center;
     }
-/* 
-    aside{
-        width: 50%;
-        left: -500px;
-    } */
 
     .sticky-wall-main{
         margin: 0;
@@ -161,10 +118,6 @@
     }
     /* End Login and registration page */
 
-    /*  Dashboard */
-    aside{
-        left: -500px;
-    }
 }
 
 @media screen and (max-width: 766px){
@@ -180,41 +133,8 @@
     main .container{
         width: 100%;
     }
-
-    aside{
-        width: 60%;
-    }
 }
 
-@media screen and (max-width: 1000px) {
-    aside{
-        left: -500px;
-    }
-
-}
-
-
-/* Navbar container responsiveness */
-#nav {
-    width: 100%;
-    max-width: 1200px;
-    background-color: transparent;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    z-index: 1000;
-}
-  
-/* Make the nav content wrap on small screens */
-#menu-list {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    list-style: none;
-    gap: 0.5rem;
-}
-  
 /* Hide menu list on small screens initially */
 @media (max-width: 768px) {
     #menu-list {
@@ -248,21 +168,3 @@
         display: none;
     }
 }
-
-/* Hamburger button style */
-.menu-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-}
-
-.menu-btn hr {
-    margin: 4px 0;
-    height: 5px;
-    width: 25px;
-    background-color: #dfdfdf;
-    border: none;
-    border-radius: 2px;
-}
-  

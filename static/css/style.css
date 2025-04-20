@@ -73,20 +73,9 @@ header{
     z-index: 0;
 }
 
-/* header::before{
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: auto;
-    height: 100%;
-    background-color: #2c7286be;
-    mix-blend-mode: multiply;
-    backdrop-filter: saturate(180%);
-    z-index: 0;
-} */
+.login-btn:hover{
+    border-color: transparent!important;
+}
 
 .slide-container{
     height: 100vh;
@@ -215,30 +204,6 @@ textarea{
 
 /* Start Dashboard page */
 
-
-.menu-btn{
-    width: 35px;
-    padding: 0;
-    display: none;
-}
-
-.menu-btn-mobile{
-    display: none;
-}
-
-.menu-btn > hr{
-    border: 2px solid black;
-    border-radius: 5px;
-}
-
-aside{
-    left: 0;
-    width: 25%;
-    height: 100vh;
-    overflow-y: auto;
-    z-index: 99;
-}
-
 ::-webkit-scrollbar{
     width: 5px;
     background-color: transparent;
@@ -249,7 +214,13 @@ aside{
     border-radius: 5px;
 }
 
-
+#aside{
+    height: 100vh;
+    background-color: #f5f4f4;
+    overflow: auto;
+    z-index: 999;
+    transition: .5s ease-in-out;
+}
 
 aside form input{
     border: none;
@@ -268,7 +239,6 @@ aside div ul li:hover{
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    text-decoration: underline;
 }
 
 aside div ul li span{
@@ -286,14 +256,9 @@ aside div ul li span{
 }
 
 .sticky-wall-main{
-    margin-left: 350px;
+    margin-left: 300px;
     height: 100vh;
     overflow-y: auto;
-}
-
-aside{
-    z-index: 99;
-    transition: .5s all;
 }
 
 aside i{
@@ -376,6 +341,10 @@ aside div ul li{
 
 /* Main */
 
+main{
+    transition: .5s ease-in-out;
+}
+
 main .container{
     transition: 2s all;
 }
@@ -457,7 +426,12 @@ main .container li:hover{
 }
 
 #calendar{
-    z-index: 0;
+    z-index: -1;
+    height: 100vh;
+}
+
+#calendar-container{
+    overflow: auto;
 }
 
 /* End Main */
@@ -702,6 +676,47 @@ nav li a{
 .finished_subtasks{
     background-color: #1c915a81!important;
 }
+
 .text-first{
     color: #1c915a81!important;
 }
+
+
+/* Navbar container responsiveness */
+#nav {
+    width: 100%;
+    max-width: 1200px;
+    background-color: transparent;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+}
+  
+/* Make the nav content wrap on small screens */
+#menu-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    gap: 0.5rem;
+}
+
+/* Hamburger button style */
+.menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.menu-btn hr {
+    margin: 4px 0;
+    height: 5px;
+    width: 25px;
+    background-color: #dfdfdf;
+    border: none;
+    border-radius: 2px;
+}
+  

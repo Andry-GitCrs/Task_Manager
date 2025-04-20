@@ -15,14 +15,14 @@
     <title>{% block title %} Base title {% endblock %}</title>
 </head>
 <body>
-    <aside class="bg-light px-3 rounded-2 position-fixed mb-2 mb-0" id="aside">
+    <aside class="px-3 rounded-2 position-fixed mb-2 mb-0 py-2" id="aside">
         <div class="d-flex justify-content-between align-items-center my-1">
             <h3 class="text-dark d-flex align-items-center justify-content-center gap-2">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="40px" height="40px">
                 Task manager
             </h3>
-            <button class="btn menu-btn">
-                <hr><hr><hr>
+            <button class="btn hide-btn">
+                <i class="fas fa-angle-left"></i>
             </button>
         </div>
         <form class="d-flex justify-content-between align-items-center border px-3 py-2 rounded-2" action="">
@@ -34,28 +34,28 @@
             <h4 class="text-dark fw-bold" >TASKS</h4>
             <ul class="p-0">
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block upcoming %}{% endblock %}">
-                    <div>
+                    <div class="w-100 d-flex align-items-center">
                         <i class="text-warning fas fa-clock"></i>
-                        <a  class="text-dark text-decoration-none" href="/dashboard/upcoming">Upcoming</a>
+                        <a  class="text-dark text-decoration-none w-100" href="/dashboard/upcoming">Upcoming</a>
                     </div>
                 </li>
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block today %}{% endblock %}">
-                    <div>
+                    <div class="w-100 d-flex align-items-center">
                         <i class="text-success fas fa-list"></i>
-                        <a  class="text-dark text-decoration-none" href="/dashboard/today">Today</a>
+                        <a  class="text-dark text-decoration-none w-100" href="/dashboard/today">Today</a>
                     </div>
                     <span class="text-dark" id="todayTaskNbr">0</span>
                 </li>
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block calendar %}{% endblock %}">
-                    <div>
+                    <div class="w-100 d-flex align-items-center">
                         <i class="text-primary fas fa-calendar-days"></i>
-                        <a  class="text-dark text-decoration-none" href="/dashboard/calendar">Calendar</a>
+                        <a  class="text-dark text-decoration-none w-100" href="/dashboard/calendar">Calendar</a>
                     </div>
                 </li>
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block stickywall %}{% endblock %}">
-                    <div>
+                    <div class="w-100 d-flex align-items-center">
                         <i class="text-info fas fa-grip"></i>
-                        <a  class="text-dark text-decoration-none " href="/dashboard">Sticky Wall</a>
+                        <a  class="text-dark text-decoration-none w-100" href="/dashboard">Sticky Wall</a>
                     </div>
                     <span class="text-dark bg-light" id="taskNbr">0</span>
                 </li>
@@ -91,7 +91,7 @@
             </ul>
         </div>
         <div class="mt-2">
-            <ul class="p-0 _user_action">
+            <ul class="p-0 _user_action m-0">
                 <li class="my-2 py-1">
                     <i class="text-danger fas fa-bug"></i>
                     <a class="text-dark text-decoration-none" href="mailto:andrianaivonoe403@gmail.com">Bug report</a>
@@ -103,7 +103,7 @@
                             My profile
                         </div>
                         <!-- Dropdown Form -->
-                        <div class="dropdown-menu p-3 dropdown-form">
+                        <div class="dropdown-menu p-3 dropdown-form position-relative">
                           <form class="updateForm">
                             <h4>
                                 <i class="text-dark fas fa-cog"></i>
@@ -144,6 +144,9 @@
         </div>
     </aside>
     <main class="sticky-wall-main p-3 py-4">
+        <button class="btn hide-btn hide-btn2" style="display: none;">
+            <i class="fas fa-angle-left"></i>
+        </button>
         {% block content %}
             <h1>
                 Hello world
@@ -156,7 +159,25 @@
         <span id="notification-message"></span>
     </div>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-    {% block script %} 
+    {% block script %}
     {% endblock %}
+    <script>
+        let hidden = false
+        $('.hide-btn').on('click', () => {
+           if(!hidden){
+                $('#aside').css('transform', 'translateX(-100%)')
+                $('.sticky-wall-main').css('margin-left', '0')
+                $('.hide-btn i').css('transform', 'rotate(180deg)')
+                $('.hide-btn2').css('display', 'inline')
+                hidden = true
+           }else{
+                $('#aside').css('transform', 'translateX(0)')
+                $('.hide-btn i').css('transform', 'rotate(0deg)')
+                $('.hide-btn2').css('display', 'none')
+                hidden = false
+           }
+            // alert('Hello')
+        })
+    </script>
 </body>
 </html>
