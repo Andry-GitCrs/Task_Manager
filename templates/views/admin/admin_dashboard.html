@@ -1,0 +1,87 @@
+{% extends 'views/admin/base.html' %}
+{% block title %}
+    Admin Dashboard
+{% endblock %}
+{% block head %}
+    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+{% endblock %}
+{% block dashboardActive %}
+    border shadow
+{% endblock %}
+{% block content %}
+    <div class="container-fluid rounded-3 p-1">
+        <div class="row">
+            <div class="col-md-3 p-2">
+                <div class="card text-bg-warning text-center">
+                    <div class="card-body shadow bg-light rounded-3 total_users">
+                        <i class="fas fa-users text-secondary"></i>
+                        <h5 class="card-title">Total Users</h5>
+                        <p class="card-text" id="total_users">N/a</p>
+                        <hr class="m-0 border-secondary">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 p-2">
+                <div class="card text-bg-success text-center">
+                    <div class="card-body shadow bg-light rounded-3 users_tasks">
+                        <i class="fas fa-tasks text-success"></i>
+                        <h5 class="card-title">Users Tasks</h5>
+                        <p class="card-text" id="users_tasks">N/a</p>
+                        <hr class="m-0 border-success">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 p-2">
+                <div class="card text-bg-info text-center">
+                    <div class="card-body shadow bg-light rounded-3 users_subtasks">
+                        <i class="fas fa-list text-warning"></i>
+                        <h5 class="card-title">Subtasks</h5>
+                        <p class="card-text" id="users_subtasks">N/a</p>
+                        <hr class="m-0 border-warning" id="users_subtasks_percent">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 p-2">
+                <div class="card text-bg-danger text-center">
+                    <div class="card-body shadow bg-light rounded-3 finished_subtasks">
+                        <i class="fas fa-check-double text-success"></i>
+                        <h5 class="card-title">Finished subtasks</h5>
+                        <p class="card-text" id="finished_subtasks">N/a</p>
+                        <hr class="m-0 border-success">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- charts goes here -->
+    <div class="container-fluid bg-light shadow p-2 pt-3 charts_container rounded-3">
+        <div class="row h-50 m-0">
+            <div class="col-7">
+                <div class="col-12 h-100 border rounded-3 pt-1">
+                    <h4 class="text-center my-1"><i class="fas fa-chart-line text-primary"></i> User Activity Line Chart</h4>
+                    <canvas class="" id="user_activity_lineChart"></canvas>
+                </div>
+            </div>
+            <div class="col-5 d-flex justify-content-center align-items-center">
+                <div class="col-9 h-100 border rounded-3">
+                    <div class="position-relative" id="percentage">
+                        <span id="percentage_nbr">N/a</span>
+                        <span style="font-size: 15px;">%</span>
+                    </div>
+                    <canvas id="user_circularChart" width="200" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="row h-50 m-0 my-2">
+            <div class="col-12">
+                <div class="h-100 border rounded-3 d-flex justify-content-center align-items-center">
+                    <canvas id="usersChart" height="70%"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{{ url_for('static', filename='js/admin/admin_dashboard.js') }}" ></script>
+{% endblock %}

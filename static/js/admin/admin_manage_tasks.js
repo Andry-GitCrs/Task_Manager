@@ -7,7 +7,6 @@ const fetchTasks = async () => {
           taskData = data.data
           showNotification("success", data.message)
           const tableBody = document.getElementById('taskTableBody');
-          console.log(taskData)
           taskData.forEach(task => {
               const percent = task.subtask_nbr > 0 ? Math.round((task.finished_subtask_nbr / task.subtask_nbr) * 100) : 0;
               const activityColor = percent >= 80 ? 'success' : percent >= 50 ? 'warning' : 'danger';
@@ -19,8 +18,14 @@ const fetchTasks = async () => {
                 <td class='fw-bold'>${task.task_id}</td>
                 <td class='text-start'>${task.task_title}</td>
                 <td class='text-start'>${task.owner}</td>
-                <td class=''>${formatDate(task.created_at)}</td>
-                <td class=''>${formatDate(task.updated_at)}</td>
+                <td class=''>
+                  ${formatDate(task.created_at).date}
+                  <span class="btn text-success time rounded-pill border border-success">${formatDate(task.created_at).time}</span>
+                </td>
+                <td class=''>
+                  ${formatDate(task.updated_at).date}
+                  <span class="btn text-success time rounded-pill border border-success">${formatDate(task.updated_at).time}</span>
+                </td>
                 <td class="${percent == 100 ? 'text-success' : 'text-danger'}">${percent == 100 ? "Yes" : "No"}</td>
                 <td class=''>${task.subtask_nbr}</td>
                 <td class=''>${task.finished_subtask_nbr}</td>
@@ -30,7 +35,7 @@ const fetchTasks = async () => {
                     <input class="form-check-input" type="checkbox" ${task.stat ? 'checked' : ''} onchange="">
                   </div>
                 </td>
-                <td class='d-flex gap-2'>
+                <td class=''>
                   <div class="dropdown">
                     <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                       <i class="fas fa-pen text-success"></i>
@@ -96,7 +101,19 @@ function showNotification(type, message) {
 
 function formatDate(dateStr) {
   const date = new Date(dateStr);
-  return date.toLocaleDateString('en-GB'); // dd/mm/yyyy format
+
+  // Format date: Jan 25 2025
+  const optionsDate = { year: 'numeric', month: 'short', day: 'numeric' };
+  const formattedDate = date.toLocaleDateString('en-US', optionsDate);
+
+  // Format time: 20:00
+  const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: false };
+  const formattedTime = date.toLocaleTimeString('en-US', optionsTime);
+
+  return {
+      date: formattedDate,
+      time: formattedTime
+  };
 }
 
 showNotification("success", "Task manager")

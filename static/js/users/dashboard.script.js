@@ -59,6 +59,7 @@ $(document).ready(function() {
             }
 
             
+            $(".loading-dash").css("display", 'inline');
             try {
                 const response = await fetch("/api/user/addTask", {
                     method: "POST",
@@ -96,15 +97,19 @@ $(document).ready(function() {
                     showNotification("success", responseData.message)
                 } else {
                     showNotification("error", responseData.error)
+                    $(".loading-dash").css("display", 'none');
                 }
 
             } catch (error) {
                 showNotification("error", responseData.error)
+                $(".loading-dash").css("display", 'none');
             }
 
         }else{
             showNotification("error", "Empty required fields")
+            $(".loading-dash").css("display", 'none');
         }
+        $(".loading-dash").css("display", 'none');
     })
 })
 
@@ -127,6 +132,8 @@ async function  removeTask(id){
         task = {
             "task_id": task_id
         }
+        
+        $(".loading-dash").css("display", 'inline');
         try {
             const response = await fetch("/api/user/deleteTask", {
                 method: "DELETE",
@@ -143,10 +150,13 @@ async function  removeTask(id){
                 $(`#task${id}`).remove()
             } else {
                 showNotification("error", responseData.error)
+                $(".loading-dash").css("display", 'none');
             }
         } catch (error) {
             showNotification("error", error)
+            $(".loading-dash").css("display", 'none');
         }
+        $(".loading-dash").css("display", 'none');
     }
 }
 
@@ -158,6 +168,8 @@ async function removeSubTask(id){
         subtask = {
             "subtask_id": subtask_id
         }
+        
+        $(".loading-dash").css("display", 'inline');
         try {
             const response = await fetch("/api/user/deleteSubTask", {
                 method: "DELETE",
@@ -173,10 +185,13 @@ async function removeSubTask(id){
                 $('#taskNbr').text($('#taskNbr').text() - 1)
             } else {
                 showNotification("error", responseData.error)
+                $(".loading-dash").css("display", 'none');
             }
         } catch (error) {
             showNotification("error", responseData.error)
+            $(".loading-dash").css("display", 'none');
         }
+        $(".loading-dash").css("display", 'none');
     }
 }
 
@@ -189,6 +204,8 @@ async function addSubTask(id){
             "task_id": task_id,
             "subtask_title": newValue
         }
+        
+        $(".loading-dash").css("display", 'inline');
         try {
             const response = await fetch("/api/user/addSubTask", {
                 method: "POST",
@@ -213,7 +230,6 @@ async function addSubTask(id){
                         ${subtask.subtask_title}
                     </span>
                     <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                        <i class="fas fa-pen" onclick="editSubTask('${subtask.subtask_id}')"></i>
                         <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
                         <input
                             class="from-control mx-2 my-0"
@@ -233,13 +249,17 @@ async function addSubTask(id){
                 $(`#subtaskContainer${task_id}`).append(subtaskElement)
             } else {
                 showNotification("error", responseData.error)
+                $(".loading-dash").css("display", 'none');
             }
         } catch (error) {
             showNotification("error", responseData.error)
+            $(".loading-dash").css("display", 'none');
         }
     }else{
         showNotification("error", "Invalid value")
+        $(".loading-dash").css("display", 'none');
     }
+    $(".loading-dash").css("display", 'none');
 }
 
 function editSubTask_on_adding(id){
@@ -277,11 +297,10 @@ function editSubTask(id, subtask_id){
             newValue = old_value
         }
         $(`#${id}`).html($(`
-            <span> 
+            <span class="text-light"> 
             ${newValue}
             </span>
             <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                <i class="fas fa-pen" onclick="editSubTask('${subtask_id}')"></i>
                 <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask_id}')"></i>
                 <input
                     class="from-control mx-2 my-0"
@@ -299,32 +318,6 @@ function editSubTask(id, subtask_id){
         `))
     })
 }
-
-/* Show menu  */
-let menuStat = false
-$('.menu-btn').on('click', () => {
-    if(!menuStat){
-        $("aside").css("left", "0")
-        menuStat = true
-    }else{
-        $("aside").css("left", "-500px")
-        menuStat = false
-    }
-})
-/* Welcome Modal */
-
-$(document).ready(function() {
-    
-    $("#welcomeModal").fadeIn();
-
-    // Close on click outside the modal box
-    $(window).click(function(event) {
-        if (event.target.id === "welcomeModal") {
-            $("#welcomeModal").fadeOut();
-        }
-    });
-
-});
 
 const fetchTasks = async () => {
     $(".loading-dash").css("display", 'inline');
@@ -353,7 +346,7 @@ const fetchTasks = async () => {
                 const bg_color = task.bg_color
                 addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color,  subtasks)
             });
-            return responseData.length
+            return responseData
         } else {
             showNotification("error", responseData.message)
         }
@@ -437,7 +430,7 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
             </ul>
         </div>
     `)
-    $(".task").before(taskContainer)
+    $(".task").after(taskContainer)
 }
 
 //Notification displayer
@@ -604,10 +597,12 @@ async function findTaskk(){
             
         }else{
             showNotification('error', "Task not found")
+            $(".loading-dash").css("display", 'none');
         }
     }else{
         searchResult.html("")
-        searchResult.css('display', 'none')
+        searchResult.css('display', 'none')  
+        $(".loading-dash").css("display", 'none');
     }
 }
 
@@ -618,7 +613,7 @@ $(document).on('click', function(event) {
     }
 });
 
-// Optional: show the results container when the input is focused
+// Show the results container when the input is focused
 $('#findTask').on('focus', function() {
     $('#searchResultsContainer').show();
 });
@@ -708,10 +703,12 @@ $('.updateForm').on('submit', async function(e) {
 
         } else {
             showNotification("error", responseData.error)
+
         }
 
     } catch (error) {
         showNotification("error", error)
+        
     }
     $(".loading-dash").css("display", 'none');
 });

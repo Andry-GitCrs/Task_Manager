@@ -15,13 +15,17 @@ $(".menu-toggler").on("click", () => {
     }
 })
 
+document.getElementById('menu-btn').addEventListener('click', function () {
+    document.getElementById('menu-list').classList.toggle('active');
+});
+
 
 /* End menu */
 
 /* Slide Animation */
-let headerPart = document.getElementById("header")
+let headerPart = document.getElementById("header-part")
 let slideBtnContainer = document.getElementById("slide-btn-container")
-const bg = ["../../static/images/bg-1.avif", "../../static/images/bg-2.jpg", "../../static/images/bg-3.avif"]
+const bg = ["../../static/images/bg-1.jpg", "../../static/images/bg-2.jpg", "../../static/images/bg-3.jpg"]
 const buttonId = []
 let i = 1
 
@@ -65,6 +69,35 @@ function activeBtn(){
     document.getElementById(`btn-${i}`).classList.remove("inactive-btn-slide-indicator")
 }
 
-/* End Slide animation */
+let arrow = document.getElementById("arrow")
+let logs = []
+let nav = document.getElementById("nav")
 
-/* Welcome page index */
+window.addEventListener("scroll", () => {
+    let y = window.scrollY
+    logs.push(y)
+    if( y!= 0){
+        nav.style.backgroundColor = "rgba(0, 0, 0, 0.3)"
+        nav.style.backdropFilter = "blur(5px)";
+        
+    }else{
+        nav.style.backgroundColor = "transparent"
+        nav.style.backdropFilter =  "blur(0)";
+
+    }
+    if(logs[logs.length - 2] < window.scrollY){
+        goTo("down")
+    }else{
+        goTo("up")
+    }
+})
+
+
+function goTo(dir){
+    if(dir == "down"){
+        nav.style.top = -86 + "px"
+    }else{
+        nav.style.top = "0px"
+    }
+}
+

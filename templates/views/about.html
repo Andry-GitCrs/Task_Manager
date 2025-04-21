@@ -1,64 +1,158 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
-    <script src="{{ url_for('static', filename='js/jQuery-3.7.1.min.js') }}"></script>
-    <title>About Us</title>
-</head>
-<body>
-    <header id="header">
-        <nav class="container-fluid position-absolute w-100 top-0 welcome-navigation z-1" id="welcome-navigation">
-            <div class="d-flex px-5 py-2 justify-content-between align-items-center">
-                <div class="col-1" style="height: 100px;width: 100px;">
-                    <img class="app-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" width="100%" height="100%">
-                </div>
-                <div class="col-md-8 justify-content-between gap-3 md-pe-5 menu-list" id="menu-list">
-                    <ul class="nav col-md-8  justify-content-between">
-                        <a href="/" class="text-light text-uppercase nav-link fw-bold">home</a>
-                        <a href="/about" class="text-light text-uppercase nav-link fw-bold active-link">about us</a>
-                        <a href="/contact" class="text-light text-uppercase nav-link fw-bold">contact</a>
-                        <a href="/auth" class="text-light text-uppercase nav-link fw-bold">login</a>
-                    </ul>
-                </div>
-                <button class="btn p-0 menu-toggler" id="button-toggler">
-                    <hr><hr><hr>
-                </button>
-            </div>
-        </nav>
-        <!--Slide-->
-        <div class="d-flex align-items-center justify-content-center py-5 slide-container z-1">
-            <div class="d-flex align-items-center flex-column gap-3 z-1 welcome-text">
-              <h1 class="text-light">About us</h1>
-              <p class="text-center text-light ">
-                Welcome to Task manager, the ultimate task management solution designed to help you stay organized, productive, and in control of your daily responsibilities.
+{% extends "views/base.html" %}
+{% block title %}
+    About us
+{% endblock %}
+{% block head %}
+    <style>
+        .team-card img {
+            object-fit: cover;
+            height: 200px;
+        }
+        .section-title {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
 
-Our mission is to simplify task management by providing a seamless and intuitive experience for individuals and teams. Whether you're managing personal projects or collaborating with colleagues, Task manager offers powerful features to streamline your workflow.
-              </p>
-              <div class="justify-content-between gap-2 position-absolute slide-btn-container" id="slide-btn-container"></div>
-            </div>
-
-            <div class="position-absolute end-0 bottom-0 mx-5 my-3 d-flex justify-content-between align-items-center gap-3 logo-container bg-light py-2 px-3 rounded-3">
-                <a href="https://github.com/Andry-GitCrs/Task_Manager.git">
-                    <i class="fa-brands fa-github fs-3 text-dark m-0"></i>
-                </a>
-                <a href="https://facebook.com">
-                    <i class="fa-brands fa-facebook fs-3 text-primary m-0"></i>
-                </a>
-                <a href="https://twitter.com">
-                    <i class="fa-brands fa-twitter fs-3 text-primary m-0"></i>
-                </a>
-                <a href="https://whatsapp.com">
-                    <i class="fa-brands fa-whatsapp fs-3 text-success m-0"></i>
-                </a>
-            </div>
+{% block header %}
+<header class="container-fluid h-5 px-0 header-part header-part-about" id="header-part" id="head" style="height: 75vh;">
+    <div class="d-flex align-items-center justify-content-center py-5 slide-container" style="height: 75vh;">
+        <div class="d-flex justify-content-center align-items-center flex-column gap-3 z-1 w-auto">
+            <h1 class="contact-title">About us</h1>
+            <p class="lead text-light text-center fw-bolder">Helping you stay productive and organized every day.</p>
+            <div class="justify-content-between gap-2 slide-btn-container" id="slide-btn-container"></div>
         </div>
-    </header>
+    </div>
+</header>  
+{% endblock %}
+{% block pub %}
+<main class="container my-5">
+    <section>
+      <h2 class="section-title contact-title"><span class="text-success">Our</span> Mission</h2>
+      <p class="text-center">
+        Our mission is to simplify task management for individuals and teams. With a user-friendly interface,
+        customizable subtasks, and intuitive design, our goal is to boost your productivity and keep your workflow smooth.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="section-title"><i class="fas fa-tools text-warning" ></i> Features Highlight</h2>
+      <div class="row text-center">
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-layer-group text-secondary"></i> Organized Tasks</h5>
+              <p class="card-text">Group tasks and subtasks to keep your work structured and clear.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-bolt text-warning"></i> Productivity Boost</h5>
+              <p class="card-text">Stay on track with due dates, reminders, and priorities.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-smile text-success"></i> User Friendly</h5>
+              <p class="card-text">Built with simplicity and speed in mind. No clutter, just results.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title"><i class="fas fa-terminal text-dark fw-bold"></i> Meet The Developer</h2>
+      <div class="row justify-content-center">
+        <div class="col-md-4 text-center ">
+          <div class="card team-card shadow border">
+            <img src="{{ url_for('static', filename='images/software-developer-6521720_1280.jpg') }}" class="card-img-top" alt="Developer Photo">
+            <div class="card-body">
+              <h5 class="card-title">Andry</h5>
+              <p class="card-text">Full-stack Dev passionate about building tools that empower users. Always learning, always coding <i class="fas fa-code"></i>.</p>
+              <a href="/contact" class="btn btn-outline-primary btn-sm">Contact</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-dark text-light pt-4 pb-1">
+    <div class="container">
+    <div class="row">
+
+        <!-- App Branding and Description -->
+        <div class="col-md-4 mb-4">
+        <h5 class="fw-bold text-white">
+            <i class="bi bi-graph-up-arrow me-2 contact-title fw-bolder"></i>Task Manager
+        </h5>
+        <p>
+            Task Manager is committed to empowering businesses and individuals with innovative solutions to drive success.
+        </p>
+        <div class="d-flex gap-3 fs-5">
+            <a href="https://github.com/Andry-GitCrs/Task_Manager.git">
+                <i class="fa-brands fa-github fs-3 text-light m-0"></i>
+            </a>
+            <a href="https://facebook.com">
+                <i class="fa-brands fa-facebook fs-3 text-primary m-0"></i>
+            </a>
+            <a href="https://whatsapp.com">
+                <i class="fa-brands fa-whatsapp fs-3 text-success m-0"></i>
+            </a>
+            <a href="https://twitter.com">
+                <i class="fa-brands fa-twitter fs-3 text-primary m-0"></i>
+            </a>
+        </div>
+        </div>
+
+        <!-- Links -->
+        <div class="col-md-2 mb-4">
+        <h6 class="fw-bold">Links</h6>
+        <ul class="list-unstyled">
+            <li><a href="/" class="contact-title fw-bold text-decoration-none">Home</a></li>
+            <li><a href="#" class="text-light text-decoration-none">Our Service</a></li>
+            <li><a href="#" class="text-light text-decoration-none">Pricing</a></li>
+            <li><a href="#" class="text-light text-decoration-none">Testimonials</a></li>
+        </ul>
+        </div>
+
+        <!-- Pages -->
+        <div class="col-md-2 mb-4">
+        <h6 class="fw-bold">Pages</h6>
+        <ul class="list-unstyled">
+            <li><a href="#" class="text-light text-decoration-none">Style-Guide</a></li>
+            <li><a href="#" class="text-light text-decoration-none">Change-Log</a></li>
+            <li><a href="#" class="text-light text-decoration-none">Licensing</a></li>
+        </ul>
+        </div>
+
+        <!-- Contact -->
+        <div class="col-md-4 mb-4">
+        <h6 class="fw-bold">Contact Us</h6>
+        <p><i class="bi bi-geo-alt-fill me-2 footer-icon"></i>308 Fandriana. Ankilahila, Institut Supérieur de Technologie d'Ambositra</p>
+        <p><i class="bi bi-telephone-fill me-2 footer-icon"></i>(261) 33 14 568 86</p>
+        <p><i class="bi bi-envelope-fill me-2 footer-icon"></i>andrianaivonoe403@gmail.com</p>
+        </div>
+    </div>
+    <hr class="border-warning border-2 opacity-100">
+
+    <!-- Bottom Footer -->
+    <div class="d-md-flex justify-content-center align-items-center text-muted small pt-3">
+        <div>
+            &copy; 2025 Task Manager | Designed by <span class="text-light fw-bold">Andry</span> – Powered by andry.buss.com
+        </div>
+    </div>
+    </div>
+</footer>
+{% endblock %}
+
+{% block script %}
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "views/users/base.html" %}
+{% block head %}
+    <script src="{{ url_for('static', filename='js/index.global.js') }}"></script>
+{% endblock %}
+{% block title %}
+    Calendar
+{% endblock %}
+{% block calendar %}
+    active-page
+{% endblock %}
+{% block content %}
+    <h1 class="text-dark d-flex align-items-center justify-content-between">
+        <img class="loading-dash loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
+    </h1>
+    <div class="container py-3" id="calendar-container">
+        <div id='calendar'></div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{{ url_for('static', filename='js/users/calendar.script.js') }}"></script>
+{% endblock %}

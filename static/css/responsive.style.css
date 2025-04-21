@@ -1,43 +1,5 @@
 @media screen and (max-width: 1125px){
 
-    /* Welcome page responsive */
-    .menu-list{
-        display: none;
-        background-color: rgba(51, 47, 47, 0.336);;
-        position: absolute;
-        top: 78px;
-        padding: 15px 0;
-        right: 0;
-        margin-right: 0px;
-        width: 200px;
-        z-index: 9!important;
-        flex-direction: column;
-        justify-content: center!important;
-        align-items: center;
-        transition: 1s all;
-    }
-
-    .menu-list ul a{
-        text-align: center;
-        height: 50px;
-    }
-
-    .menu-list > a{
-        width: 100%;
-    } 
-
-    .menu-list ul{
-        flex-direction: column;
-    }
-
-    .menu-toggler{
-        display: block;
-    }
-
-    .welcome-text{
-        z-index: 0!important;
-    }
-
     .slide-container h1{
         text-align: center;
         font-size: 50px;
@@ -59,11 +21,10 @@
 
     /* Start login and registration */
     .form-container{
-        width: 100%;
-        left: 0;
         margin: 0 auto;
         height: auto;
         box-shadow: none!important;
+        position: relative;
     }
 
     .color{
@@ -82,11 +43,6 @@
     /*  Dashboard */
     main h1{
         text-align: center;
-    }
-
-    aside{
-        width: 50%;
-        left: -500px;
     }
 
     .sticky-wall-main{
@@ -108,10 +64,9 @@
     }
 
     .contact-form-container, .form-container{
-        top: 20%;
         height: auto;
         left: 0;
-        width: 100%;
+        width: 100%!important;
     }
     
     .logo-container{
@@ -163,10 +118,6 @@
     }
     /* End Login and registration page */
 
-    /*  Dashboard */
-    aside{
-        left: -500px;
-    }
 }
 
 @media screen and (max-width: 766px){
@@ -182,15 +133,38 @@
     main .container{
         width: 100%;
     }
+}
 
-    aside{
-        width: 60%;
+/* Hide menu list on small screens initially */
+@media (max-width: 768px) {
+    #menu-list {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 1rem;
+        background-color: #212529;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+    }
+
+    #menu-list.active {
+        display: flex;
+    }
+
+    #menu-btn {
+        display: block;
     }
 }
 
-@media screen and (max-width: 1000px) {
-    aside{
-        left: -500px;
+/* Show menu normally on desktop */
+@media (min-width: 769px) {
+    #menu-list {
+        display: flex !important;
     }
 
+    #menu-btn {
+        display: none;
+    }
 }

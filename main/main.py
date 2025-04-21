@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile
+from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser
 from database import pgconnexion
 
 ## App config
@@ -17,7 +17,7 @@ app.secret_key = "secret-key"
 
 # Login Manager
 login_manager = LoginManager()
-login_manager.login_view = 'login_route'
+login_manager.login_view = 'authentication'
 login_manager.init_app(app)
 
 # Database Connection
@@ -43,37 +43,60 @@ def about():
 def contact():
     return render_template('views/contact.html')
 
+@app.route('/login')
+def login_page():
+    return render_template('views/login.html')
+
 ## Auth route
 auth.auth(app)
 login.login(app, database) # Login
 register.register(app, database) # Register
 
-## Admin page login route
+# Private User Routes
+@app.route('/auth/logout') # Logout
+@login_required
+def logout():
+    if current_user.admin:
+        user = User.query.filter_by(user_id = current_user.user_id).first()
+        user.activate()
+        db.session.commit()
+    logout_user()
+    return redirect('/')
+
+@app.route('/dashboard') # Dashboard
+@login_required
+def dashboard():
+    if current_user.admin:
+        current_user.stat = False
+    return render_template('views/users/dashboard.html', message = current_user.email,  email = current_user.email)
+
+@app.route('/dashboard/calendar') # Calendar
+@login_required
+def calendar():
+    return render_template('views/users/calendar.html', email = current_user.email)
+
+@app.route('/dashboard/today') # Today tasks
+@login_required
+def today():
+    return render_template('views/users/today.html', email = current_user.email)
+
+@app.route('/dashboard/upcoming') # Upcoming tasks
+@login_required
+def upcoming():
+    return render_template('views/users/upcoming.html', email = current_user.email)
+
+# Admin Routes
 @app.route('/auth/admin/login')
 @login_required
 def admin_login_route():
     try:
         admin = current_user.admin
         if admin:
-            return render_template('views/admin_login.html')
+            return render_template('views/admin/admin_login.html')
         abort(404)
     except AttributeError:
         abort(404)
 
-## Admin page logout route
-@app.route('/auth/admin/logout')
-@login_required
-def admin_logout_route():
-    admin = current_user.admin
-    if admin:
-        user = User.query.filter_by(user_id = current_user.user_id).first()
-        user.activate()
-        db.session.commit()
-        logout_user()
-        render_template('views/main.html')
-    abort(404)
-
-## Admin page login route
 @app.route('/admin/dashboard')
 @login_required
 def admin_dashboard():
@@ -82,7 +105,7 @@ def admin_dashboard():
         stat = current_user.stat
         email = current_user.email
         if admin and stat:
-            return render_template('views/admin_dashboard.html', email = email, title = "Dashboard")
+            return render_template('views/admin/admin_dashboard.html', email = email, title = "Dashboard")
         abort(404)
     except AttributeError:
         abort(404)
@@ -105,7 +128,6 @@ def manage_tasks():
         return render_template('views/admin/admin_manage_task.html', email = email, title = "Manage tasks")
     abort(404)
 
-## Protected routes
 @app.route('/admin/manage_subtasks')
 @login_required
 def manage_subtasks():
@@ -114,38 +136,6 @@ def manage_subtasks():
     if admin and current_user.stat:
         return render_template('views/admin/admin_manage_subtask.html', email = email, title = "Manage subtasks")
     abort(404)
-
-@app.route('/auth/logout') # Logout
-@login_required
-def logout():
-    if current_user.admin:
-        user = User.query.filter_by(user_id = current_user.user_id).first()
-        user.activate()
-        db.session.commit()
-    logout_user()
-    return redirect('/auth')
-
-@app.route('/dashboard') # Dashboard
-@login_required
-def dashboard():
-    if current_user.admin:
-        current_user.stat = False
-    return render_template('views/dashboard.html', message = current_user.email,  email = current_user.email)
-
-@app.route('/dashboard/calendar') # Calendar
-@login_required
-def calendar():
-    return render_template('views/calendar.html', email = current_user.email)
-
-@app.route('/dashboard/today') # Today tasks
-@login_required
-def today():
-    return render_template('views/today.html', email = current_user.email)
-
-@app.route('/dashboard/upcoming') # Upcoming tasks
-@login_required
-def upcoming():
-    return render_template('views/upcoming.html', email = current_user.email)
 
 ## API
 
@@ -207,5 +197,12 @@ sendemail.verifyEmail(app)
 ## Send email
 sendemail.sendEmail(app)
 
+## Test zone
+exportcsv.export_to_csv(app, database)
+exportpdf.export_to_pdf(app, database)
+
+## End test zone
+adduser.adduser(app, database)
+
 if __name__ == "__main__":
-    app.run(debug=True)  
+    app.run(debug=True)

@@ -1,200 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
-    <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
-    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
-    <title>Admin manage users</title>
-</head>
-<body>
-    <aside class="position-fixed bg-light shadow h-100 p-3 sidebar" id="sidebar">
-        <h4 class="text-center">
-            <i class="fas fa-user-shield me-2 text-success"></i>Task manager <br> 
-        </h4>
-        <div class="my-2">
-            <div class="d-flex justify-content-center align-items-center gap-2">
-                <span class="col-6 text-center text-dark fs-5">Admin space</span>
-                <button class="toggle-btn" onclick="toggleSidebar()">
-                    <i class="fas fa-angle-left"></i>
-                </button>
-            </div>
-        </div>
-        <form action="">
-            <input class="form-control " type="search" name="search_user" id="search_user" placeholder="Find user">
-        </form>
+{% extends "views/admin/base.html" %}
+{% block title %}
+    Admin manage users
+{% endblock %}
+{% block usersManageActive %}
+    border shadow
+{% endblock %}
+{% block head %}
+<style>
+    .dropdown-container {
+      position: relative;
+      display: inline-block;
+    }
 
-        <div class="pt-4">
-            <h6>Managing & Analytics</h6>
-            <ul class="nav flex-column gap-2">
-                <a  href="/admin/dashboard" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-dashboard mx-2 text-primary"></i><span>Dashboard</span></a>
-                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-chart-line mx-2 text-secondary"></i><span>Users Analytics</span></a>
-                <a  href="/admin/manage_users" class="ms-2 p-2 text-decoration-none text-dark rounded-3 border shadow"><i class="fas fa-hand mx-2 text-warning shadow"></i><span>Manage Users</span></a>
-                <a  href="/admin/manage_tasks" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-th-large mx-2 text-success"></i><span>Users Tasks</span></a>
-                <a  href="/admin/manage_subtasks" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-list mx-2 text-danger"></i><span>Subtasks</span></a>
-            </ul>
-        </div>
-
-        <div class="pt-4">
-            <h6>Admins</h6>
-            <ul  class="nav flex-column gap-1">
-                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-users mx-2 text-secondary"></i><span>Manage admins</span></a>
-                <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-home mx-2 text-secondary"></i><span>Admins room</span></a>
-            </ul>
-        </div>
-        <div class="pt-4 text-center">
-            <a href="/auth/logout" class="text-decoration-none text-dark"><i class="btn bg-danger fas fa-power-off mx-2 text-light"></i><span>Logout</span></a>
-        </div>
-
-    </aside>
-    <main class="h-100 position-fixed ps-2 pt-1 p-3 main" id="main">
-        <nav class="nav w-100 bg-light shadow p-2 rounded-3 justify-content-between mb-3">
-            <h1 class="text-secondary"><i class="fas fa-hand mx-2 text-warning"></i>{{ title }}</h1>
-            <div class="w-auto d-flex align-items-center justify-content-between border gap-2 mx-2 admin_profile_container">
-                <img id="loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
-                <span class="mx-3 text-secondary">
-                    {{ email }}
-                </span>
-                <div class="dropdown">
-                    <div class="border admin_profile d-flex justify-content-center align-items-center dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user text-secondary fs-4"></i>
-                    </div>
-                    <!-- Dropdown Form -->
-                    <div class="dropdown-menu p-3 dropdown-form">
-                      <form id="updateForm">
+    .dropdown-form {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 1000;
+      width: 300px;
+      margin-top: 5px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f9f9f9;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="my-4">
+            <h2 class="mb-0 text-center">
+                <i class="fas fa-users text-secondary"></i>
+                All Users
+            </h2>
+            <p class="text-muted text-center">List of all users in the system</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="dropdown-container">
+                    <button id="toggleFormBtn" class="btn btn-success">
+                      <i class="fas fa-add"></i> Add new user
+                    </button>
+                    <div id="userForm" class="dropdown-form">
+                      <form id="adduser">
                         <div class="mb-3">
-                          <label for="email" class="form-label">User Email</label>
-                          <input type="email" value="{{ email }}" class="form-control" id="email" placeholder="example@mail.com" >
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="oldconfirmPassword" class="form-label">Confirm old Password</label>
-                            <input type="password" class="form-control" id="oldconfirmPassword" required>
+                          <label for="email" class="form-label">Email address</label>
+                          <input type="email" class="form-control" id="new_email" placeholder="Enter email" required>
                         </div>
                 
                         <div class="mb-3">
-                          <label for="newPassword" class="form-label">New Password</label>
-                          <input type="password" class="form-control" id="newPassword" required>
+                          <label for="password1" class="form-label">Password</label>
+                          <input type="password" class="form-control" id="password" placeholder="Enter password" required>
                         </div>
                 
                         <div class="mb-3">
-                          <label for="confirmPassword" class="form-label">Confirm Password</label>
-                          <input type="password" class="form-control" id="confirmPassword" required>
+                          <label for="password2" class="form-label">Confirm Password</label>
+                          <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password" required>
                         </div>
                 
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-success w-50">Validate</button>
+                        <div class="form-check form-switch mb-3">
+                          <input class="form-check-input" type="checkbox" id="adminSwitch">
+                          <label class="form-check-label" for="adminSwitch">Admin Role</label>
                         </div>
+                
+                        <button type="submit" class="btn btn-primary">Submit</button>
                       </form>
                     </div>
                 </div>
-            </div>
-        </nav>
 
+                <div class="d-flex gap-3">
+                    <h4 class="m-0 text-center">
+                        Total users <span id="simple_users_nbr">N/a</span>
+                    </h4>
+                    <h4 class="m-0 text-center">
+                        / Admin <span id="admin_nbr">N/a</span>
+                    </h4>
+                    <a class="btn btn-primary" id="refreshBtn" href="{{ url_for('export_csv') }}">
+                        <i class="fas fa-sync"></i> Refresh
+                        Export to CSV
+                    </a>
+                </div>
+            </div>
+        </div>
 
-        <div class="container-fluid">
-            <div class="my-4">
-                <h2 class="mb-0 text-center">
-                    <i class="fas fa-users text-secondary"></i>
-                    All Users
-                </h2>
-                <p class="text-muted text-center">List of all users in the system</p>
-                <h4 class="mt-2 text-center">
-                    Total users <span id="simple_users_nbr">N/a</span>
-                </h4>
-                <h4 class="mb-0 text-center">
-                    Admin <span id="admin_nbr">N/a</span>
-                </h4>
-            </div>
-        
-            <div style="max-width: 100%; overflow-x: auto;">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th><i class="fas fa-id-badge text-danger"></i><br> ID</th>
-                            <th><i class="fas fa-envelope text-secondary"></i><br> Email</th>
-                            <th><i class="fas fa-tasks text-success"></i><br> Tasks</th>
-                            <th><i class="fas fa-check-circle text-success"></i><br> Finished Tasks</th>
-                            <th><i class="fas fa-stream"></i> Subtasks</th>
-                            <th><i class="fas fa-check-double text-success"></i><br> Finished Subtasks</th>
-                            <th><i class="fas fa-calendar-plus text-warning"></i><br> Created At</th>
-                            <th><i class="fas fa-calendar-check text-success"></i><br> Updated At</th>
-                            <th><i class="fas fa-bolt text-warning"></i> Activity</th>
-                            <th><i class="fas fa-toggle-on text-success"></i> Status</th>
-                            <th><i class="fas fa-gear text-secondary"></i> Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="userTableBody">
-                    <!-- Filled by JS -->
-                    </tbody>
-                </table>
-            </div>  
-        </div>
-    </main>
-    <!-- Edit User Modal -->
-    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="editUserForm">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editUserModalLabel">
-                <i class="fas fa-user-edit"></i> Edit User
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            
-            <div class="modal-body">
-                <input type="hidden" id="editUserId">
-    
-                <div class="mb-3">
-                <label for="editEmail" class="form-label">
-                    <i class="fas fa-envelope"></i> Email
-                </label>
-                <input type="email" class="form-control" id="editEmail" required>
-                </div>
-    
-                <div class="mb-3">
-                <label for="editRole" class="form-label">
-                    <i class="fas fa-user-tag"></i> Role
-                </label>
-                <select class="form-select" id="editRole" required>
-                    <option value="">Select role</option>
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                    <option value="moderator">Moderator</option>
-                </select>
-                </div>
-    
-                <div class="mb-3">
-                <label for="editPassword" class="form-label">
-                    <i class="fas fa-lock"></i> New Password
-                </label>
-                <input type="password" class="form-control" id="editPassword" placeholder="Leave blank to keep current password">
-                </div>
-            </div>
-            
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                <i class="fas fa-times"></i> Cancel
-                </button>
-                <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Save Changes
-                </button>
-            </div>
-            </form>
-        </div>
-        </div>
+        <div style="max-width: 100%; overflow-x: auto;">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-id-badge text-danger"></i><br> ID</th>
+                        <th><i class="fas fa-envelope text-secondary"></i><br> Email</th>
+                        <th><i class="fas fa-tasks text-success"></i><br> Tasks</th>
+                        <th><i class="fas fa-check-circle text-success"></i><br> Finished Tasks</th>
+                        <th><i class="fas fa-stream"></i> Subtasks</th>
+                        <th><i class="fas fa-check-double text-success"></i><br> Finished Subtasks</th>
+                        <th><i class="fas fa-calendar-plus text-warning"></i><br> Created At</th>
+                        <th><i class="fas fa-calendar-check text-success"></i><br> Updated At</th>
+                        <th><i class="fas fa-bolt text-warning"></i> Activity</th>
+                        <th><i class="fas fa-toggle-on text-success"></i> Status</th>
+                        <th><i class="fas fa-gear text-secondary"></i> Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                <!-- Filled by JS -->
+                </tbody>
+            </table>
+        </div>  
     </div>
-  
-    <!-- nofitication displayer -->
-    <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
-        <i id="notification-icon" class=""></i>
-        <span id="notification-message"></span>
-    </div>
-    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/admin_manage_users.js') }}" ></script>
-</body>
-</html>
+{% endblock %}
+{% block script %}
+    <script src="{{ url_for('static', filename='js/admin/admin_manage_users.js') }}" ></script>
+    <script>
+         const btn = document.getElementById("toggleFormBtn");
+            const form = document.getElementById("userForm");
+
+            btn.addEventListener("click", () => {
+            form.style.display = form.style.display === "none" || form.style.display === "" ? "block" : "none";
+        });
+    </script>
+{% endblock %}

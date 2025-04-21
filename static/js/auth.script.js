@@ -25,6 +25,11 @@ $(".menu-toggler").on("click", () => {
 } )
 
 
+document.getElementById('menu-btn').addEventListener('click', function () {
+    document.getElementById('menu-list').classList.toggle('active');
+});
+
+
 /* End menu */
 
 registerBtn.addEventListener("click", (e) => {
@@ -33,8 +38,6 @@ registerBtn.addEventListener("click", (e) => {
     registerImg.classList.remove("d-none")
     loginForm.classList.add("d-none")
     loginImg.classList.add("d-none")
-    document.getElementById("login_error").textContent = ""
-    document.getElementById("login_info").textContent = ""
     empty_login_field()
 })
 
@@ -44,8 +47,6 @@ loginBtn.addEventListener("click", (e) => {
     loginImg.classList.remove("d-none")
     registerForm.classList.add("d-none")
     registerImg.classList.add("d-none")
-    document.getElementById("register_error").textContent = ""
-    document.getElementById("register_info").textContent = ""
     empty_register_field()
 })
 
@@ -70,7 +71,7 @@ $("#login_form").on("submit", async (e) => {
             showNotification("success", responseData.message)
             empty_login_field()
             $("#log-in").prop("disabled", false);
-    $(".loading").css("display", 'none');
+            $(".loading").css("display", 'none');
             location.href = '/dashboard'
         } else {
             showNotification("error", responseData.error)
@@ -162,4 +163,4 @@ function showNotification(type, message) {
   }
 
 /* End Login and Register */
-$("#header").css("background-image", "url('../../static/images/bg-4.avif')")
+$("body").css("background-image", "url('../../static/images/bg-4.jpg')")

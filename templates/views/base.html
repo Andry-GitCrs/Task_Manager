@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='js/fontawesome-free-6.6.0-web/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/jQuery-3.7.1.min.js') }}"></script>
+    {%  block head %}
+    {% endblock %}
+    <title>
+        {% block title %}
+            Base title
+        {% endblock %}
+    </title>
+</head>
+<body>
+    {% block navigation %}
+    <!-- navbar -->
+    <div class="row m-0 z-1 d-flex justify-content-center" id="head">
+      <nav class="navbar  position-fixed nav-width m-2" id="nav"> 
+        <h1 class="m-0 z-1">
+          <span class="bold-style text-success">Task </span>Manager
+        </h1>
+        <ul class="m-0 menu-list" id="menu-list">
+          <li class="md-mx-2 list-inline-item nav-item">
+            <a class="p-0 nav-link" href="/">HOME</a>
+          </li>
+          <li class="md-mx-2 list-inline-item nav-item">
+            <a class="p-0 nav-link" href="/about">ABOUT US</a>
+          </li>
+          <li class="md-mx-2 list-inline-item nav-item">
+            <a class="p-0 nav-link" href="/contact">CONTACT US</a>
+          </li>
+          <li class="md-mx-2 list-inline-item nav-item">
+            <a class="btn p-0 nav-link p-2 px-4 bg-success rounded-3 border-none fw-bold login-btn" href="/auth">Login</a>
+          </li>
+        </ul>
+        <button class="btn menu-btn" id="menu-btn">
+          <hr><hr><hr>
+        </button>
+      </nav>
+    </div>
+    {% endblock %}
+    
+    {% block header %}          
+    {% endblock %}
+    
+    {% block pub %}
+    {% endblock %}
+
+    <!-- nofitication displayer -->
+    <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
+        <i id="notification-icon" class=""></i>
+        <span id="notification-message"></span>
+    </div>
+    {% block script %}
+    {% endblock %}
+</body>
+</html>

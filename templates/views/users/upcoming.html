@@ -1,0 +1,20 @@
+{% extends "views/users/base.html" %}
+{% block title %}
+    Upcoming tasks
+{% endblock %}
+{% block upcoming %}
+    active-page
+{% endblock %}
+{% block content %}
+    <h1 class="text-dark d-flex align-items-center justify-content-between">
+        <img class="loading-dash loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
+    </h1>
+    <div class="container py-3">
+        <div class="row justify-content-start" id="upComingTaskContainer1"></div>
+        <div class="row justify-content-start" id="upComingTaskContainer2"></div>
+        <div class="row justify-content-start" id="upComingTaskContainer"></div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{{ url_for('static', filename='js/users/upComingTask.script.js') }}"></script>
+{% endblock %}

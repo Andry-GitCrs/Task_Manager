@@ -24,21 +24,21 @@ def sendEmail(app):
             user_last_name = data['last_name']
             user_phone = data['phone']
             user_message = data['message']
-            if not user_email or not user_first_name or not user_last_name or not user_phone or not user_message:
+            if not user_email or not user_first_name or not user_last_name or not user_message:
                 return jsonify({'error': "All fields are required"}), 400
             
             msg1 = Message(
-                subject = f'Contact from Task Manager APP {user_email}',
+                subject = f'Task Manager APP notification',
                 sender = app.config['MAIL_USERNAME'],
                 recipients = [app.config['MAIL_USERNAME']],
-                body = f"Sender Email: {user_email}\nFirst Name: {user_first_name}\nLast Name: {user_last_name}\nPhone: {user_phone}\nMessage:\n{user_message}"
+                body = f"Sender Email: {user_email}\nName: {user_first_name} {user_last_name}\nPhone: {user_phone}\nMessage: {user_message}"
             )
 
             msg2 = Message(
-                subject = f'Contact from Task Manager APP {user_email}',
+                subject = f'Task Manager App demand confirmation',
                 sender = app.config['MAIL_USERNAME'],
                 recipients = [user_email],
-                body = f"Thank you for reaching out to us. Your feedback has been received. \nSender Email: {user_email}\nFirst Name: {user_first_name}\nLast Name: {user_last_name}\nPhone: {user_phone}\nMessage:\n{user_message}"
+                body = f"Mr/Ms , {user_first_name} {user_last_name} thank you for reaching out to us. Your feedback has been received. We'll respond you a soon as possible\nYour message: {user_message}"
             )
 
             try:

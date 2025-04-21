@@ -1,0 +1,18 @@
+{% extends "views/users/base.html" %}
+{% block title %}
+    Today tasks
+{% endblock %}
+{% block today %}
+    active-page
+{% endblock %}
+{% block content %}
+    <h1 class="text-dark d-flex align-items-center justify-content-end">
+        <img class="loading-dash loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
+    </h1>
+    <div class="container py-3">
+        <div class="row justify-content-start" id="todayTaskContainer"></div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script type="module" src="{{ url_for('static', filename='js/users/todayTask.script.js') }}"></script>
+{% endblock %}

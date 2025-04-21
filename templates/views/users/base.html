@@ -9,51 +9,53 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
     <script src="{{ url_for('static', filename='js/jQuery-3.7.1.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/index.global.js') }}"></script>
-    <title>Calendar</title>
+    <script src="{{ url_for('static', filename='js/users/dashboard.script.js') }}"></script>
+    {% block head %}
+    {% endblock %}
+    <title>{% block title %} Base title {% endblock %}</title>
 </head>
 <body>
-    <aside class="bg-light pt-2 rounded-2 position-fixed m-2 mb-0">
+    <aside class="px-3 rounded-2 position-fixed mb-2 mb-0 py-2" id="aside">
         <div class="d-flex justify-content-between align-items-center my-1">
             <h3 class="text-dark d-flex align-items-center justify-content-center gap-2">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="40px" height="40px">
                 Task manager
             </h3>
-            <button class="btn menu-btn">
-                <hr><hr><hr>
+            <button class="btn hide-btn">
+                <i class="fas fa-angle-left"></i>
             </button>
         </div>
         <form class="d-flex justify-content-between align-items-center border px-3 py-2 rounded-2" action="">
             <i class="text-primary fa fa-search"></i>
-            <input class="text-dark" type="search" placeholder="Find task">
+            <input class="text-dark" type="search" id="findTask" onkeyup="findTaskk()" placeholder="Find task">
+            <div id="searchResultsContainer" class="mt-3 p-2"></div>
         </form>
         <div class="my-3">
             <h4 class="text-dark fw-bold" >TASKS</h4>
             <ul class="p-0">
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center">
-                    <div>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block upcoming %}{% endblock %}">
+                    <div class="w-100 d-flex align-items-center">
                         <i class="text-warning fas fa-clock"></i>
-                        <a  class="text-dark text-decoration-none" href="/dashboard/upcoming">Upcoming</a>
+                        <a  class="text-dark text-decoration-none w-100" href="/dashboard/upcoming">Upcoming</a>
                     </div>
-                    <span class="text-dark">0</span>
                 </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center">
-                    <div>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block today %}{% endblock %}">
+                    <div class="w-100 d-flex align-items-center">
                         <i class="text-success fas fa-list"></i>
-                        <a  class="text-dark text-decoration-none" href="/dashboard/today">Today</a>
+                        <a  class="text-dark text-decoration-none w-100" href="/dashboard/today">Today</a>
                     </div>
-                    <span class="text-dark">0</span>
+                    <span class="text-dark" id="todayTaskNbr">0</span>
                 </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center  active-page ">
-                    <div>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block calendar %}{% endblock %}">
+                    <div class="w-100 d-flex align-items-center">
                         <i class="text-primary fas fa-calendar-days"></i>
-                        <a  class="text-dark text-decoration-none" href="/dashboard/calendar">Calendar</a>
+                        <a  class="text-dark text-decoration-none w-100" href="/dashboard/calendar">Calendar</a>
                     </div>
                 </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center">
-                    <div>
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block stickywall %}{% endblock %}">
+                    <div class="w-100 d-flex align-items-center">
                         <i class="text-info fas fa-grip"></i>
-                        <a  class="text-dark text-decoration-none " href="/dashboard">Sticky Wall</a>
+                        <a  class="text-dark text-decoration-none w-100" href="/dashboard">Sticky Wall</a>
                     </div>
                     <span class="text-dark bg-light" id="taskNbr">0</span>
                 </li>
@@ -89,7 +91,7 @@
             </ul>
         </div>
         <div class="mt-2">
-            <ul class="p-0 user_action">
+            <ul class="p-0 _user_action m-0">
                 <li class="my-2 py-1">
                     <i class="text-danger fas fa-bug"></i>
                     <a class="text-dark text-decoration-none" href="mailto:andrianaivonoe403@gmail.com">Bug report</a>
@@ -98,18 +100,22 @@
                     <div class="dropdown">
                         <div class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
                             <i class="text-dark fas fa-cog"></i>
-                            User account
+                            My profile
                         </div>
                         <!-- Dropdown Form -->
-                        <div class="dropdown-menu p-3 dropdown-form">
+                        <div class="dropdown-menu p-3 dropdown-form position-relative">
                           <form class="updateForm">
+                            <h4>
+                                <i class="text-dark fas fa-cog"></i>
+                                Edit my profile
+                            </h4>
                             <div class="mb-3">
-                              <label for="email" class="form-label">User Email</label>
+                              <label for="email" class="form-label"><i class="fas fa-envelope text-secondary" ></i> Email</label>
                               <input name="email" type="email" value="{{ email }}" class="form-control" id="email" placeholder="example@mail.com" >
                             </div>
     
                             <div class="mb-3">
-                                <label for="oldconfirmPassword" class="form-label">Confirm old Password</label>
+                                <label for="oldconfirmPassword" class="form-label"><i class="fas fa-key text-success"></i> Confirm old Password</label>
                                 <input name="oldconfirmPassword" type="password" class="form-control" id="oldconfirmPassword" required>
                             </div>
                     
@@ -137,17 +143,15 @@
             </ul>
         </div>
     </aside>
-    <!-- Task list in Sticky Wall -->
     <main class="sticky-wall-main p-3 py-4">
-        <h1 class="text-dark d-flex align-items-center justify-content-between">
-            <button class="btn menu-btn float-left menu-btn-mobile">
-                <hr><hr><hr>
-            </button>
-            Calendar
-        </h1>
-        <div class="container py-3">
-            <div id='calendar'></div>
-        </div>
+        <button class="btn hide-btn hide-btn2" style="display: none;">
+            <i class="fas fa-angle-left"></i>
+        </button>
+        {% block content %}
+            <h1>
+                Hello world
+            </h1>
+        {% endblock %}        
     </main>
     <!-- nofitication displayer -->
     <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
@@ -155,6 +159,25 @@
         <span id="notification-message"></span>
     </div>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/calendar.script.js') }}"></script>
+    {% block script %}
+    {% endblock %}
+    <script>
+        let hidden = false
+        $('.hide-btn').on('click', () => {
+           if(!hidden){
+                $('#aside').css('transform', 'translateX(-100%)')
+                $('.sticky-wall-main').css('margin-left', '0')
+                $('.hide-btn i').css('transform', 'rotate(180deg)')
+                $('.hide-btn2').css('display', 'inline')
+                hidden = true
+           }else{
+                $('#aside').css('transform', 'translateX(0)')
+                $('.hide-btn i').css('transform', 'rotate(0deg)')
+                $('.hide-btn2').css('display', 'none')
+                hidden = false
+           }
+            // alert('Hello')
+        })
+    </script>
 </body>
 </html>

@@ -1,0 +1,66 @@
+{% extends "views/users/base.html" %}
+{% block title %}Sticky Wall{% endblock %}
+{% block stickywall %}
+    active-page
+{% endblock %}
+{% block content %}
+    <h1 class="text-dark d-flex align-items-center justify-content-end">
+        <img class="loading-dash loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
+    </h1>
+    <div class="container py-3">
+        <div class="row justify-content-start" id="allTaskContainer">
+            <!--Create task-->
+            <div class="col-4 p-1 rounded-3 task taskBox">
+                <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                    <i class="text-dark fas fa-add addSing"></i>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="overlay"></div>
+            <div class="modal">
+                <form class="d-flex flex-column justify-content-between h-100" id="add_task_form">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                            <label class="text-dark" name="tastTitle" >Task title</label>
+                            <input class="form-control w-75" type="text" id="title" placeholder="Task title">
+                        </div>
+                        <!--Start date-->
+                        <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                            <label class="text-dark" name="startDate" >Start date</label>
+                            <input class="form-control w-75" type="date" id="startDate" placeholder="Start date">
+                        </div>
+                        <!--End date-->
+                        <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                            <label class="text-dark" name="endDate" >End date</label>
+                            <input class="form-control w-75" type="date" id="endDate" placeholder="End date">
+                        </div>
+                        <!--Description-->
+                        <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                            <label class="text-dark" name="endDate" >Description</label>
+                            <input class="form-control w-75" type="text" id="description" placeholder="A short description (optional)">
+                        </div>
+                        <!--Backgound colour select-->
+                        <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                            <label class="text-dark" name="endDate" >Select task background-color <span>(default color    <div class="default-color"></div>  </span>)</label>
+                            <input class="" type="color" id="bg-color-piker" value="#95ce83">
+                        </div>
+                        <!--Task content-->
+                        <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                            <input class="form-control" type="text" id="content" placeholder="Add sub-task (Optional)">
+                            <button class="add btn btn-primary">Add</button>
+                        </div>
+                        <ul class="text-dark task-list-container text-center">
+                            <span id="subTaskIndicator">No subtask added </br> all subtask will appear here</span>
+                        </ul>
+                    </div>                        
+                    <div class="btn-container">
+                        <button class="shadow submit text-light" id="submit">Submit <img class="loading-dash loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt=""></button>
+                        <button class="shadow btn-danger" id="closeModal">Close</button>
+                    </div>
+                </from>
+            </div>
+            <!--End Modal-->
+        </div>
+    </div>
+{% endblock %}
