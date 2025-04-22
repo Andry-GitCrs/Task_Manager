@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser
+from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask
 from database import pgconnexion
 
 ## App config
@@ -85,6 +85,12 @@ def today():
 def upcoming():
     return render_template('views/users/upcoming.html', email = current_user.email)
 
+
+@app.route('/dashboard/profile') # Upcoming tasks
+@login_required
+def profile():
+    return render_template('views/users/profile.html', email = current_user.email)
+
 # Admin Routes
 @app.route('/auth/admin/login')
 @login_required
@@ -145,8 +151,14 @@ gettasks.get_tasks(app, database)
 ## Add new task
 addtask.add_task(app, database)
 
+## Update task
+updatetask.update_task(app, database)
+
 ## Add subtask
 addsubtask.add_subtask(app, database)
+
+## Update subtask
+updatesubtask.update_subtask(app, database)
 
 ## Delete task
 deletetask.deleteTask(app, database)
@@ -197,12 +209,13 @@ sendemail.verifyEmail(app)
 ## Send email
 sendemail.sendEmail(app)
 
+adduser.adduser(app, database)
+
 ## Test zone
 exportcsv.export_to_csv(app, database)
 exportpdf.export_to_pdf(app, database)
 
 ## End test zone
-adduser.adduser(app, database)
 
 if __name__ == "__main__":
     app.run(debug=True)

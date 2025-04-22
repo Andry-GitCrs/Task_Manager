@@ -25,11 +25,6 @@
                 <i class="fas fa-angle-left"></i>
             </button>
         </div>
-        <form class="d-flex justify-content-between align-items-center border px-3 py-2 rounded-2" action="">
-            <i class="text-primary fa fa-search"></i>
-            <input class="text-dark" type="search" id="findTask" onkeyup="findTaskk()" placeholder="Find task">
-            <div id="searchResultsContainer" class="mt-3 p-2"></div>
-        </form>
         <div class="my-3">
             <h4 class="text-dark fw-bold" >TASKS</h4>
             <ul class="p-0">
@@ -66,13 +61,13 @@
             <ul class="p-0">
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
-                        <i class="text-dark fas fa-user"></i>
-                        <a  class="text-dark text-decoration-none" href="#">Personal</a>
+                        <i class="text-dark fas fa-users"></i>
+                        <a  class="text-dark text-decoration-none" href="#">Team</a>
                     </div>
                 </li>
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
-                        <i class="text-danger fas fa-circle"></i>
+                        <i class="text-warning fas fa-coins"></i>
                         <a  class="text-dark text-decoration-none" href="#">Work</a>
                     </div>
                 </li>
@@ -96,62 +91,90 @@
                     <i class="text-danger fas fa-bug"></i>
                     <a class="text-dark text-decoration-none" href="mailto:andrianaivonoe403@gmail.com">Bug report</a>
                 </li>
-                <li class="my-2 py-1">
-                    <div class="dropdown">
-                        <div class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <li class="my-2 py-1 {% block profile %}{% endblock %}">
+                    <div class="w-100 d-flex align-items-center">
+                        <a  class="text-dark text-decoration-none w-100" href="/dashboard/profile">
                             <i class="text-dark fas fa-cog"></i>
                             My profile
-                        </div>
-                        <!-- Dropdown Form -->
-                        <div class="dropdown-menu p-3 dropdown-form position-relative">
-                          <form class="updateForm">
-                            <h4>
-                                <i class="text-dark fas fa-cog"></i>
-                                Edit my profile
-                            </h4>
-                            <div class="mb-3">
-                              <label for="email" class="form-label"><i class="fas fa-envelope text-secondary" ></i> Email</label>
-                              <input name="email" type="email" value="{{ email }}" class="form-control" id="email" placeholder="example@mail.com" >
-                            </div>
-    
-                            <div class="mb-3">
-                                <label for="oldconfirmPassword" class="form-label"><i class="fas fa-key text-success"></i> Confirm old Password</label>
-                                <input name="oldconfirmPassword" type="password" class="form-control" id="oldconfirmPassword" required>
-                            </div>
-                    
-                            <div class="mb-3">
-                              <label for="newPassword" class="form-label">New Password</label>
-                              <input name="newPassword" type="password" class="form-control" id="newPassword" required>
-                            </div>
-                    
-                            <div class="mb-3">
-                              <label for="confirmPassword" class="form-label">Confirm Password</label>
-                              <input name="confirmPassword" type="password" class="form-control" id="confirmPassword" required>
-                            </div>
-                    
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-success w-50">Validate</button>
-                            </div>
-                          </form>
-                        </div>
+                        </a>
                     </div>
                 </li>
                 <li class="my-2 py-1">
-                    <i class="text-secondary fas fa-power-off"></i>
-                    <a class="text-dark text-decoration-none" href="/auth/logout">Sing out</a>
+                    <div class="w-100 d-flex align-items-center">
+                        <a  class="text-dark text-decoration-none w-100" href="/auth/logout">
+                            <i class="text-secondary fas fa-power-off"></i>
+                            Sing out
+                        </a>
+                    </div>
                 </li>
             </ul>
         </div>
     </aside>
     <main class="sticky-wall-main p-3 py-4">
-        <button class="btn hide-btn hide-btn2" style="display: none;">
-            <i class="fas fa-angle-left"></i>
-        </button>
+        <nav class="nav shadow p-1">
+            <button class="btn hide-btn hide-btn2" style="color: transparent;">
+                <i class="fas fa-angle-left"></i>
+            </button>
+            <form class="d-flex justify-content-between align-items-center border px-3 mx-3 rounded-2" action="">
+                <i class="text-primary fa fa-search"></i>
+                <input name="search_bar" class="px-3 text-dark bg-transparent" type="search" id="findTask" onkeyup="findTaskk()" placeholder="Find task">
+                <div id="searchResultsContainer" class="mt-3 p-2"></div>
+            </form>
+            <button class="btn bg-primary open-modal py-1">
+                <i class="fas fa-add text-success"></i>
+                Create new task
+            </button>
+        </nav>
         {% block content %}
             <h1>
                 Hello world
             </h1>
-        {% endblock %}        
+        {% endblock %}
+        <!-- Modal -->
+        <div class="overlay"></div>
+        <div class="modal">
+            <form class="d-flex flex-column justify-content-between h-100" id="add_task_form">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                        <label for="title" class="text-dark" name="tastTitle" >Task title</label>
+                        <input name="task_title" class="form-control w-75" type="text" id="title" placeholder="Task title">
+                    </div>
+                    <!--Start date-->
+                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                        <label for="startDate" class="text-dark" name="startDate" >Start date</label>
+                        <input name="start_date" class="form-control w-75" type="date" id="startDate" placeholder="Start date">
+                    </div>
+                    <!--End date-->
+                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                        <label for="endDate" class="text-dark" name="endDate" >End date</label>
+                        <input name="end_date" class="form-control w-75" type="date" id="endDate" placeholder="End date">
+                    </div>
+                    <!--Description-->
+                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                        <label for="description" class="text-dark" name="endDate" >Description</label>
+                        <input name="task_description" class="form-control w-75" type="text" id="description" placeholder="A short description (optional)">
+                    </div>
+                    <!--Backgound colour select-->
+                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                        <label for="bg-color-piker" class="text-dark" name="endDate" >Select task background-color <span>(default color    <div class="default-color"></div>  </span>)</label>
+                        <input name="task_background" class="" type="color" id="bg-color-piker" value="#95ce83">
+                    </div>
+                    <!--Task content-->
+                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                        <input name="add_btn" class="form-control" type="text" id="content" placeholder="Add sub-task (Optional)">
+                        <button name="add_btn" class="add btn btn-primary">Add</button>
+                    </div>
+                    <ul class="text-dark task-list-container text-center">
+                        <span id="subTaskIndicator">No subtask added </br> all subtask will appear here</span>
+                    </ul>
+                </div>                        
+                <div class="btn-container">
+                    <button class="shadow submit text-light" id="submit">Submit <img class="loading-dash loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt=""></button>
+                    <button class="shadow btn-danger" id="closeModal">Close</button>
+                </div>
+            </from>
+        </div>
+        <!--End Modal-->        
     </main>
     <!-- nofitication displayer -->
     <div id="notification" class="d-none position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2" style="z-index: 9999; min-width: 250px;">
@@ -168,12 +191,12 @@
                 $('#aside').css('transform', 'translateX(-100%)')
                 $('.sticky-wall-main').css('margin-left', '0')
                 $('.hide-btn i').css('transform', 'rotate(180deg)')
-                $('.hide-btn2').css('display', 'inline')
+                $('.hide-btn2').css('color', 'black')
                 hidden = true
            }else{
                 $('#aside').css('transform', 'translateX(0)')
                 $('.hide-btn i').css('transform', 'rotate(0deg)')
-                $('.hide-btn2').css('display', 'none')
+                $('.hide-btn2').css('color', 'transparent')
                 hidden = false
            }
             // alert('Hello')

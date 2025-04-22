@@ -37,4 +37,5 @@ document.addEventListener('DOMContentLoaded', async function () {
   };
 
   await fetchTasksAndInitCalendar();
+  $(".loading-dash").css("display", 'none');
 });

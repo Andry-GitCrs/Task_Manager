@@ -223,6 +223,7 @@ async function addSubTask(id){
                         class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
                         id='subtask${subtask.subtask_id}'
                         style="background-color: '#f8f9fa'"
+                        ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
                     >
                     <span 
 
@@ -253,70 +254,91 @@ async function addSubTask(id){
             }
         } catch (error) {
             showNotification("error", responseData.error)
-            $(".loading-dash").css("display", 'none');
+            $(".loading-dash").css("display", 'none')
         }
     }else{
         showNotification("error", "Invalid value")
-        $(".loading-dash").css("display", 'none');
+        $(".loading-dash").css("display", 'none')
     }
-    $(".loading-dash").css("display", 'none');
+    $(".loading-dash").css("display", 'none')
 }
 
 function editSubTask_on_adding(id){
     showNotification("success", `Edit subtask ${id}?`)
-    let old_value = $(`#${id}`).text()
-    $(`#${id}`).html(`
-        <input
-            value='${old_value}'
-            class="form-control mx-2 my-0 d-block"
-            type="text" name="subtask_status"
-        />
-    `)
 }
 
 // Write change
-function removeSubTask_on_adding(id){
+async function removeSubTask_on_adding(id){
     showNotification("success", `Remove subtask ${id}?`)
 }
 
-function editSubTask(id, subtask_id){
-    showNotification("success", `Edit subtask ${id}?`)
-    let old_value = $(`#${id}`).text().trim()
-    $(`#${id}`).html(`
-        <input
-            value='${old_value}'
-            class="form-control mx-2 my-0 d-block py-0"
-            type="text" name="subtask_status"
-            id="inputEdit${id}"
-        />
-    `)
+async function editSubTask(id, subtask_id) {
+    let subtask_title = document.getElementById(id).textContent.trim();
+    let temp_subtask_title = subtask_title;
 
-    $(`#inputEdit${id}`).on('mouseleave', () => {
-        let newValue = $(`#inputEdit${id}`).val()
-        if(!newValue.trim()){
-            newValue = old_value
+    subtask_title = prompt('Edit subtask:', temp_subtask_title)?.trim() || "";
+
+    console.log("subTask_title :", subtask_title);
+    console.log("Temp :", temp_subtask_title);
+    console.log("Different:", subtask_title !== temp_subtask_title);
+
+    if (subtask_title === "") {
+        showNotification("error", `No modification applied`);
+
+    } else if (subtask_title !== temp_subtask_title) {
+        
+        $(".loading-dash").css("display", 'inline');
+        try{
+            const response = await fetch(`/api/subtask/update/${subtask_id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({subtask_title})
+            });
+
+            let responseData = await response.json();
+
+            if (response.ok) {
+                subtask = responseData.data
+                showNotification("success", responseData.message);
+                document.getElementById(id).innerHTML = `
+                    <span 
+                        style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
+                    > 
+                    ${subtask.subtask_title}
+                    </span>
+                    <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
+                        <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                        <input
+                            ${subtask.finished ? "checked" : ""}
+                            value=${subtask.finished ? "off" : "on"}
+                            class="from-control mx-2 my-0"
+                            type="checkbox" name="subtask_status" 
+                            id="input${subtask.subtask_id}" 
+                            onchange="check(${subtask.subtask_id})"
+                        />
+                        <i 
+                            class="fas fa-check-circle text-warning"
+                            style="display: ${(subtask.finished)?'inline' : 'none'}" 
+                            id='check_icon${subtask.subtask_id}'
+                        >
+                        </i>
+                    </div>
+                `;
+
+            }else{
+                showNotification("error", responseData.error)
+            }            
+        }catch(error){
+            showNotification("error", error)
         }
-        $(`#${id}`).html($(`
-            <span class="text-light"> 
-            ${newValue}
-            </span>
-            <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask_id}')"></i>
-                <input
-                    class="from-control mx-2 my-0"
-                    type="checkbox" name="subtask_status" 
-                    id="input${subtask_id}" 
-                    onchange="check(${subtask_id})"
-                />
-                <i 
-                    class="fas fa-check-circle text-warning"
-                    style="display: none" 
-                    id='check_icon${subtask_id}'
-                >
-                </i>
-            </div>
-        `))
-    })
+        $(".loading-dash").css("display", 'none');
+
+    } else {
+        showNotification("error", `No modification applied`);
+
+    }
 }
 
 const fetchTasks = async () => {
@@ -457,6 +479,10 @@ function showNotification(type, message) {
     setTimeout(() => {
       notification.classList.add('d-none');
     }, 5000);
+
+    notification.addEventListener('click', () => {
+        notification.classList.add('d-none');
+    })
 }
 
 // Check Subtask
@@ -545,8 +571,12 @@ var verify = async () => {
         if (response.ok) {
             $('._user_action').append(`
                 <li class="my-0 pb-0">
-                    <i class="text-success fas fa-key"></i>
-                    <a class="text-dark text-decoration-none" href="/auth/admin/login">Login as admin</a>
+                    <div class="w-100 d-flex align-items-center">
+                        <a  class="text-dark text-decoration-none w-100" href="/auth/admin/login">
+                            <i class="text-success fas fa-key"></i>
+                            Login as admin
+                        </a>
+                    </div>
                 </li>
             `)
         }
@@ -642,6 +672,7 @@ function genTaskCard(bg_color, description, start_date, end_date, title, id, sub
                         class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
                         id='subtask${subtask.subtask_id}'
                         style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
+                        ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
                     >
                         <span 
                             style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
@@ -673,42 +704,3 @@ function genTaskCard(bg_color, description, start_date, end_date, title, id, sub
     ` 
     return card
 }
-
-$('.updateForm').on('submit', async function(e) {
-    e.preventDefault();
-    
-    const email = document.getElementById('email').value.trim('');
-    const oldconfirmPassword = document.getElementById('oldconfirmPassword').value.trim('')
-    const newPassword = document.getElementById('newPassword').value.trim('');
-    const confirmPassword = document.getElementById('confirmPassword').value.trim('');
-
-    user = {
-        "email": email,
-        "old_password": oldconfirmPassword,
-        "new_password": newPassword,
-        "confirmation_password": confirmPassword
-    }
-    $(".loading-dash").css("display", 'inline');
-    try {
-        const response = await fetch("/api/user/update", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user)
-        });
-
-        const responseData = await response.json();
-
-        if (response.ok) {  //Response with status code 200
-            showNotification("success", responseData.message)
-
-        } else {
-            showNotification("error", responseData.error)
-
-        }
-
-    } catch (error) {
-        showNotification("error", error)
-        
-    }
-    $(".loading-dash").css("display", 'none');
-});
