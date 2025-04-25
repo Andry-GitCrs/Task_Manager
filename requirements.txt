@@ -8,4 +8,4 @@ Requests==2.32.3
 SQLAlchemy==2.0.40
 gunicorn
 psycopg2-binary
-
+reportlab

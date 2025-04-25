@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async function () {
           center: 'title',
           right: 'multiMonthYear,dayGridMonth,timeGridWeek'
         },
+        themeSystem: 'bootstrap5',
         initialView: 'dayGridMonth',
         initialDate: Date.now(),
         editable: true,
