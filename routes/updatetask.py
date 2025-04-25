@@ -16,18 +16,46 @@ def update_task(app, database):
             task_end_date = data['task_end_date']
             task_background_color = data['task_background_color']
             description = data['description'] or "None"
-            subtasks = data['subtasks']
+            user_id = current_user.user_id
 
             task = db.session.query(Task).filter_by(task_id = task_id).first()
+
             if not task:
                 return jsonify({"error": "Task not found"}), 404
+            
+            newTask = Task.query.filter(
+                Task.task_title == task_title,
+                Task.user_id == user_id,
+                Task.stat == True,
+                Task.task_id != task_id
+            ).first()
+
+            if newTask:
+                return jsonify({
+                    "error": "Task already exists"
+                }), 400
         
             if not task_title or not task_start_date or not task_end_date or not task_background_color:
                 return jsonify({"error": "Please fill all required fields"}), 400
             
-            # task.task_title = task_title
-            # task.updated_at = datetime.utcnow()
-            # db.session.commit()
+            try:
+                start_date = datetime.strptime(task_start_date, "%Y-%m-%d")
+                end_date = datetime.strptime(task_end_date, "%Y-%m-%d")
+
+            except ValueError:
+                return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
+
+            if start_date > end_date:
+                return jsonify({"error": "Start date must be before end date"}), 400
+            
+            task.task_title = task_title
+            task.task_start_date = task_start_date
+            task.task_end_date = task_end_date
+            task.task_background_color = task_background_color
+            task.description = description
+            task.updated_at = datetime.utcnow()
+            db.session.commit()
+
             task = {
                 "task_id": task.task_id,
                 "title": task.task_title,

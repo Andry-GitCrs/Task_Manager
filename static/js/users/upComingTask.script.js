@@ -30,8 +30,6 @@ async function fetchUpcomingTasks(element_id, condition, day, message) {
                 
                 addUpcomingTask(element_id, id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks)
             });
-        } else {
-            $(`#${element_id}`).append($("<h3></h3>").text(`No task to do ${condition} ${day} ${day > 1 ? "days" : "day"}, ${message}`))
         }
     } catch (error) {
         console.log(error);
@@ -49,3 +47,7 @@ function addUpcomingTask(element_id, id, title, start_date, end_date, descriptio
 fetchUpcomingTasks('upComingTaskContainer', 'before', 7, "Next week");
 fetchUpcomingTasks('upComingTaskContainer1', 'on', 1, "Tomorrow");
 fetchUpcomingTasks('upComingTaskContainer2', 'after', 2, "After tomorrow");
+
+$('#date_select').on('change', (e) => {
+    alert(e.target.value)
+})
