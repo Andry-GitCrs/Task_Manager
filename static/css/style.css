@@ -308,7 +308,7 @@ aside div ul li{
     max-height: 120px;
     overflow-y: auto;
     padding: 0;
-} 
+}
 
 .overlay {
     display: none;
@@ -425,9 +425,13 @@ main .container li:hover{
     display: inline;
 }
 
-#calendar{
-    z-index: -1;
-    height: 100vh;
+#calendar {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
 #calendar-container{
@@ -439,6 +443,12 @@ main .container li:hover{
 /* End Dashboard page */
 
 /* Welcome modal */
+
+.nav{
+    height: 50px;
+    background-color: #ffffffa9;
+    backdrop-filter: blur(10px);
+}
 
 .welcomeModal {
     display: none;
@@ -479,6 +489,14 @@ main .container li:hover{
     background-color: antiquewhite;
 }
 
+#findTask{
+    border: none;
+}
+
+#findTask:focus{
+    outline: none;
+}
+
 /* End Welcome modal */
 #searchResultsContainer{
     transition: 2s all;
@@ -487,7 +505,7 @@ main .container li:hover{
     width: 100%;
     max-height: 300px;
     overflow-y: auto;
-    top: 94px;
+    top: 45px;
     left: 0;
     z-index: 9999;
     display: none;
@@ -720,3 +738,6 @@ nav li a{
     border-radius: 2px;
 }
   
+.task-icon{
+    font-size: 16px!important;
+}

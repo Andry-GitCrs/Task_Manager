@@ -1,6 +1,6 @@
-
 from flask import jsonify
 from flask_login import current_user, login_required
+from datetime import datetime
 
 def checktask(app, database):
     Subtask = database["tables"]["Subtask"]
@@ -20,6 +20,7 @@ def checktask(app, database):
                 subtask.check()
                 message = "Subtask checked successfully"
                 
+            subtask.updated_at = datetime.utcnow()
             db.session.commit()
             
             subtaskData = {

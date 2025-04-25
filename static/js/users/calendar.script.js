@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async function () {
           center: 'title',
           right: 'multiMonthYear,dayGridMonth,timeGridWeek'
         },
+        themeSystem: 'bootstrap5',
         initialView: 'dayGridMonth',
         initialDate: Date.now(),
         editable: true,
@@ -37,4 +38,5 @@ document.addEventListener('DOMContentLoaded', async function () {
   };
 
   await fetchTasksAndInitCalendar();
+  $(".loading-dash").css("display", 'none');
 });

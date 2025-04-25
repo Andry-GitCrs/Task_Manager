@@ -9,3 +9,4 @@ SQLAlchemy==2.0.40
 gunicorn
 psycopg2-binary
 reportlab
+

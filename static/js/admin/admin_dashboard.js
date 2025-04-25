@@ -53,6 +53,10 @@ function showNotification(type, message) {
     setTimeout(() => {
       notification.classList.add('d-none');
     }, 5000);
+
+    notification.addEventListener('click', () => {
+        notification.classList.add('d-none');
+    })
 }
 
 function makeLineChart(userData) {

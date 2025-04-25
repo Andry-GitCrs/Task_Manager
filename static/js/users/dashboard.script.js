@@ -18,6 +18,9 @@ $(document).ready(function() {
     $("#closeModal, .overlay").on("click", function(e) {
         e.preventDefault()
         $(".overlay, .modal").fadeOut()
+        $("#update_task_form").off("submit");
+        $('.task-form').attr('id', 'add_task_form')
+        $("#add_task_form").on("submit");
     })
 
     // Add task
@@ -111,17 +114,17 @@ $(document).ready(function() {
         }
         $(".loading-dash").css("display", 'none');
     })
-})
 
-let tempValue = []
-$("#title").on("keyup", () => {
-    tempValue.push($("#title").val())
-    let value = tempValue[tempValue.length -1]
-    if(value){
-        $("#subTaskIndicator").text(`No subtask added to ${value}`)
-    }else{
-        $("#subTaskIndicator").html("No subtask added </br> all subtask will appear here")
-    }
+    let tempValue = []
+    $("#title").on("keyup", () => {
+        tempValue.push($("#title").val())
+        let value = tempValue[tempValue.length -1]
+        if(value){
+            $("#subTaskIndicator").text(`No subtask added to ${value}`)
+        }else{
+            $("#subTaskIndicator").html("No subtask added </br> all subtask will appear here")
+        }
+    })
 })
 
 //Remove task
@@ -196,8 +199,8 @@ async function removeSubTask(id){
 }
 
 // Add subtask
-async function addSubTask(id){
-    const newValue = prompt(`Add task to ${id}`).trim()
+async function addSubTask(id, title){
+    const newValue = prompt(`Add subtask to ${title}`).trim()
     task_id = id
     if(newValue.trim()){
         newSubtask = {
@@ -223,6 +226,7 @@ async function addSubTask(id){
                         class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
                         id='subtask${subtask.subtask_id}'
                         style="background-color: '#f8f9fa'"
+                        ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
                     >
                     <span 
 
@@ -253,70 +257,89 @@ async function addSubTask(id){
             }
         } catch (error) {
             showNotification("error", responseData.error)
-            $(".loading-dash").css("display", 'none');
+            $(".loading-dash").css("display", 'none')
         }
     }else{
         showNotification("error", "Invalid value")
-        $(".loading-dash").css("display", 'none');
+        $(".loading-dash").css("display", 'none')
     }
-    $(".loading-dash").css("display", 'none');
+    $(".loading-dash").css("display", 'none')
 }
 
 function editSubTask_on_adding(id){
     showNotification("success", `Edit subtask ${id}?`)
-    let old_value = $(`#${id}`).text()
-    $(`#${id}`).html(`
-        <input
-            value='${old_value}'
-            class="form-control mx-2 my-0 d-block"
-            type="text" name="subtask_status"
-        />
-    `)
 }
 
 // Write change
-function removeSubTask_on_adding(id){
+async function removeSubTask_on_adding(id){
     showNotification("success", `Remove subtask ${id}?`)
 }
 
-function editSubTask(id, subtask_id){
-    showNotification("success", `Edit subtask ${id}?`)
-    let old_value = $(`#${id}`).text().trim()
-    $(`#${id}`).html(`
-        <input
-            value='${old_value}'
-            class="form-control mx-2 my-0 d-block py-0"
-            type="text" name="subtask_status"
-            id="inputEdit${id}"
-        />
-    `)
+async function editSubTask(id, subtask_id) {
+    let subtask_title = document.getElementById(id).textContent.trim();
+    let temp_subtask_title = subtask_title;
 
-    $(`#inputEdit${id}`).on('mouseleave', () => {
-        let newValue = $(`#inputEdit${id}`).val()
-        if(!newValue.trim()){
-            newValue = old_value
+    subtask_title = prompt('Edit subtask:', temp_subtask_title)?.trim() || "";
+
+    if (subtask_title === "") {
+        showNotification("error", `No modification applied`);
+
+    } else if (subtask_title !== temp_subtask_title) {
+        
+        $(".loading-dash").css("display", 'inline');
+        try{
+            const response = await fetch(`/api/subtask/update/${subtask_id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({subtask_title})
+            });
+
+            let responseData = await response.json();
+
+            if (response.ok) {
+                subtask = responseData.data
+                showNotification("success", responseData.message);
+                document.getElementById(id).innerHTML = `
+                    <span 
+                        style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
+                    > 
+                    ${subtask.subtask_title}
+                    </span>
+                    <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
+                        <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                        <input
+                            ${subtask.finished ? "checked" : ""}
+                            value=${subtask.finished ? "off" : "on"}
+                            class="from-control mx-2 my-0"
+                            type="checkbox" name="subtask_status" 
+                            id="input${subtask.subtask_id}" 
+                            onchange="check(${subtask.subtask_id})"
+                        />
+                        <i 
+                            class="fas fa-check-circle text-warning"
+                            style="display: ${(subtask.finished)?'inline' : 'none'}" 
+                            id='check_icon${subtask.subtask_id}'
+                        >
+                        </i>
+                    </div>
+                `;
+
+            }else{
+                showNotification("error", responseData.error)
+                
+            }            
+        }catch(error){
+            showNotification("error", error)
+
         }
-        $(`#${id}`).html($(`
-            <span class="text-light"> 
-            ${newValue}
-            </span>
-            <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask_id}')"></i>
-                <input
-                    class="from-control mx-2 my-0"
-                    type="checkbox" name="subtask_status" 
-                    id="input${subtask_id}" 
-                    onchange="check(${subtask_id})"
-                />
-                <i 
-                    class="fas fa-check-circle text-warning"
-                    style="display: none" 
-                    id='check_icon${subtask_id}'
-                >
-                </i>
-            </div>
-        `))
-    })
+        $(".loading-dash").css("display", 'none');
+
+    } else {
+        showNotification("error", `No modification applied`);
+
+    }
 }
 
 const fetchTasks = async () => {
@@ -334,7 +357,6 @@ const fetchTasks = async () => {
         if (response.ok) {
             responseData = responseData.data
             taskcount = responseData.length
-            $("#taskNbr").text(taskcount)
             showNotification("success", `You have ${taskcount} task${taskcount > 1 ? "s" : ""} to do`)
             responseData.forEach(task => {
                 const id = task.task_id
@@ -347,11 +369,14 @@ const fetchTasks = async () => {
                 addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color,  subtasks)
             });
             return responseData
+
         } else {
             showNotification("error", responseData.message)
+
         }
     } catch (error) {
         showNotification("error", error.message)
+
     }
     $(".loading-dash").css("display", 'none');
 };
@@ -379,7 +404,11 @@ const formatDate = (date) => {
 function addNewTask(id, title, start_date, end_date, description, bg_color,  subtasks){
     let taskContainer = $(`<div class="col-4 p-1 taskBox" id="task${id}"></div>`)
     taskContainer.html(`    
-        <div class=" h-100 p-2 rounded-3 d-flex flex-column justify-content-start" style='background-color: ${bg_color}' title="${(description !== 'None')?description:'No description'}">
+        <div 
+            class=" h-100 p-2 rounded-3 d-flex flex-column justify-content-start"
+            style='background-color: ${bg_color}' 
+            title="${(description !== 'None')?description:'No description'}"
+        >
             <span class="text-dark date date-range w-auto ">
                 <i class="fa-solid fa-calendar-days text-success"></i>
                 ${start_date}
@@ -388,9 +417,10 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
             </span>
             <h3 class="text-dark task-title">
                 ${title}
-                <div class='d-flex justify-content-center gap-3 bg-transparent'>
-                    <i class="fas fa-add text-success" onclick="addSubTask('${id}')"></i> 
-                    <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
+                <div class='d-flex justify-content-center align-items-center gap-3 bg-transparent'>
+                    <i class="fas fa-pen text-success task-icon" onclick="update_task('${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
+                    <i class="fas fa-add text-success task-icon" onclick="addSubTask('${id}', '${title}')"></i> 
+                    <i class="fas fa-trash text-danger task-icon" onclick="removeTask('${id}')"></i>
                 </div>
             </h3>
             <ul class="p-0" id='subtaskContainer${id}'>
@@ -457,6 +487,10 @@ function showNotification(type, message) {
     setTimeout(() => {
       notification.classList.add('d-none');
     }, 5000);
+
+    notification.addEventListener('click', () => {
+        notification.classList.add('d-none');
+    })
 }
 
 // Check Subtask
@@ -545,8 +579,12 @@ var verify = async () => {
         if (response.ok) {
             $('._user_action').append(`
                 <li class="my-0 pb-0">
-                    <i class="text-success fas fa-key"></i>
-                    <a class="text-dark text-decoration-none" href="/auth/admin/login">Login as admin</a>
+                    <div class="w-100 d-flex align-items-center">
+                        <a  class="text-dark text-decoration-none w-100" href="/auth/admin/login">
+                            <i class="text-success fas fa-key"></i>
+                            Login as admin
+                        </a>
+                    </div>
                 </li>
             `)
         }
@@ -581,6 +619,7 @@ async function findTaskk(){
                     bg_color,
                     subtasks
                 } = task;
+
                 searchResult.append(`
                     <li class='my-2 p-2 rounded justify-content-between align-items-center subTask task${id}' id='${id}' style='background-color: ${bg_color}'>
                         ${title}
@@ -630,8 +669,9 @@ function genTaskCard(bg_color, description, start_date, end_date, title, id, sub
             </span>
             <h3 class="text-dark task-title">
                 ${title}
-                <div class='d-flex justify-content-center gap-3 bg-transparent'>
-                    <i class="fas fa-add text-success" onclick="addSubTask('${id}')"></i> 
+                <div class='d-flex justify-content-center gap-3 bg-transparent'>         
+                    <i class="fas fa-pen text-success task-icon" onclick="update_task('${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
+                    <i class="fas fa-add text-success" onclick="addSubTask('${id}', '${title}')"></i> 
                     <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
                 </div>
             </h3>
@@ -642,6 +682,7 @@ function genTaskCard(bg_color, description, start_date, end_date, title, id, sub
                         class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
                         id='subtask${subtask.subtask_id}'
                         style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
+                        ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
                     >
                         <span 
                             style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
@@ -674,41 +715,82 @@ function genTaskCard(bg_color, description, start_date, end_date, title, id, sub
     return card
 }
 
-$('.updateForm').on('submit', async function(e) {
-    e.preventDefault();
+function convertToISO(dateStr) {
+    // Split into parts: "Wed", "23", "April", "2025"
+    const [ , day, monthName, year ] = dateStr.split(' ');
+  
+    // Map full month name to month number
+    const months = {
+      January: "01", February: "02", March: "03",
+      April: "04", May: "05", June: "06",
+      July: "07", August: "08", September: "09",
+      October: "10", November: "11", December: "12"
+    };
+  
+    const month = months[monthName];
+  
+    // Ensure day has leading zero
+    const paddedDay = day.padStart(2, '0');
+  
+    return `${year}-${month}-${paddedDay}`;
+  }
+
+function update_task(task_id, title, startDate, endDate, bg_color, description){
+    $('.overlay, .modal').fadeIn()
+    $('.task-form').attr('id', 'update_task_form')
+    $("#title").val(title)
+    $("#startDate").val(convertToISO(startDate))
+    $("#endDate").val(convertToISO(endDate))
+    $("#bg-color-piker").val(bg_color)
+    $("#description").val(description)
+
+    $("#update_task_form").off("submit");
+
+    $("#update_task_form").on("submit", async function(e) {
+        e.preventDefault()
+        let title = $("#title").val().trim()
+        let startDate = $("#startDate").val()
+        let endDate = $("#endDate").val()
+        let bgColor = $("#bg-color-piker").val()
+        let description = $("#description").val().trim()
     
-    const email = document.getElementById('email').value.trim('');
-    const oldconfirmPassword = document.getElementById('oldconfirmPassword').value.trim('')
-    const newPassword = document.getElementById('newPassword').value.trim('');
-    const confirmPassword = document.getElementById('confirmPassword').value.trim('');
-
-    user = {
-        "email": email,
-        "old_password": oldconfirmPassword,
-        "new_password": newPassword,
-        "confirmation_password": confirmPassword
-    }
-    $(".loading-dash").css("display", 'inline');
-    try {
-        const response = await fetch("/api/user/update", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user)
-        });
-
-        const responseData = await response.json();
-
-        if (response.ok) {  //Response with status code 200
-            showNotification("success", responseData.message)
-
-        } else {
-            showNotification("error", responseData.error)
-
+        if (title.trim() !== "" && startDate !== "" && endDate !== "") {
+            task = {
+                "task_title": title,
+                "task_start_date": startDate,
+                "task_end_date": endDate,
+                "task_background_color": bgColor,
+                "description": description || "None"
+            }
+    
+            $(".loading-dash").css("display", 'inline');
+            try {
+                const response = await fetch(`/api/task/update/${task_id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(task)
+                });
+        
+                const responseData = await response.json();
+        
+                if (response.ok) {  //Response with status code 200
+                    showNotification("success", responseData.message)
+                } else {
+                    showNotification("error", responseData.error)
+                    $(".loading-dash").css("display", 'none');
+                }
+    
+            } catch (error) {
+                showNotification("error", responseData.error)
+                $(".loading-dash").css("display", 'none');
+            }
+    
+        }else{
+            showNotification("error", "Empty required fields")
+            $(".loading-dash").css("display", 'none');
         }
 
-    } catch (error) {
-        showNotification("error", error)
-        
-    }
-    $(".loading-dash").css("display", 'none');
-});
+        $(".loading-dash").css("display", 'none');
+    })
+}
+
