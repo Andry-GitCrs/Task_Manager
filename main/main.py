@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask
+from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, getTaskByDate, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask
 from database import pgconnexion
 
 ## App config
@@ -168,6 +168,9 @@ def manage_subtasks():
 
 ## Get task
 gettasks.get_tasks(app, database)
+
+## Get task by date
+getTaskByDate.getTaskByDate(app, database)
 
 ## Add new task
 addtask.add_task(app, database)

@@ -741,3 +741,9 @@ nav li a{
 .task-icon{
     font-size: 16px!important;
 }
+
+#select_arg{
+    border: 1.5px solid #dee2e6;
+    border-radius: 0.375rem;
+    outline: none;
+}
