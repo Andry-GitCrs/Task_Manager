@@ -16,6 +16,7 @@ email_form.addEventListener('submit', async function(e) {
     }
 
     document.getElementById('submit_feedback').textContent = 'Loading ...'
+    document.getElementById('submit_feedback').disabled = true
     
     const res = verify_email(email)
     if( (await res).is_valid == true ){
@@ -45,6 +46,8 @@ email_form.addEventListener('submit', async function(e) {
         showNotification('error', err)
         document.getElementById('submit_feedback').textContent = 'Submit'
     }
+    
+    document.getElementById('submit_feedback').disabled = false
 })
 
 

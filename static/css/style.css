@@ -25,12 +25,16 @@ body{
 
 nav ul a{
     color: var(--black-text)!important;
+    overflow: hidden;
 }
 
-nav ul a:hover{
-    transition: .2s all;
-    color: var(--white-text)!important;
-    border-bottom: 2px solid var(--white-text);
+nav ul a span{
+    display: none;
+}
+
+nav ul a:hover span{
+    transition: 1s all;
+    display: inline;
 }
 
 .menu-list{
@@ -241,6 +245,14 @@ aside div ul li:hover{
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
+.active-dash-link{
+    transition: .5s all;
+    background-color: var(--white-text);
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
 aside div ul li span{
     width: 20px;
     height: 20px;
@@ -409,7 +421,13 @@ main .container li:hover{
 }
 
 .active-page{
-    background-color: var(--grey);
+    border: 2px solid #e9540e;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.active-page a span{
+    display: inline;
 }
 
 .subTask{
@@ -569,13 +587,6 @@ nav li a{
 
 .bold-style{
     font-weight: 900;
-}
-
-.a-active{
-    font-weight: bold;
-    border-bottom: 2px solid white;
-    color: white;
-    font-weight: bolder;
 }
 
 .menu-list{
