@@ -35,7 +35,7 @@ $(document).ready(function() {
                     $(".task-list-container").text("")
                 }
                 subTaskList.push(content)
-                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask' id='subtask${taskNbr}${subTaskNbr}' ondblclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></li>`).html(`${content}  <div class="w-25 d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`))
+                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask rounded-2' id='subtask${taskNbr}${subTaskNbr}' ondblclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></li>`).html(`${content}  <div class="w-auto d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`))
             }else{
                 showNotification("error", `This taks already have "${content}" subtask`)
             }

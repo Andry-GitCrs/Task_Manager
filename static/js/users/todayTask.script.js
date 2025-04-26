@@ -44,6 +44,7 @@ async function fetchTodayTasks() {
             return todayTasks.length;
         } else {
             showNotification("error", "You don't have any task for today");
+            $("#todayTaskContainer").append($(`<h4 class='text-center'>You don't have any task for today</h4>`));
         }
     } catch (error) {
         showNotification("error", error.message);

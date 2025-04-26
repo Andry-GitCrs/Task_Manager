@@ -16,7 +16,7 @@ async function fetchUpcomingTasks(element_id, condition, day, message) {
             const date = formatDate(responseData.date);
             //$("#upcomingTaskNbr").text(upComingTasks.length);
             showNotification("success", `You have ${upComingTasks.length} task${upComingTasks.length > 1 ? "s" : ""} to do ${condition} ${date}`);
-            $(`#${element_id}`).append($("<h3 class='m-0 my-1'></h3>").html(`<span class="event p-1 px-3 text-dark rounded-pill">${message}</span> ${upComingTasks.length} task${upComingTasks.length > 1 ? "s" : ""} to do ${condition} ${date}`))
+            $(`#${element_id}`).append($("<h3 class='m-0 my-1'></h3>").html(`<span class="event p-1 px-3 text-dark rounded-pill">${message}</span>`))
             upComingTasks.forEach(task => {
                 const {
                     task_id: id,
@@ -43,10 +43,6 @@ function addUpcomingTask(element_id, id, title, start_date, end_date, descriptio
     taskContainer.html(newTaskCard);
     $(`#${element_id}`).append(taskContainer);
 }
-
-fetchUpcomingTasks('upComingTaskContainer', 'before', 7, "Next week");
-fetchUpcomingTasks('upComingTaskContainer1', 'on', 1, "Tomorrow");
-fetchUpcomingTasks('upComingTaskContainer2', 'after', 2, "After tomorrow");
 
 let argument = $('#select_arg').val()
 let year = null
@@ -115,3 +111,7 @@ async function getTaskByDate(arg, year, month, day){
         $(".loading-dash").css("display", 'none');
     }
 }
+
+fetchUpcomingTasks('upComingTaskContainer', 'after', 7, "Next week");
+fetchUpcomingTasks('upComingTaskContainer1', 'on', 1, "Tomorrow");
+fetchUpcomingTasks('upComingTaskContainer2', 'after', 2, "After tomorrow");
