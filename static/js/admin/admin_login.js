@@ -39,7 +39,8 @@ $("#adminLoginForm").on("submit", async function (e) {
     e.preventDefault();  
     const email = $("#email").val().trim();
     const password = $("#password").val().trim();
-    
+    document.getElementById("loading").style.display = 'inline'
+    document.getElementById('submit_btn').disabled = true
     try {
         const response = await fetch("/admin/auth/login", {
             method: "POST",
@@ -60,4 +61,6 @@ $("#adminLoginForm").on("submit", async function (e) {
     } catch (error) {
         showNotification("error", error)
     }
+    document.getElementById("loading").style.display = 'none'
+    document.getElementById('submit_btn').disabled = false
 });

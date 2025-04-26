@@ -64,4 +64,4 @@ def verify_admin(app, database):
         return jsonify({
             "error": f"User is not an admin member",
             "privilege": admin
-        }), 201
+        }), 401

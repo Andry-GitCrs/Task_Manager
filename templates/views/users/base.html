@@ -15,7 +15,7 @@
     <title>{% block title %} Base title {% endblock %}</title>
 </head>
 <body>
-    <aside class="px-3 rounded-2 position-fixed mb-2 mb-0 py-2" id="aside">
+    <aside class="px-3 rounded-2 position-fixed mb-2 mb-0 py-2 shadow" id="aside">
         <div class="d-flex justify-content-between align-items-center my-1 mb-2">
             <h3 class="text-dark d-flex align-items-center justify-content-center gap-2">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="40px" height="40px">
@@ -56,25 +56,25 @@
                 </li>
             </ul>
         </div>
-        <div class="my-4">
+        <div class="">
             <h4 class="text-dark fw-bold" >LISTS</h4>
-            <ul class="p-0">
+            <ul class="p-2 list-container rounded-3">
+                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center active-dash-link" onclick="showNotification('error', 'Sorry this feature is not available right now')">
+                    <div>
+                        <i class="text-secondary fas fa-user"></i>
+                        <a  class="text-dark text-decoration-none" href="#">Personal</a>
+                    </div>
+                </li>
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
-                        <i class="text-dark fas fa-users"></i>
+                        <i class="text-secondary fas fa-users"></i>
                         <a  class="text-dark text-decoration-none" href="#">Team</a>
                     </div>
                 </li>
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
                     <div>
-                        <i class="text-warning fas fa-coins"></i>
+                        <i class="text-warning fas fa-briefcase"></i>
                         <a  class="text-dark text-decoration-none" href="#">Work</a>
-                    </div>
-                </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
-                    <div>
-                        <i class="text-secondary fas fa-square"></i>
-                        <a  class="text-dark text-decoration-none" href="#">List 1</a>
                     </div>
                 </li>
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
@@ -115,16 +115,56 @@
             <button class="btn hide-btn hide-btn2" style="color: transparent;">
                 <i class="fas fa-angle-left"></i>
             </button>
-            <form class="d-flex justify-content-between align-items-center border px-3 mx-3 rounded-2" action="">
+            <form class="d-flex justify-content-start align-items-center border px-3 mx-3 rounded-2" action="">
                 <i class="text-primary fa fa-search"></i>
                 <input name="search_bar" class="px-3 py-2 text-dark bg-transparent" type="search" id="findTask" onkeyup="findTaskk()" placeholder="Find task">
                 <div id="searchResultsContainer" class="mt-3 p-2"></div>
             </form>
-            <button class="btn bg-primary open-modal py-2">
+            <button class="btn open-modal" style="background-color: transparent!important">
                 <i class="fas fa-add text-success"></i>
                 Create new task
             </button>
             {% block additionnal %}{% endblock%}
+            <div class="dropdown position-relative">
+                <button class="btn dropdown-toggle position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bell text-secondary me-2"></i> Notification
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                        4
+                        <span class="visually-hidden">unread messages</span>
+                    </span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="text-dark dropdown-item d-flex align-items-center" href="#">
+                            <i class="fas fa-tasks me-2 text-secondary"></i> Today's Tasks
+                            <span class="badge bg-primary ms-auto">2</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-dark dropdown-item d-flex align-items-center" href="#">
+                            <i class="fas fa-exclamation-circle me-2 text-danger"></i> Missed Tasks
+                            <span class="badge bg-warning ms-auto">1</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-dark dropdown-item d-flex align-items-center" href="#">
+                            <i class="fas fa-calendar-check me-2 text-success"></i> Upcoming Events
+                            <span class="badge bg-success ms-auto">1</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-dark dropdown-item d-flex align-items-center" href="#">
+                            <i class="fas fa-envelope-open-text me-2 text-info"></i> New Messages
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-dark dropdown-item d-flex align-items-center" href="#">
+                            <i class="fas fa-user-friends me-2 text-warning"></i> Friend Requests
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
             <img class="loading-dash loading mx-3" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
         </nav>
         {% block content %}
@@ -166,7 +206,7 @@
                         <input name="add_btn" class="form-control" type="text" id="content" placeholder="Add sub-task (Optional)">
                         <button name="add_btn" class="add btn btn-primary">Add</button>
                     </div>
-                    <ul class="text-dark task-list-container text-center">
+                    <ul class="text-dark task-list-container text-center ps-0">
                         <span id="subTaskIndicator">No subtask added </br> all subtask will appear here</span>
                     </ul>
                 </div>                        
@@ -205,7 +245,7 @@
                 $('.hide-btn2').css('color', 'transparent')
                 hidden = false
            }
-            // alert('Hello')
+             
         })
     </script>
 </body>

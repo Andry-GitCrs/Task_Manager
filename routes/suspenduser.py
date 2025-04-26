@@ -12,7 +12,7 @@ def suspendUser(app, database):
         admin = current_user.admin
         admin_user_id = current_user.user_id
 
-        user = User.query.filter_by(user_id = user_id, admin = False).first()
+        user = User.query.filter_by(user_id = user_id).first()
         suspended = User.query.filter_by(user_id = user_id, stat = False).first()
 
         if admin:
@@ -32,6 +32,6 @@ def suspendUser(app, database):
                 return jsonify({"message": f"User unsuspended successfully"}), 200
             
             else:
-                return jsonify({"error": "You don't have permission to suspend this user"}), 404
+                return jsonify({"error": "You don't have permission to suspend this user"}), 401
         else:
             return jsonify({"error": "You are not an admin member"}), 401
