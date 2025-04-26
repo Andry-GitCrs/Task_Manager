@@ -94,7 +94,7 @@ window.addEventListener("scroll", () => {
 
 
 function goTo(dir){
-    if(dir == "down"){
+    if(dir == "down"){    
         nav.style.top = -86 + "px"
     }else{
         nav.style.top = "0px"

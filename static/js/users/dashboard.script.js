@@ -578,7 +578,7 @@ var verify = async () => {
     
         if (response.ok) {
             $('._user_action').append(`
-                <li class="my-0 pb-0">
+                <li class="my-2 py-1">
                     <div class="w-100 d-flex align-items-center">
                         <a  class="text-dark text-decoration-none w-100" href="/auth/admin/login">
                             <i class="text-success fas fa-key"></i>

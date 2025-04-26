@@ -27,14 +27,14 @@
           <span class="bold-style text-success">Task </span>Manager
         </h1>
         <ul class="m-0 menu-list" id="menu-list">
-          <li class="md-mx-2 list-inline-item nav-item">
-            <a class="p-0 nav-link" href="/">HOME</a>
+          <li class="md-mx-2 list-inline-item nav-item {% block homeActive %}{% endblock %}">
+            <a class="p-0 nav-link" href="/"><i class="fas fa-home contact-title"></i> <span>HOME</span></a>
           </li>
-          <li class="md-mx-2 list-inline-item nav-item">
-            <a class="p-0 nav-link" href="/about">ABOUT US</a>
+          <li class="md-mx-2 list-inline-item nav-item {% block aboutActive %}{% endblock %}">
+            <a class="p-0 nav-link" href="/about"><i class="fas fa-eye contact-title"></i> <span>ABOUT US</span></a>
           </li>
-          <li class="md-mx-2 list-inline-item nav-item">
-            <a class="p-0 nav-link" href="/contact">CONTACT US</a>
+          <li class="md-mx-2 list-inline-item nav-item {% block contactActive %}{% endblock %}">
+            <a class="p-0 nav-link" href="/contact"><i class="fas fa-phone contact-title"></i> <span>CONTACT US</span></a>
           </li>
           <li class="md-mx-2 list-inline-item nav-item">
             <a class="btn p-0 nav-link p-2 px-4 bg-success rounded-3 border-none fw-bold login-btn" href="/auth">Login</a>
