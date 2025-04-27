@@ -897,6 +897,9 @@ async function deleteNotification(notificationId) {
             const notificationItem = document.getElementById(`notification${notificationId}`);
             if (notificationItem) {
                 notificationItem.remove();
+                const badge = document.querySelector('.dropdown .badge.bg-success');
+                let count = parseInt(badge.textContent);
+                badge.textContent = count - 1;
             }
 
         } else {

@@ -4,8 +4,9 @@ from flask_socketio import SocketIO, emit, join_room
 
 def send_notification(app, database, socketio):
     Notification = database['tables']['Notification']
+    User = database['tables']['User']
     db = database['db']
-
+    
     @app.route('/api/user/notifications/send', methods=['POST'])
     @login_required
     def send_notification_route():
@@ -19,11 +20,15 @@ def send_notification(app, database, socketio):
         if not user_id or not message:
             return jsonify({'error': 'User ID and message are required'}), 400
 
+        # Check if the user exists
+        user = db.session.query(User).filter_by(user_id=user_id).first()
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
         # Store the notification in the database
         new_notification = Notification(
             message=message,
-            user_id=user_id,
-            stat=True
+            user_id=user_id
         )
         db.session.add(new_notification)
         db.session.commit()
@@ -37,7 +42,6 @@ def send_notification(app, database, socketio):
         }, to=f'user_{user_id}')
 
         return jsonify({'message': 'Notification sent successfully'}), 201
-
     # SocketIO event to join a room for real-time notifications
     @socketio.on('join')
     def on_join(data):
@@ -46,4 +50,3 @@ def send_notification(app, database, socketio):
             room = f'user_{user_id}'
             join_room(room) 
             emit('joined', {'room': room})
-
