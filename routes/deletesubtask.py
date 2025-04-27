@@ -21,5 +21,4 @@ def deleteSubTask(app, database):
                 db.session.commit()
             return jsonify({"message": f"Subtask deleted successfully by {user_id}"}), 200
         
-        else:
-            return jsonify({"error": "Subtask not found"}), 404
+        return jsonify({"error": "Subtask not found"}), 404

@@ -86,5 +86,4 @@ def add_task(app, database):
                 'data': taskData
             }), 201
         
-        else:
-            return jsonify({'error': 'Missing required fields'}), 400
+        return jsonify({'error': 'Missing required fields'}), 400

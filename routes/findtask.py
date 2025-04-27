@@ -45,5 +45,4 @@ def findTask(app, database):
             
             return jsonify({"data": task_list, "message": f"{len(task_list)} Tasks found"}), 200
 
-        else:
-            return jsonify({"data": []}), 404
+        return jsonify({"data": []}), 404

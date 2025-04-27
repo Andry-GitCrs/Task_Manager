@@ -36,6 +36,12 @@
                 All Users
             </h2>
             <p class="text-muted text-center">List of all users in the system</p>
+            <h4 class="m-0 text-center">
+                Total users <span id="simple_users_nbr">N/a</span>
+            </h4>
+            <h4 class="m-0 text-center">
+                Admin <span id="admin_nbr">N/a</span>
+            </h4>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="dropdown-container">
                     <button id="toggleFormBtn" class="btn btn-success">
@@ -69,12 +75,6 @@
                 </div>
 
                 <div class="d-flex gap-3">
-                    <h4 class="m-0 text-center">
-                        Total users <span id="simple_users_nbr">N/a</span>
-                    </h4>
-                    <h4 class="m-0 text-center">
-                        / Admin <span id="admin_nbr">N/a</span>
-                    </h4>
                     <a class="btn btn-success" id="refreshBtn" href="{{ url_for('export_pdf') }}">
                         <i class="fas fa-file"></i>
                         Export to PDF

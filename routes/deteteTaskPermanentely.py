@@ -16,5 +16,4 @@ def deleteTaskPermanentely(app, database):
             db.session.commit()
             return jsonify({"message": "Task deleted permanently"}), 200
 
-        else:
-            return jsonify({"error": "Task not found"}), 404
+        return jsonify({"error": "Task not found"}), 404

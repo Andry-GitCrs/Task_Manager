@@ -28,5 +28,4 @@ def deleteTask(app, database):
             db.session.commit()
             return jsonify({"message": "Task deleted successfully"}), 200
         
-        else:
-            return jsonify({"error": "Task not found"}), 404
+        return jsonify({"error": "Task not found"}), 404

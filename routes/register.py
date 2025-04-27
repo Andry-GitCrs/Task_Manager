@@ -28,5 +28,4 @@ def register(app, database):
         elif suspended:
             return jsonify({"error": f"User {email} is suspended by admin"}), 401
         
-        else :
-            return jsonify({"error": "Passwords do not match"}), 400
+        return jsonify({"error": "Passwords do not match"}), 400

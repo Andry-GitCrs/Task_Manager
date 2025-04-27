@@ -43,5 +43,4 @@ def add_subtask(app, database):
                 'data': newSubtask
             }), 201
         
-        else:
-            return jsonify({'error': 'Missing required fields'}), 400
+        return jsonify({'error': 'Missing required fields'}), 400
