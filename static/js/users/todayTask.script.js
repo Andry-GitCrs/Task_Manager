@@ -17,7 +17,7 @@ async function fetchTodayTasks() {
 
         if (response.ok && responseData.data.length > 0) {
             const todayTasks = responseData.data;
-            showNotification("success", `You have ${taskcount} task${taskcount > 1 ? "s" : ""} to do today`);
+            showNotification("success", `You have ${todayTasks.length} task${taskcount > 1 ? "s" : ""} to do today`);
 
             todayTasks.forEach(task => {
                 const {
