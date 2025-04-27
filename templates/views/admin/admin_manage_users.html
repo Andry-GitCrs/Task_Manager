@@ -75,8 +75,12 @@
                     <h4 class="m-0 text-center">
                         / Admin <span id="admin_nbr">N/a</span>
                     </h4>
+                    <a class="btn btn-success" id="refreshBtn" href="{{ url_for('export_pdf') }}">
+                        <i class="fas fa-file"></i>
+                        Export to PDF
+                    </a>
                     <a class="btn btn-primary" id="refreshBtn" href="{{ url_for('export_csv') }}">
-                        <i class="fas fa-sync"></i>
+                        <i class="fas fa-table"></i>
                         Export to CSV
                     </a>
                 </div>

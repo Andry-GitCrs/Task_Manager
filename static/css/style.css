@@ -62,18 +62,16 @@ header{
     background-attachment: fixed;
 }
 
-.header-part-about::after{
+.header-part::after{
     content: "";
     position: absolute;
+    height: 75vh;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    width: auto;
-    height: 75vh;
-    background-color: #2c7286be;
+    background-color: #242627ad;
     mix-blend-mode: multiply;
-    backdrop-filter: saturate(180%);
     z-index: 0;
 }
 
