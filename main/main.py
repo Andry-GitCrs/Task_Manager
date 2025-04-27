@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, getNotification, getTaskByDate, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask, sendNotification
+from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, getNotification, getTaskByDate, gettodaytasks, getupcomingtasks, login, loginadmin, markNotification, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask, sendNotification
 from database import pgconnexion
 
 ## App config
@@ -172,6 +172,9 @@ def manage_subtasks():
 
 ## Get notification
 getNotification.get_notifications(app, database)
+
+## Mark notification
+markNotification.mark_notification(app, database)
 
 ## Get task
 gettasks.get_tasks(app, database)

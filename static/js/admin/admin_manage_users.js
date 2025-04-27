@@ -197,6 +197,19 @@ async function toggleAdmin(user_id) {
         const data = await response.json();
         if(response.ok){
             showNotification("success", data.message)
+            try {
+                const response = await fetch(`/api/user/notifications/send`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        "user_id": user_id,
+                        "message": `You have been ${data.data ? 'granted' : 'removed from'} admin role`
+                    })
+                }); 
+
+            } catch (error) {
+                showNotification("error", error.message)
+            }
 
         }else{
             showNotification("error", data.error)

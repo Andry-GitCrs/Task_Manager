@@ -14,7 +14,7 @@ def get_notifications(app, database):
             {
                 "id": notification.id,
                 "message": notification.message,
-                "created_at": notification.created_at,
+                "created_at": notification.created_at.strftime('%Y-%m-%d %H:%M'),
                 "updated_at": notification.updated_at,
                 "stat": notification.stat
             }

@@ -1,4 +1,5 @@
 // Fetch today tasks
+let taskcount = 0;
 async function fetchTodayTasks() {
     $(".loading-dash").css("display", 'inline');
     try {

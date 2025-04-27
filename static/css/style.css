@@ -790,3 +790,22 @@ nav li a{
     max-height: 130px;
     overflow-y: auto;
 }
+
+.nofitication-container{
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.notification-date {
+    font-size: 0.875rem; 
+    font-style: italic;  
+    opacity: 0.7; 
+}
+
+.notification-hover-info {
+    display: none;
+}
+
+li:hover .notification-hover-info {
+    display: flex;
+}

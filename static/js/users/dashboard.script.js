@@ -823,9 +823,13 @@ socket.on('new_notification', (data) => {
         // Add the new notification to the dropdown menu
         const dropdownMenu = document.querySelector('.dropdown-menu');
         const newNotification = `
-            <li>
-                <a class="text-dark dropdown-item d-flex align-items-center" href="#">
+            <li id="notification${data.notification_id}" class="position-relative">
+                <a class="text-dark dropdown-item d-flex align-items-center">
+                    <small class="notification-date text-muted me-2">${data.created_at}</small>
                     ${data.message}
+                    <div class="notification-hover-info align-items-center gap-2 mx-2">
+                        <i class="fas fa-trash text-danger" onclick="deleteNotification(${data.notification_id})"></i>
+                    </div>
                 </a>
             </li>
         `;
@@ -854,9 +858,13 @@ const fetchNotifications = async () => {
             dropdownMenu.innerHTML = ''; // Clear existing notifications
             notifications.forEach(notification => {
                 const notificationItem = `
-                    <li>
-                        <a class="text-dark dropdown-item d-flex align-items-center" href="#">
+                    <li id="notification${notification.id}" class="position-relative">
+                        <a class="text-dark dropdown-item d-flex align-items-center">
+                            <small class="notification-date text-muted me-2">${notification.created_at}</small>
                             ${notification.message}
+                            <div class="notification-hover-info align-items-center gap-2 mx-2">
+                                <i class="fas fa-trash text-danger" onclick="deleteNotification(${notification.id})"></i>
+                            </div>
                         </a>
                     </li>
                 `;
@@ -873,6 +881,31 @@ const fetchNotifications = async () => {
         console.error('Error fetching notifications:', error); // Debug: Log fetch error
     }
 };
+
+// Delete notification
+async function deleteNotification(notificationId) {
+    try {
+        const response = await fetch(`/api/user/notifications/mark_read/${notificationId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok) {
+            const responseData = await response.json();
+            showNotification('success', responseData.message);
+            // Remove the deleted notification from the dropdown menu
+            const notificationItem = document.getElementById(`notification${notificationId}`);
+            if (notificationItem) {
+                notificationItem.remove();
+            }
+
+        } else {
+            console.error('Failed to delete notification:', response.statusText); // Debug: Log delete failure
+        }
+    } catch (error) {
+        console.error('Error deleting notification:', error); // Debug: Log delete error
+    }
+}
 
 // Call fetchNotifications on page load
 fetchNotifications();
