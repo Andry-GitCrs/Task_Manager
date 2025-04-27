@@ -4,12 +4,13 @@ from flask import Flask, abort, redirect, render_template
 from flask_login import login_required, current_user, LoginManager, login_user, logout_user, current_user
 from sqlalchemy import func
 from datetime import datetime, date
+from flask_socketio import SocketIO
 ## Dir config 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, getTaskByDate, gettodaytasks, getupcomingtasks, login, loginadmin, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask
+from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, getNotification, getTaskByDate, gettodaytasks, getupcomingtasks, login, loginadmin, markNotification, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask, sendNotification
 from database import pgconnexion
 
 ## App config
@@ -20,6 +21,9 @@ app.secret_key = "secret-key"
 login_manager = LoginManager()
 login_manager.login_view = 'authentication'
 login_manager.init_app(app)
+
+# Initialize SocketIO
+socketio = SocketIO(app)
 
 # Database Connection
 database = pgconnexion.connect(app)
@@ -166,6 +170,12 @@ def manage_subtasks():
 
 ## API
 
+## Get notification
+getNotification.get_notifications(app, database)
+
+## Mark notification
+markNotification.mark_notification(app, database)
+
 ## Get task
 gettasks.get_tasks(app, database)
 
@@ -235,6 +245,9 @@ sendemail.sendEmail(app)
 
 adduser.adduser(app, database)
 
+## Send notification
+sendNotification.send_notification(app, database, socketio)
+
 ## Test zone
 exportcsv.export_to_csv(app, database)
 exportpdf.export_to_pdf(app, database)
@@ -242,4 +255,4 @@ exportpdf.export_to_pdf(app, database)
 ## End test zone
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app, debug=True)

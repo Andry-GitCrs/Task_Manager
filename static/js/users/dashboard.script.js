@@ -1,67 +1,65 @@
-let taskcount = 0
-let taskList = []
+let CURRENT_USER_ID = undefined;
 
 $(document).ready(function() {
-    let addTask = null
-    let subTaskList = []
-    let taskNbr = 0
-    let subTaskNbr = 1
+    let addTask = null;
+    let subTaskList = [];
+    let taskNbr = 0;
+    let subTaskNbr = 1;
     /* Task number */
 
     // Open modal and store clicked element
     $(".open-modal").on("click", function() {
         addTask = $(this);
-        $(".overlay, .modal").fadeIn()
-    })
+        $(".overlay, .modal").fadeIn();
+    });
 
     // Close modal
     $("#closeModal, .overlay").on("click", function(e) {
-        e.preventDefault()
-        $(".overlay, .modal").fadeOut()
+        e.preventDefault();
+        $(".overlay, .modal").fadeOut();
         $("#update_task_form").off("submit");
-        $('.task-form').attr('id', 'add_task_form')
+        $('.task-form').attr('id', 'add_task_form');
         $("#add_task_form").on("submit");
-    })
+    });
 
     // Add task
     $(".add").on("click", (e) => {
-        e.preventDefault()
-        let content = $("#content").val().trim()
-        $("#content").val("")
-        if( content !== ""){
-            
-            if( !subTaskList.includes(content) ){
-                if(subTaskNbr == 1){
-                    $(".task-list-container").text("")
+        e.preventDefault();
+        let content = $("#content").val().trim();
+        $("#content").val("");
+        if (content !== "") {
+            if (!subTaskList.includes(content)) {
+                if (subTaskNbr == 1) {
+                    $(".task-list-container").text("");
                 }
-                subTaskList.push(content)
-                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask rounded-2' id='subtask${taskNbr}${subTaskNbr}' ondblclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></li>`).html(`${content}  <div class="w-auto d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`))
-            }else{
-                showNotification("error", `This taks already have "${content}" subtask`)
+                subTaskList.push(content);
+                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask rounded-2' id='subtask${taskNbr}${subTaskNbr}' ondblclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></li>`).html(`${content}  <div class="w-auto d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`));
+            } else {
+                showNotification("error", `This task already has "${content}" subtask`);
             }
         }
-        subTaskNbr += 1
-    })
+        subTaskNbr += 1;
+    });
+
     // Handle form submission
     $("#add_task_form").on("submit", async function(e) {
-        e.preventDefault()
-        let title = $("#title").val().trim()
-        let startDate = $("#startDate").val()
-        let endDate = $("#endDate").val()
-        let bgColor = $("#bg-color-piker").val()
-        let description = $("#description").val().trim()
+        e.preventDefault();
+        let title = $("#title").val().trim();
+        let startDate = $("#startDate").val();
+        let endDate = $("#endDate").val();
+        let bgColor = $("#bg-color-piker").val();
+        let description = $("#description").val().trim();
 
         if (title.trim() !== "" && startDate !== "" && endDate !== "") {
-            task = {
+            const task = {
                 "task_title": title,
                 "task_start_date": startDate,
                 "task_end_date": endDate,
                 "task_background_color": bgColor,
                 "description": description || "None",
                 "subtasks": [...subTaskList]
-            }
+            };
 
-            
             $(".loading-dash").css("display", 'inline');
             try {
                 const response = await fetch("/api/user/addTask", {
@@ -69,63 +67,63 @@ $(document).ready(function() {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(task)
                 });
-        
+
                 const responseData = await response.json();
-        
-                if (response.ok) {  //Response with status code 200
-                    const response_data = responseData.data
 
-                    const id = response_data.task_id
-                    const title = response_data.title
-                    const start_date = response_data.start_date
-                    const end_date = response_data.end_date
-                    const subtasks = response_data.subtasks
-                    const description = response_data.description
-                    const bg_color = response_data.bg_color
+                if (response.ok) {  // Response with status code 200
+                    const response_data = responseData.data;
 
-                    addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color,  subtasks)
+                    const id = response_data.task_id;
+                    const title = response_data.title;
+                    const start_date = response_data.start_date;
+                    const end_date = response_data.end_date;
+                    const subtasks = response_data.subtasks;
+                    const description = response_data.description;
+                    const bg_color = response_data.bg_color;
 
-                    $(".task-list-container").html("<span id='subTaskIndicator'>No subtask added </br> all subtask will appear here</span>")
-                    
-                    subTaskList.splice(0, subTaskList.length)
-                    $("#title").val("")
-                    $("#content").val("")
-                    $("#startDate").val("")
-                    $("#endDate").val("")
-                    $("#description").val("")
-                    $("#bg-color-piker").val("#95ce83")
+                    addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
+
+                    $(".task-list-container").html("<span id='subTaskIndicator'>No subtask added </br> all subtask will appear here</span>");
+
+                    subTaskList.splice(0, subTaskList.length);
+                    $("#title").val("");
+                    $("#content").val("");
+                    $("#startDate").val("");
+                    $("#endDate").val("");
+                    $("#description").val("");
+                    $("#bg-color-piker").val("#95ce83");
                     $(".overlay, .modal").fadeOut(); // Close modal
-                    taskNbr += 1
-                    $("#taskNbr").text(taskNbr)
-                    showNotification("success", responseData.message)
+                    taskNbr += 1;
+                    $("#taskNbr").text(taskNbr);
+                    showNotification("success", responseData.message);
                 } else {
-                    showNotification("error", responseData.error)
+                    showNotification("error", responseData.error);
                     $(".loading-dash").css("display", 'none');
                 }
 
             } catch (error) {
-                showNotification("error", responseData.error)
+                showNotification("error", error.message);
                 $(".loading-dash").css("display", 'none');
             }
 
-        }else{
-            showNotification("error", "Empty required fields")
+        } else {
+            showNotification("error", "Empty required fields");
             $(".loading-dash").css("display", 'none');
         }
         $(".loading-dash").css("display", 'none');
-    })
+    });
 
-    let tempValue = []
+    let tempValue = [];
     $("#title").on("keyup", () => {
-        tempValue.push($("#title").val())
-        let value = tempValue[tempValue.length -1]
-        if(value){
-            $("#subTaskIndicator").text(`No subtask added to ${value}`)
-        }else{
-            $("#subTaskIndicator").html("No subtask added </br> all subtask will appear here")
+        tempValue.push($("#title").val());
+        let value = tempValue[tempValue.length - 1];
+        if (value) {
+            $("#subTaskIndicator").text(`No subtask added to ${value}`);
+        } else {
+            $("#subTaskIndicator").html("No subtask added </br> all subtask will appear here");
         }
-    })
-})
+    });
+});
 
 //Remove task
 async function  removeTask(id){
@@ -148,8 +146,7 @@ async function  removeTask(id){
     
             if (response.ok) {  //Response with status code 200
                 showNotification("success", responseData.message)
-                taskcount -= 1
-                $("#taskNbr").text(taskcount)
+                $("#taskNbr").text(parseInt($("#taskNbr").text()) - 1); // Update task count in UI
                 $(`#task${id}`).remove()
             } else {
                 showNotification("error", responseData.error)
@@ -355,28 +352,27 @@ const fetchTasks = async () => {
         let responseData = await response.json();
 
         if (response.ok) {
-            responseData = responseData.data
-            taskcount = responseData.length
-            showNotification("success", `You have ${taskcount} task${taskcount > 1 ? "s" : ""} to do`)
+            CURRENT_USER_ID = responseData.user_id;
+            responseData = responseData.data;
+            $("#taskNbr").text(responseData.length); // Set task count in UI
+            showNotification("success", `You have ${responseData.length} task${responseData.length > 1 ? "s" : ""} to do`);
+
             responseData.forEach(task => {
-                const id = task.task_id
-                const title = task.title
-                const start_date = task.start_date
-                const end_date = task.end_date
-                const subtasks = task.subtasks
-                const description = task.description
-                const bg_color = task.bg_color
-                addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color,  subtasks)
+                const id = task.task_id;
+                const title = task.title;
+                const start_date = task.start_date;
+                const end_date = task.end_date;
+                const subtasks = task.subtasks;
+                const description = task.description;
+                const bg_color = task.bg_color;
+                addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
             });
-            return responseData
-
+            return responseData;
         } else {
-            showNotification("error", responseData.message)
-
+            showNotification("error", responseData.message);
         }
     } catch (error) {
-        showNotification("error", error.message)
-
+        showNotification("error", error.message);
     }
     $(".loading-dash").css("display", 'none');
 };
@@ -470,28 +466,42 @@ function showNotification(type, message) {
     const icon = document.getElementById('notification-icon');
 
     // Reset classes
-    notification.className = 'position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2';
+    notification.className = 'position-fixed bottom-0 end-0 mb-3 me-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2';
     icon.className = '';
 
     if (type === 'error') {
-      notification.classList.add('bg-danger');
-      icon.classList.add('fas', 'fa-circle-exclamation');
+        notification.classList.add('bg-danger');
+        icon.classList.add('fas', 'fa-circle-exclamation');
     } else if (type === 'success') {
-      notification.classList.add('bg-success');
-      icon.classList.add('fas', 'fa-check-circle');
+        notification.classList.add('bg-success');
+        icon.classList.add('fas', 'fa-check-circle');
     }
 
     messageBox.textContent = message;
+
+    // Show with animation
+    notification.style.opacity = 0;
+    notification.style.transform = 'translateY(20px)';
     notification.classList.remove('d-none');
 
     setTimeout(() => {
-      notification.classList.add('d-none');
-    }, 5000);
+        notification.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        notification.style.opacity = 1;
+        notification.style.transform = 'translateY(0)';
+    }, 10); // Small delay to trigger transition
 
-    notification.addEventListener('click', () => {
-        notification.classList.add('d-none');
-    })
+    // Hide after 5 seconds
+    setTimeout(() => {
+        notification.style.opacity = 0;
+        notification.style.transform = 'translateY(20px)';
+        
+        // After animation ends, hide the element
+        setTimeout(() => {
+            notification.classList.add('d-none');
+        }, 500); // Match transition duration
+    }, 5000);
 }
+
 
 // Check Subtask
 async function check(id){
@@ -794,3 +804,111 @@ function update_task(task_id, title, startDate, endDate, bg_color, description){
     })
 }
 
+// Initialize Socket.IO
+const socket = io();
+
+socket.on('connect', () => {
+    // Now tell server to join
+    socket.emit('join', { user_id: CURRENT_USER_ID });
+});
+
+// Listen for new notifications
+socket.on('new_notification', (data) => {
+    if (data.user_id === CURRENT_USER_ID) {
+        // Update the notification badge count
+        const badge = document.querySelector('.dropdown .badge.bg-success');
+        let count = parseInt(badge?.textContent) || 0;
+        badge.textContent = count + 1;
+
+        // Add the new notification to the dropdown menu
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        const newNotification = `
+            <li id="notification${data.notification_id}" class="position-relative">
+                <a class="text-dark dropdown-item d-flex align-items-center">
+                    <small class="notification-date text-muted me-2">${data.created_at}</small>
+                    ${data.message}
+                    <div class="notification-hover-info align-items-center gap-2 mx-2">
+                        <i class="fas fa-trash text-danger" onclick="deleteNotification(${data.notification_id})"></i>
+                    </div>
+                </a>
+            </li>
+        `;
+        dropdownMenu?.insertAdjacentHTML('afterbegin', newNotification);
+
+        showNotification('success', "You received a new notification: " + data.message);
+    } else {
+        console.warn('Notification received for a different user:', data.user_id); // Debug: Warn if the notification is for another user
+    }
+});
+
+// Fetch initial notifications on page load
+const fetchNotifications = async () => {
+    try {
+        const response = await fetch('/api/user/notifications', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok) {
+            const responseData = await response.json();
+            const notifications = responseData.data;
+
+            // Populate the dropdown menu with notifications
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            dropdownMenu.innerHTML = ''; // Clear existing notifications
+            notifications.forEach(notification => {
+                const notificationItem = `
+                    <li id="notification${notification.id}" class="position-relative">
+                        <a class="text-dark dropdown-item d-flex align-items-center">
+                            <small class="notification-date text-muted me-2">${notification.created_at}</small>
+                            ${notification.message}
+                            <div class="notification-hover-info align-items-center gap-2 mx-2">
+                                <i class="fas fa-trash text-danger" onclick="deleteNotification(${notification.id})"></i>
+                            </div>
+                        </a>
+                    </li>
+                `;
+                dropdownMenu.insertAdjacentHTML('beforeend', notificationItem);
+            });
+
+            // Update the badge count
+            const badge = document.querySelector('.dropdown .badge.bg-success');
+            badge.textContent = notifications.length;
+        } else {
+            console.error('Failed to fetch notifications:', response.statusText); // Debug: Log fetch failure
+        }
+    } catch (error) {
+        console.error('Error fetching notifications:', error); // Debug: Log fetch error
+    }
+};
+
+// Delete notification
+async function deleteNotification(notificationId) {
+    try {
+        const response = await fetch(`/api/user/notifications/mark_read/${notificationId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok) {
+            const responseData = await response.json();
+            showNotification('success', responseData.message);
+            // Remove the deleted notification from the dropdown menu
+            const notificationItem = document.getElementById(`notification${notificationId}`);
+            if (notificationItem) {
+                notificationItem.remove();
+                const badge = document.querySelector('.dropdown .badge.bg-success');
+                let count = parseInt(badge.textContent);
+                badge.textContent = count - 1;
+            }
+
+        } else {
+            console.error('Failed to delete notification:', response.statusText); // Debug: Log delete failure
+        }
+    } catch (error) {
+        console.error('Error deleting notification:', error); // Debug: Log delete error
+    }
+}
+
+// Call fetchNotifications on page load
+fetchNotifications();

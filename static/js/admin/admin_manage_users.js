@@ -148,7 +148,7 @@ function showNotification(type, message) {
     const icon = document.getElementById('notification-icon');
 
     // Reset classes
-    notification.className = 'position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2';
+    notification.className = 'position-fixed bottom-0 end-0 mb-3 me-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2';
     icon.className = '';
 
     if (type === 'error') {
@@ -197,6 +197,19 @@ async function toggleAdmin(user_id) {
         const data = await response.json();
         if(response.ok){
             showNotification("success", data.message)
+            try {
+                const response = await fetch(`/api/user/notifications/send`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        "user_id": user_id,
+                        "message": `You have been ${data.data ? 'granted' : 'removed from'} admin role`
+                    })
+                }); 
+
+            } catch (error) {
+                showNotification("error", error.message)
+            }
 
         }else{
             showNotification("error", data.error)
