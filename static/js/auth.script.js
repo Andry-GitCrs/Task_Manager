@@ -143,24 +143,41 @@ function showNotification(type, message) {
     const icon = document.getElementById('notification-icon');
 
     // Reset classes
-    notification.className = 'position-fixed top-0 start-50 translate-middle-x mt-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2';
+    notification.className = 'position-fixed bottom-0 end-0 mb-3 me-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2';
     icon.className = '';
 
     if (type === 'error') {
-      notification.classList.add('bg-danger');
-      icon.classList.add('fas', 'fa-circle-exclamation');
+        notification.classList.add('bg-danger');
+        icon.classList.add('fas', 'fa-circle-exclamation');
     } else if (type === 'success') {
-      notification.classList.add('bg-success');
-      icon.classList.add('fas', 'fa-check-circle');
+        notification.classList.add('bg-success');
+        icon.classList.add('fas', 'fa-check-circle');
     }
 
     messageBox.textContent = message;
+
+    // Show with animation
+    notification.style.opacity = 0;
+    notification.style.transform = 'translateY(20px)';
     notification.classList.remove('d-none');
 
     setTimeout(() => {
-      notification.classList.add('d-none');
+        notification.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        notification.style.opacity = 1;
+        notification.style.transform = 'translateY(0)';
+    }, 10); // Small delay to trigger transition
+
+    // Hide after 5 seconds
+    setTimeout(() => {
+        notification.style.opacity = 0;
+        notification.style.transform = 'translateY(20px)';
+        
+        // After animation ends, hide the element
+        setTimeout(() => {
+            notification.classList.add('d-none');
+        }, 500); // Match transition duration
     }, 5000);
-  }
+}
 
 /* End Login and Register */
 $("body").css("background-image", "url('../../static/images/bg-4.jpg')")

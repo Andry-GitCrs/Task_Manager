@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/users/dashboard.script.js') }}"></script>
     {% block head %}
     {% endblock %}
@@ -129,39 +130,11 @@
                 <button class="btn dropdown-toggle position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-bell text-secondary me-2"></i> Notification
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
-                        4
+                        0
                         <span class="visually-hidden">unread messages</span>
                     </span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li>
-                        <a class="text-dark dropdown-item d-flex align-items-center" href="#">
-                            <i class="fas fa-tasks me-2 text-secondary"></i> Today's Tasks
-                            <span class="badge bg-primary ms-auto">2</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-dark dropdown-item d-flex align-items-center" href="#">
-                            <i class="fas fa-exclamation-circle me-2 text-danger"></i> Missed Tasks
-                            <span class="badge bg-warning ms-auto">1</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-dark dropdown-item d-flex align-items-center" href="#">
-                            <i class="fas fa-calendar-check me-2 text-success"></i> Upcoming Events
-                            <span class="badge bg-success ms-auto">1</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-dark dropdown-item d-flex align-items-center" href="#">
-                            <i class="fas fa-envelope-open-text me-2 text-info"></i> New Messages
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-dark dropdown-item d-flex align-items-center" href="#">
-                            <i class="fas fa-user-friends me-2 text-warning"></i> Friend Requests
-                        </a>
-                    </li>
                 </ul>
             </div>
             

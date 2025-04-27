@@ -51,10 +51,12 @@ def get_tasks(app, database):
 
             return jsonify({
                 "message": f"Task fetched successfully",
+                "user_id": result.user_id,
                 "data": tasks
             }), 200
         
         return jsonify({
                 "message": f"You don't have any task yet",
+                "user_id": result.user_id,
                 "data": tasks
             }), 404
