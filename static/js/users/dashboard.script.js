@@ -370,6 +370,7 @@ const fetchTasks = async () => {
             return responseData;
         } else {
             showNotification("error", responseData.message);
+            CURRENT_USER_ID = responseData.user_id;
         }
     } catch (error) {
         showNotification("error", error.message);
@@ -834,7 +835,7 @@ socket.on('new_notification', (data) => {
                     <small class="notification-date text-muted me-2">${data.created_at}</small>
                     ${data.message}
                     <div class="notification-hover-info align-items-center gap-2 mx-2">
-                        <i class="fas fa-trash text-danger" onclick="deleteNotification(${data.notification_id})"></i>
+                        <i class="fas fa-times text-danger" onclick="deleteNotification(${data.notification_id})"></i>
                     </div>
                 </a>
             </li>
@@ -869,7 +870,7 @@ const fetchNotifications = async () => {
                             <small class="notification-date text-muted me-2">${notification.created_at}</small>
                             ${notification.message}
                             <div class="notification-hover-info align-items-center gap-2 mx-2">
-                                <i class="fas fa-trash text-danger" onclick="deleteNotification(${notification.id})"></i>
+                                <i class="fas fa-times text-danger" onclick="deleteNotification(${notification.id})"></i>
                             </div>
                         </a>
                     </li>

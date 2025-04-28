@@ -113,5 +113,5 @@ async function getTaskByDate(arg, year, month, day){
 }
 
 fetchUpcomingTasks('upComingTaskContainer', 'after', 7, "Next week");
-fetchUpcomingTasks('upComingTaskContainer1', 'on', 1, "Tomorrow");
+fetchUpcomingTasks('upComingTaskContainer1', 'on', 2, "Tomorrow");
 fetchUpcomingTasks('upComingTaskContainer2', 'after', 2, "After tomorrow");

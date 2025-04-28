@@ -57,6 +57,6 @@ def get_tasks(app, database):
         
         return jsonify({
                 "message": f"You don't have any task yet",
-                "user_id": result.user_id,
+                "user_id": user_id,
                 "data": tasks
             }), 404
