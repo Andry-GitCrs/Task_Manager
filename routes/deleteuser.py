@@ -19,6 +19,5 @@ def delete_user(app, database):
                 db.session.delete(user)
                 db.session.commit()
                 return jsonify({"message": "User deleted successfully"}), 200
-            else:
-                return jsonify({"error": "User not found"}), 404
+            return jsonify({"error": "User not found"}), 404
         abort(404)

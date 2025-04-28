@@ -24,18 +24,19 @@ def edit_user_role(app, database):
                     else:
                         user.admin = True
                         message = "an admin"
+                        
                     user.modified_at = datetime.utcnow()
                     db.session.commit()
+
                     return jsonify({
                         "message": f"User switched as {message}",
                         "data": user.admin
                     }), 200
-                else:
-                    return jsonify({"error": "User not found"}), 404
-            else:
-                return jsonify({"error": "You can not change your own role"}), 404
+                
+                return jsonify({"error": "User not found"}), 404
+            
+            return jsonify({"error": "You can not change your own role"}), 404
 
-        else:
-            return jsonify({"error": "You are not an admin member"}), 401
+        return jsonify({"error": "You are not an admin member"}), 401
 
         

@@ -449,7 +449,6 @@ main .container li:hover{
 }
 
 #calendar {
-    max-width: 900px;
     margin: 0 auto;
     background: white;
     padding: 20px;

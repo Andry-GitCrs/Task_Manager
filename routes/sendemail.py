@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 import os
 from flask_mail import Mail, Message
-
 from flask import jsonify, request
 import requests
 
@@ -12,7 +11,7 @@ def sendEmail(app):
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
     app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  # all one string
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
     mail = Mail(app)
 
     @app.route('/api/send_email', methods=['POST'])
@@ -24,7 +23,7 @@ def sendEmail(app):
             user_last_name = data['last_name']
             user_phone = data['phone']
             user_message = data['message']
-            if not user_email or not user_first_name or not user_last_name or not user_message:
+            if not user_email or not user_first_name or not user_message:
                 return jsonify({'error': "All fields are required"}), 400
             
             msg1 = Message(
@@ -78,11 +77,10 @@ def verifyEmail(app):
                         'message': "Your email is valid",
                         'is_valid': True
                     }), 200
-                else:
-                    return jsonify({
-                        'error': "Your email address does not exist",
-                        'is_valid': False
-                    }), 400
+                return jsonify({
+                    'error': "Your email address does not exist",
+                    'is_valid': False
+                }), 400
             except ConnectionError as e:
                 return jsonify({
                     'error': str(e)

@@ -4,11 +4,11 @@ from dotenv import load_dotenv
 import os
 
 class Database :
-        def __init__(self, user, password, host, db_name):
-            self.user = user
-            self.password = password
-            self.host = host
-            self.db_name = db_name
+    def __init__(self, user, password, host, db_name):
+        self.user = user
+        self.password = password
+        self.host = host
+        self.db_name = db_name
 
 # Database Setup
 def config(app, databaseConfig):
@@ -33,7 +33,7 @@ def connect(app):
         User = usermodel.userModel(db)
         Task = taskmodel.taskModel(db, User)
         Subtask = subtaskmodel.subtaskModel(db, Task)
-        Notification = notificationmodel.notificationModel(db, User)  # Add Notification model
+        Notification = notificationmodel.notificationModel(db, User)
         db.create_all()
     
     return {
@@ -43,6 +43,6 @@ def connect(app):
             "User": User,
             "Task": Task,
             "Subtask": Subtask,
-            "Notification": Notification  # Include Notification in tables
+            "Notification": Notification
         }
     }

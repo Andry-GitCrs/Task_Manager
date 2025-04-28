@@ -805,7 +805,13 @@ function update_task(task_id, title, startDate, endDate, bg_color, description){
 }
 
 // Initialize Socket.IO
-const socket = io();
+const socket = io({
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+    forceNew: true // Ensures a fresh connection
+  });
 
 socket.on('connect', () => {
     // Now tell server to join

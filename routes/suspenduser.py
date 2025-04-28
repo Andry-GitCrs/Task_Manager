@@ -31,7 +31,6 @@ def suspendUser(app, database):
                 db.session.commit()
                 return jsonify({"message": f"User unsuspended successfully"}), 200
             
-            else:
-                return jsonify({"error": "You don't have permission to suspend this user"}), 401
-        else:
-            return jsonify({"error": "You are not an admin member"}), 401
+            return jsonify({"error": "You don't have permission to suspend this user"}), 401
+        
+        return jsonify({"error": "You are not an admin member"}), 401

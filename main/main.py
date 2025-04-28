@@ -103,10 +103,7 @@ def today():
 @app.route('/dashboard/upcoming') # Upcoming tasks
 @login_required
 def upcoming():
-
-    today = date.today()
-    today_task_nbr = Task.query.filter(Task.user_id == current_user.user_id, func.date(Task.task_end_date) == today, Task.stat == True).count()    
-    task_nbr = db.session.query(Task).filter_by(user_id = current_user.user_id, stat = True).count()
+    
     return render_template('views/users/upcoming.html', email = current_user.email, task_nbr = getTaskNbr()["task_nbr"], today_task_nbr = getTaskNbr()["today_task"])
 
 
@@ -248,11 +245,9 @@ adduser.adduser(app, database)
 ## Send notification
 sendNotification.send_notification(app, database, socketio)
 
-## Test zone
+## Data exportation
 exportcsv.export_to_csv(app, database)
 exportpdf.export_to_pdf(app, database)
-
-## End test zone
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
