@@ -60,7 +60,7 @@ $(document).ready(function() {
                 "subtasks": [...subTaskList]
             };
 
-            $(".loading-dash").css("display", 'inline');
+            $(".loading").css("display", 'inline');
             try {
                 const response = await fetch("/api/user/addTask", {
                     method: "POST",
@@ -98,19 +98,19 @@ $(document).ready(function() {
                     showNotification("success", responseData.message);
                 } else {
                     showNotification("error", responseData.error);
-                    $(".loading-dash").css("display", 'none');
+                    $(".loading").css("display", 'none');
                 }
 
             } catch (error) {
                 showNotification("error", error.message);
-                $(".loading-dash").css("display", 'none');
+                $(".loading").css("display", 'none');
             }
 
         } else {
             showNotification("error", "Empty required fields");
-            $(".loading-dash").css("display", 'none');
+            $(".loading").css("display", 'none');
         }
-        $(".loading-dash").css("display", 'none');
+        $(".loading").css("display", 'none');
     });
 
     let tempValue = [];
@@ -134,7 +134,7 @@ async function  removeTask(id){
             "task_id": task_id
         }
         
-        $(".loading-dash").css("display", 'inline');
+        $(".loading").css("display", 'inline');
         try {
             const response = await fetch("/api/user/deleteTask", {
                 method: "DELETE",
@@ -150,13 +150,13 @@ async function  removeTask(id){
                 $(`#task${id}`).remove()
             } else {
                 showNotification("error", responseData.error)
-                $(".loading-dash").css("display", 'none');
+                $(".loading").css("display", 'none');
             }
         } catch (error) {
             showNotification("error", error)
-            $(".loading-dash").css("display", 'none');
+            $(".loading").css("display", 'none');
         }
-        $(".loading-dash").css("display", 'none');
+        $(".loading").css("display", 'none');
     }
 }
 
@@ -169,7 +169,7 @@ async function removeSubTask(id){
             "subtask_id": subtask_id
         }
         
-        $(".loading-dash").css("display", 'inline');
+        $(".loading").css("display", 'inline');
         try {
             const response = await fetch("/api/user/deleteSubTask", {
                 method: "DELETE",
@@ -185,13 +185,13 @@ async function removeSubTask(id){
                 $('#taskNbr').text($('#taskNbr').text() - 1)
             } else {
                 showNotification("error", responseData.error)
-                $(".loading-dash").css("display", 'none');
+                $(".loading").css("display", 'none');
             }
         } catch (error) {
             showNotification("error", responseData.error)
-            $(".loading-dash").css("display", 'none');
+            $(".loading").css("display", 'none');
         }
-        $(".loading-dash").css("display", 'none');
+        $(".loading").css("display", 'none');
     }
 }
 
@@ -205,7 +205,7 @@ async function addSubTask(id, title){
             "subtask_title": newValue
         }
         
-        $(".loading-dash").css("display", 'inline');
+        $(".loading").css("display", 'inline');
         try {
             const response = await fetch("/api/user/addSubTask", {
                 method: "POST",
@@ -250,17 +250,17 @@ async function addSubTask(id, title){
                 $(`#subtaskContainer${task_id}`).append(subtaskElement)
             } else {
                 showNotification("error", responseData.error)
-                $(".loading-dash").css("display", 'none');
+                $(".loading").css("display", 'none');
             }
         } catch (error) {
             showNotification("error", responseData.error)
-            $(".loading-dash").css("display", 'none')
+            $(".loading").css("display", 'none')
         }
     }else{
         showNotification("error", "Invalid value")
-        $(".loading-dash").css("display", 'none')
+        $(".loading").css("display", 'none')
     }
-    $(".loading-dash").css("display", 'none')
+    $(".loading").css("display", 'none')
 }
 
 function editSubTask_on_adding(id){
@@ -283,7 +283,7 @@ async function editSubTask(id, subtask_id) {
 
     } else if (subtask_title !== temp_subtask_title) {
         
-        $(".loading-dash").css("display", 'inline');
+        $(".loading").css("display", 'inline');
         try{
             const response = await fetch(`/api/subtask/update/${subtask_id}`, {
                 method: "PUT",
@@ -331,7 +331,7 @@ async function editSubTask(id, subtask_id) {
             showNotification("error", error)
 
         }
-        $(".loading-dash").css("display", 'none');
+        $(".loading").css("display", 'none');
 
     } else {
         showNotification("error", `No modification applied`);
@@ -340,7 +340,7 @@ async function editSubTask(id, subtask_id) {
 }
 
 const fetchTasks = async () => {
-    $(".loading-dash").css("display", 'inline');
+    $(".loading").css("display", 'inline')
     try {
         const response = await fetch("/api/user/getTask", {
             method: "GET",
@@ -375,7 +375,7 @@ const fetchTasks = async () => {
     } catch (error) {
         showNotification("error", error.message);
     }
-    $(".loading-dash").css("display", 'none');
+    $(".loading").css("display", 'none')
 };
 
 // Call the function to fetch tasks
@@ -508,7 +508,7 @@ function showNotification(type, message) {
 async function check(id){
     if( $(`#input${id}`).val() == "on" ){ //Check
         
-        $(".loading-dash").css("display", 'inline');
+        $(".loading").css("display", 'inline');
         try {
             const response = await fetch(`/api/user/checkSubTask/${id}`, {
                 method: "POST",
@@ -533,10 +533,10 @@ async function check(id){
             showNotification("error", error.message)
         }
         
-        $(".loading-dash").css("display", 'none');
+        $(".loading").css("display", 'none');
     }else{ //Uncheck
         
-        $(".loading-dash").css("display", 'inline');
+        $(".loading").css("display", 'inline');
         try {
             const response = await fetch(`/api/user/checkSubTask/${id}`, {
                 method: "POST",
@@ -561,7 +561,7 @@ async function check(id){
         } catch (error) {
             showNotification("error", error.message)
         }
-        $(".loading-dash").css("display", 'none');
+        $(".loading").css("display", 'none');
     }
 }
 
@@ -579,7 +579,7 @@ function checkTask(id){
 // Verify user role
 var verify = async () => {
     
-    $(".loading-dash").css("display", 'inline');
+    $(".loading").css("display", 'inline');
     try {
         const response = await fetch(`/api/verify_user`, {
             method: "GET",
@@ -602,7 +602,6 @@ var verify = async () => {
     } catch (error) {
        console.error(error.message)
     }
-    $(".loading-dash").css("display", 'none');
 }
 
 verify()
@@ -616,7 +615,7 @@ async function findTaskk(){
     searchResult.html("")
     if(title){
         
-        $(".loading-dash").css("display", 'inline');
+        $(".loading").css("display", 'inline');
         let response = await fetch(`/api/user/findTask/${title}`)
         let responseData = await response.json()
         if(response.ok){  //Response with status code 200
@@ -643,16 +642,16 @@ async function findTaskk(){
                 `)
             })
             
-            $(".loading-dash").css("display", 'none');
+            $(".loading").css("display", 'none');
             
         }else{
             showNotification('error', "Task not found")
-            $(".loading-dash").css("display", 'none');
+            $(".loading").css("display", 'none');
         }
     }else{
         searchResult.html("")
         searchResult.css('display', 'none')  
-        $(".loading-dash").css("display", 'none');
+        $(".loading").css("display", 'none');
     }
 }
 
@@ -774,7 +773,7 @@ function update_task(task_id, title, startDate, endDate, bg_color, description){
                 "description": description || "None"
             }
     
-            $(".loading-dash").css("display", 'inline');
+            $(".loading").css("display", 'inline');
             try {
                 const response = await fetch(`/api/task/update/${task_id}`, {
                     method: "PUT",
@@ -788,20 +787,20 @@ function update_task(task_id, title, startDate, endDate, bg_color, description){
                     showNotification("success", responseData.message)
                 } else {
                     showNotification("error", responseData.error)
-                    $(".loading-dash").css("display", 'none');
+                    $(".loading").css("display", 'none');
                 }
     
             } catch (error) {
                 showNotification("error", responseData.error)
-                $(".loading-dash").css("display", 'none');
+                $(".loading").css("display", 'none');
             }
     
         }else{
             showNotification("error", "Empty required fields")
-            $(".loading-dash").css("display", 'none');
+            $(".loading").css("display", 'none');
         }
 
-        $(".loading-dash").css("display", 'none');
+        $(".loading").css("display", 'none');
     })
 }
 

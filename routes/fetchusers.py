@@ -1,7 +1,6 @@
 from flask import jsonify, abort
 from flask_login import login_required, current_user
 from flask_login import current_user
-from sqlalchemy import func
 
 def fetch_users(app, database):
     db = database["db"]
@@ -13,7 +12,6 @@ def fetch_users(app, database):
     @login_required
     def fetch_users():
         admin = current_user.admin
-        user_id = current_user.user_id
         data = []
         active_users = []
         suspended_users = []
@@ -45,8 +43,8 @@ def fetch_users(app, database):
                     user_subtasks_count = (
                         db.session.query(Subtask)
                         .join(Task, Task.task_id == Subtask.task_id)
-                        .filter(Task.user_id == result.user_id)
-                        .count()) #User total subtask number
+                        .filter(Task.user_id == result.user_id).count()
+                    ) #User total subtask number
 
                     user = {
                         "user_id": result.user_id,
