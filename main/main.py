@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, getNotification, getTaskByDate, gettodaytasks, getupcomingtasks, login, loginadmin, markNotification, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask, sendNotification
+from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchtask, fetchusers, findtask, getNotification, getTaskByDate, gettodaytasks, getupcomingtasks, login, loginadmin, markNotification, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask, sendNotification, users_statistics
 from database import pgconnexion
 
 ## App config
@@ -165,6 +165,13 @@ def manage_subtasks():
         return render_template('views/admin/admin_manage_subtask.html', email = email, title = "Manage subtasks")
     abort(404)
 
+@app.route('/admin/user_statistics')
+@login_required
+def admin_user_statistics():
+    if not current_user.admin or not current_user.stat:
+        abort(403)
+    return render_template('views/admin/admin_user_statistics.html', email = current_user.email, title = "Users statistics")
+
 ## API
 
 ## Get notification
@@ -248,6 +255,9 @@ sendNotification.send_notification(app, database, socketio)
 ## Data exportation
 exportcsv.export_to_csv(app, database)
 exportpdf.export_to_pdf(app, database)
+
+## User statistics
+users_statistics.users_statistics(app, database)
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
