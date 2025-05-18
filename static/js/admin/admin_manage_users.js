@@ -271,3 +271,8 @@ adduser_form.addEventListener('submit', async (e) => {
 
     document.getElementById("loading").style.display = "none";
 })
+
+document.getElementById("toggleFormBtn").addEventListener("click", () => {
+    const form = document.getElementById("userForm");
+    form.classList.toggle("d-none");
+});

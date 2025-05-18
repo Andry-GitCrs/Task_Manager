@@ -10,7 +10,6 @@ def add_subtask(app, database):
     @login_required
     def addsubtask():
         data = request.get_json()
-        user_id = current_user.user_id
         task_id = data['task_id']
         subtask_title = data['subtask_title']
 

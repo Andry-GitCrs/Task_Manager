@@ -7,7 +7,7 @@
 
 body{
     backdrop-filter: blur(5px);
-    overflow: auto;
+    overflow: hidden;
     height: 100vh;
 }
 
@@ -218,7 +218,7 @@ textarea{
 
 #aside{
     height: 100vh;
-    overflow: auto;
+    overflow-y: scroll;
     z-index: 999;
     transition: .5s ease-in-out;
     background-color: white;
