@@ -1,10 +1,12 @@
-let userStatisticsChart; // Declare a variable to hold the chart instance
+let userStatisticsChart;
 
 const fetchStat = async () => {
     document.getElementById("loading").style.display = 'inline';
+
     try {
         const response = await fetch('/api/users_statistics');
         const data = await response.json();
+
         if (response.ok) {
             const labels = data.data.map(item => item.date);
             const counts = data.data.map(item => item.count);
@@ -15,6 +17,7 @@ const fetchStat = async () => {
                 const date = new Date(label);
                 return monthSelect.value === 'all' || date.getMonth() + 1 === parseInt(monthSelect.value);
             });
+
             const filteredCounts = counts.filter((_, index) => {
                 const date = new Date(labels[index]);
                 return monthSelect.value === 'all' || date.getMonth() + 1 === parseInt(monthSelect.value);
@@ -22,12 +25,16 @@ const fetchStat = async () => {
 
             const ctx = document.getElementById('userStatisticsChart').getContext('2d');
 
-            // Destroy the existing chart instance if it exists
+            // Clean up previous chart
             if (userStatisticsChart) {
                 userStatisticsChart.destroy();
             }
 
-            // Create a new chart instance
+            // Create gradient fill
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(13, 110, 253, 0.5)');
+            gradient.addColorStop(1, 'rgba(13, 110, 253, 0)');
+
             userStatisticsChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -35,32 +42,66 @@ const fetchStat = async () => {
                         const date = new Date(label);
                         const today = new Date();
                         if (date.toDateString() === today.toDateString()) {
-                            return "Today"; // Display "Today" if the date matches today's date
+                            return "🟢 Today";
                         }
-                        return `${date.getDate().toString().padStart(2, '0')} ${date.toLocaleString('default', { month: 'short' })}`; // Format as DD MMM
+                        return `${date.getDate().toString().padStart(2, '0')} ${date.toLocaleString('default', { month: 'short' })}`;
                     }),
                     datasets: [{
-                        label: 'Users Created Per Day',
+                        label: '📈 Users Created Per Day',
                         data: filteredCounts,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true,
+                        backgroundColor: gradient,
+                        borderColor: '#0d6efd',
                         borderWidth: 2,
-                        tension: 0.3
+                        pointBackgroundColor: '#0d6efd',
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        tension: 0.4
                     }]
                 },
                 options: {
                     responsive: true,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    },
                     plugins: {
                         legend: {
                             display: true,
-                            position: 'top'
+                            position: 'top',
+                            labels: {
+                                color: '#333',
+                                font: { size: 14 }
+                            }
                         },
                         tooltip: {
+                            backgroundColor: '#343a40',
+                            titleColor: '#fff',
+                            bodyColor: '#f8f9fa',
+                            cornerRadius: 6,
+                            borderColor: '#0d6efd',
+                            borderWidth: 1,
                             callbacks: {
                                 title: function (tooltipItems) {
                                     const date = new Date(filteredLabels[tooltipItems[0].dataIndex]);
-                                    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`; // Full date in tooltip
+                                    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+                                },
+                                label: function (tooltipItem) {
+                                    return `👥 ${tooltipItem.formattedValue} user(s)`;
                                 }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Daily User Registrations',
+                            font: {
+                                size: 20,
+                                weight: 'bold'
+                            },
+                            color: '#212529',
+                            padding: {
+                                top: 10,
+                                bottom: 20
                             }
                         }
                     },
@@ -68,19 +109,38 @@ const fetchStat = async () => {
                         x: {
                             title: {
                                 display: true,
-                                text: 'Date (DD/MM)'
+                                text: '📅 Date (DD MMM)',
+                                color: '#6c757d',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            ticks: {
+                                color: '#495057',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                display: false
                             }
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: `${year} Users Created`
+                                text: `${year} Users Created`,
+                                color: '#6c757d',
+                                font: {
+                                    size: 14
+                                }
                             },
                             beginAtZero: true,
                             ticks: {
-                                callback: function (value) {
-                                    return Number.isInteger(value) ? value : null; // Only display integers
-                                }
+                                color: '#495057',
+                                callback: value => Number.isInteger(value) ? value : null
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
                             }
                         }
                     }
@@ -92,8 +152,10 @@ const fetchStat = async () => {
     } catch (error) {
         showNotification("error", error.message || "An error occurred");
     }
+
     document.getElementById("loading").style.display = 'none';
 };
+
 
 // Notification displayer function
 const showNotification = (type, message) => {

@@ -11,8 +11,6 @@ const fetchUserData = async () => {
             document.getElementById('users_tasks').textContent = userData.data.total_task_count
             document.getElementById('users_subtasks').textContent = userData.data.total_subtask_count
             document.getElementById('finished_subtasks').textContent = userData.data.finished_subtask_count
-            const progress_bar_subtask = (userData.data.total_subtask_count * userData.data.finished_subtask_count ) / 100
-            document.getElementById("users_subtasks_percent").style.width = progress_bar_subtask + '%'
             makeLineChart(userData)
             makeCircularChart(userData)
             makeBarChart(userData)
@@ -60,41 +58,88 @@ function showNotification(type, message) {
 }
 
 function makeLineChart(userData) {
-    const lineCtx = document.getElementById('user_activity_lineChart').getContext('2d');
-    const lineLabels = userData.data.active_users.map(user => user.user_id);
+    const canvas = document.getElementById('user_activity_lineChart');
+    const ctx = canvas.getContext('2d');
+
+    const labels = userData.data.active_users.map(user => user.user_id);
     const taskData = userData.data.active_users.map(user => user.tasks_count);
     const finishedSubtaskData = userData.data.active_users.map(user => user.finished_subtasks_count);
-    // Charts
 
-    new Chart(lineCtx, {
+    const gradientBlue = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradientBlue.addColorStop(0, 'rgba(13,110,253,0.7)');   // Top
+    gradientBlue.addColorStop(1, 'rgba(13,110,253,0.1)');   // Bottom
+
+    const gradientGreen = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradientGreen.addColorStop(0, 'rgba(25,135,84,0.7)');
+    gradientGreen.addColorStop(1, 'rgba(25,135,84,0.1)');
+
+    new Chart(ctx, {
         type: 'line',
         data: {
-            labels: lineLabels,
+            labels: labels,
             datasets: [
                 {
                     label: 'Tasks',
                     data: taskData,
                     borderColor: '#0d6efd',
-                    backgroundColor: 'rgba(13,110,253,0.1)',
-                    tension: 0.3,
-                    fill: true
+                    backgroundColor: gradientBlue,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 3,
+                    pointHoverRadius: 6
                 },
                 {
                     label: 'Finished Subtasks',
                     data: finishedSubtaskData,
                     borderColor: '#198754',
-                    backgroundColor: 'rgba(25,135,84,0.1)',
-                    tension: 0.3,
-                    fill: true
+                    backgroundColor: gradientGreen,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 3,
+                    pointHoverRadius: 6
                 }
             ]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,
-                    text: 'User Activities Over Time'
+                    text: 'User Activities Over Time',
+                    font: {
+                        size: 18
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: context => `${context.dataset.label}: ${context.parsed.y}`
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true
+                    }
+                }
+            },
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'User ID'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Count'
+                    }
                 }
             }
         }
@@ -137,82 +182,83 @@ function makeCircularChart(userData){
 }
 
 
-function makeBarChart(userData){
+function makeBarChart(userData) {
     const chartCtx = document.getElementById('usersChart').getContext('2d');
+
     const labels = userData.data.active_users.map(user => user.user_id);
     const data = userData.data.active_users.map(user => user.finished_subtasks_count);
 
+    // Create gradient fill
+    const gradient = chartCtx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(25, 135, 84, 0.9)');  // top - green
+    gradient.addColorStop(0.5, 'rgba(255, 193, 7, 0.8)'); // middle - yellow
+    gradient.addColorStop(1, 'rgba(220, 53, 69, 0.8)');  // bottom - red
+
     new Chart(chartCtx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: labels,
             datasets: [{
                 label: 'Finished Subtasks Count',
                 data: data,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: '#ff9900a8',
-                borderWidth: 3
+                backgroundColor: gradient,
+                borderColor: '#0d6efd',
+                borderWidth: 2,
+                borderRadius: 6,        // Rounded corners
+                hoverBackgroundColor: '#198754',
+                hoverBorderColor: '#145c32'
             }]
         },
         options: {
             responsive: true,
+            animation: {
+                duration: 1000,
+                easing: 'easeOutBounce'
+            },
             plugins: {
                 legend: { display: false },
-                title: { display: true, text: 'Finished Subtasks per User' }
+                title: {
+                    display: true,
+                    text: '📊 Finished Subtasks per User',
+                    color: '#343a40',
+                    font: {
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    padding: {
+                        top: 10,
+                        bottom: 10
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#212529',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    cornerRadius: 5,
+                    borderColor: '#0d6efd',
+                    borderWidth: 1
+                }
             },
-            scales: { y: { beginAtZero: true } }
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#495057',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        color: '#495057'
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                }
+            }
         }
     });
 }
-
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const main = document.getElementById('main');
-    sidebar.classList.toggle('hidden');
-    main.classList.toggle('full');
-}
-
-
-document.getElementById('updateForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const email = document.getElementById('email').value.trim('');
-    const oldconfirmPassword = document.getElementById('oldconfirmPassword').value.trim('')
-    const newPassword = document.getElementById('newPassword').value.trim('');
-    const confirmPassword = document.getElementById('confirmPassword').value.trim('');
-
-    user = {
-        "email": email,
-        "old_password": oldconfirmPassword,
-        "new_password": newPassword,
-        "confirmation_password": confirmPassword
-    }
-    
-    try {
-        const response = await fetch("/api/user/update", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user)
-        });
-
-        const responseData = await response.json();
-
-        if (response.ok) {  //Response with status code 200
-            showNotification("success", responseData.message)
-
-        } else {
-            showNotification("error", responseData.error)
-        }
-
-    } catch (error) {
-        showNotification("error", error)
-    }
-});
-
-
-
-
-
-
-
-

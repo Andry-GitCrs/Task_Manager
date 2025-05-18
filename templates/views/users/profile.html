@@ -3,12 +3,24 @@
 {% block profile %}
     active-dash-link
 {% endblock %}
+
 {% block content %}
 <div class="container-fluid py-5">
     <div class="row">
-        <div class="col-md-6 col-sm-12 border rounded-3 d-flex align-items-center justify-content-center">
-            <h3>Progress charts</h3>
-        </div>
+        <div class="col-md-6 col-sm-12 mb-4">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="card-title mb-0">Daily Finished Subtasks</h5>
+                  <button class="btn btn-sm btn-outline-primary" id="refreshChart">Refresh</button>
+                </div>
+                <div style="height: 300px;">
+                  <canvas id="subtaskLineChart"></canvas>
+                </div>
+                <div id="chartStatus" class="text-muted small mt-2">Loading chart...</div>
+              </div>
+            </div>
+          </div>
         <form id="update-form" class="col-md-6 col-sm-12">
             <h4>
                 <i class="text-success fas fa-pen"></i>
@@ -53,5 +65,6 @@
 </div>
 {% endblock %}
 {% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='js/users/profile.js') }}"></script>
 {% endblock %}

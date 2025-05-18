@@ -180,3 +180,13 @@ hr{
         width: 300px!important;
     }
 }
+.col-7.h-100 {
+    overflow-y: auto;
+}
+
+#user_activity_lineChart {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    max-height: 400px;
+}
