@@ -163,3 +163,79 @@ let chartInstance = null;
     loadChartData();
     $('#refreshChart').on('click', loadChartData);
   });
+
+  // Fetch and display user data
+  function formatProfileDate(dateStr) {
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  return new Date(dateStr).toLocaleDateString(undefined, options);
+}
+
+function createTaskRow(task) {
+  const isDone = task.subtask_nbr != 0 && task.subtask_nbr === task.finished_subtask_nbr;
+  const statusColor = isDone 
+    ? 'bg-success text-light' 
+    : 'bg-dark text-warning';
+
+  const statusText = isDone ? 'Done' : 'In Progress';
+  const activeColor = task.stat ? 'text-success' : 'text-danger';
+  const activeText = task.stat ? 'Active' : 'Deleted';
+
+  return `
+    <div class="w-100 text-dark dark:bg-dark dark:text-light p-4 rounded-3 shadow-sm border mb-3" style="background-color: ${task.task_background_color}aa;">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="h5 mb-0 fw-bold">${task.task_title}</h2>
+        <span class="small text-muted">Created: ${formatProfileDate(task.created_at)}</span>
+      </div>
+
+      <div class="row text-muted small mb-3">
+        <div class="col-sm-6 col-md-3 mb-2">
+          <div><strong>Task ID</strong></div>
+          <div>#${task.task_id}</div>
+        </div>
+        <div class="col-sm-6 col-md-3 mb-2">
+          <div><strong>Subtasks</strong></div>
+          <div>${task.subtask_nbr} total</div>
+        </div>
+        <div class="col-sm-6 col-md-3 mb-2">
+          <div><strong>Completed</strong></div>
+          <div>${task.finished_subtask_nbr}/${task.subtask_nbr}</div>
+        </div>
+        <div class="col-sm-6 col-md-3 mb-2">
+          <div><strong>Status</strong></div>
+          <span class="badge rounded-pill ${statusColor} fw-bold">${statusText}</span>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between text-muted small">
+        <span>Last update: ${formatProfileDate(task.updated_at)}</span>
+        <span>Status flag: <strong class="${activeColor}">${activeText}</strong></span>
+      </div>
+    </div>
+  `;
+}
+
+
+async function fetchUserTasks() {
+  try {
+    const response = await fetch('/api/user/fetchTask');
+    const data = await response.json();
+
+    if (response.ok) {
+      if (data.length === 0) {
+        document.getElementById('task-list').innerHTML = '<p class="text-gray-500 dark:text-gray-400">No tasks found.</p>';
+        return;
+      }
+      const tasks = data.data;
+      const taskList = document.getElementById('task-list');
+      for (const task of tasks) {
+        taskList.innerHTML += createTaskRow(task);
+      }
+    }
+    showNotification("success", data.message);
+    
+  } catch (err) {
+    showNotification("error", `Failed to fetch tasks: ${err}`);
+  }
+}
+
+fetchUserTasks();

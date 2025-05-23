@@ -6,7 +6,9 @@
     border shadow
 {% endblock %}
 {% block content %}
-    <h3>Subtasks goes here</h3>
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+    <dotlottie-player src="https://lottie.host/5e6f5b23-a100-4541-ace7-baaa49438f0d/fm80F4HIWh.lottie" background="transparent" speed="1" style="width: 450px; height: 450px; margin: auto;" loop autoplay></dotlottie-player>
+    <h4 class='text-center'>Sorry, this page is under development</h4>
 {% endblock %}
 {% block script %}
     <script src="{{ url_for('static', filename='js/admin/admin_manage_subtasks.js') }}" ></script>

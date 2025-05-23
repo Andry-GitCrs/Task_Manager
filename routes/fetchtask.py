@@ -24,7 +24,7 @@ def fetch_task(app, database):
                 Task.updated_at,
                 Task.finished,
                 Task.user_id
-            ).all()
+            ).order_by(Task.updated_at.desc()).all()
 
             for result in results:
                 subtask_nbr = db.session.query(Subtask.subtask_id).filter_by(task_id = result.task_id).count()

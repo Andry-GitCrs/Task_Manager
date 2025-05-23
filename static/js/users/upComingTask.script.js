@@ -31,6 +31,27 @@ async function fetchUpcomingTasks(element_id, condition, day, message) {
                 addUpcomingTask(element_id, id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks)
             });
         }
+        else {
+            showNotification("error", `You don't have any task ${condition} ${formatDate(responseData.date)}`);
+            $(`#${element_id}`).append($("<h3 class='m-0 my-1'></h3>").html(`<span class="event p-1 px-3 text-dark rounded-pill">${message}</span>`))
+            $(`#${element_id}`).append($(`
+                <script
+                    src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                    type="module"
+                ></script>
+                <dotlottie-player
+                    src="https://lottie.host/dc3962cd-5129-4c78-b3f5-172d5a86dec7/6sEHo0DGkz.lottie"
+                    background="transparent"
+                    speed="1"
+                    style="width: 450px; height: 450px; margin: auto; display: block;"
+                    loop
+                    autoplay
+                >
+                </dotlottie-player>
+                <h4 class='text-center'>You don't have any task ${condition} ${formatDate(responseData.date)}</h4>
+                <p class='text-center'>You can add a task by clicking the <span class='fw-bold'>'Add new task'</span> button above</p>
+            `));
+        }
     } catch (error) {
         console.log(error);
     }
