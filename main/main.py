@@ -1,16 +1,17 @@
 import sys
 import os
-from flask import Flask, abort, redirect, render_template, jsonify
-from flask_login import login_required, current_user, LoginManager, login_user, logout_user, current_user
+from flask import Flask, abort, redirect, render_template
+from flask_login import login_required, current_user, LoginManager, logout_user, current_user
 from sqlalchemy import func
-from datetime import datetime, date, timedelta
+from datetime import date
 from flask_socketio import SocketIO
+
 ## Dir config 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchUserDailyFinishedSubtask, fetchtask, fetchusers, findtask, getNotification, getTaskByDate, gettodaytasks, getupcomingtasks, login, loginadmin, markNotification, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask, sendNotification, users_statistics
+from routes import userTaskActivities, addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchUserDailyFinishedSubtask, fetchtask, fetchusers, findtask, getNotification, getTaskByDate, gettodaytasks, getupcomingtasks, login, loginadmin, markNotification, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask, sendNotification, users_statistics
 from database import pgconnexion
 
 ## App config
@@ -182,6 +183,9 @@ markNotification.mark_notification(app, database)
 
 ## Get task
 gettasks.get_tasks(app, database)
+
+## Get user task --profile
+userTaskActivities.fetch_task_profile(app, database)
 
 ## Get users daily finished task
 fetchUserDailyFinishedSubtask.fetchUserDailyFinishedSubtask(app, database)

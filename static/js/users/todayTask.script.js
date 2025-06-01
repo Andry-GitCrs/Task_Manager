@@ -42,10 +42,25 @@ async function fetchTodayTasks() {
                 
                 $("#todayTaskContainer").append(taskElement);
             });
-            return todayTasks.length;
         } else {
             showNotification("error", "You don't have any task for today");
-            $("#todayTaskContainer").append($(`<h4 class='text-center'>You don't have any task for today</h4>`));
+            $("#todayTaskContainer").append($(`
+                <script
+                    src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                    type="module"
+                ></script>
+                <dotlottie-player
+                    src="https://lottie.host/dc3962cd-5129-4c78-b3f5-172d5a86dec7/6sEHo0DGkz.lottie"
+                    background="transparent"
+                    speed="1"
+                    style="width: 450px; height: 450px; margin: auto; display: block;"
+                    loop
+                    autoplay
+                >
+                </dotlottie-player>
+                <h4 class='text-center'>You don't have any task for today</h4>
+                <p class='text-center'>You can add a task by clicking the <span class='fw-bold'>'Add new task'</span> button above</p>
+            `));
         }
     } catch (error) {
         showNotification("error", error.message);
