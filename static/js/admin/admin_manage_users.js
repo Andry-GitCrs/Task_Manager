@@ -76,7 +76,7 @@ function user_row(user, activityColor, activityText){
                 </ul>
             </div>
             <button class="btn btn-sm" onclick="deleteUser(${user.user_id})">
-                <i class="fas fa-trash text-danger"></i>
+                <i class="fas fa-trash-alt text-danger"></i>
             </button>
         </td>
     `;

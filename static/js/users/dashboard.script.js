@@ -33,7 +33,7 @@ $(document).ready(function() {
                     $(".task-list-container").text("");
                 }
                 subTaskList.push(content);
-                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask rounded-2' id='subtask${taskNbr}${subTaskNbr}' ondblclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></li>`).html(`${content}  <div class="w-auto d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`));
+                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask rounded-2' id='subtask${taskNbr}${subTaskNbr}' ondblclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></li>`).html(`${content}  <div class="w-auto d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash-alt text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`));
             } else {
                 showNotification("error", `This task already has "${content}" subtask`);
             }
@@ -231,7 +231,7 @@ async function addSubTask(id, title){
                         ${subtask.subtask_title}
                     </span>
                     <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                        <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                        <i class="fas fa-trash-alt text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
                         <input
                             class="from-control mx-2 my-0"
                             type="checkbox" name="subtask_status" 
@@ -305,7 +305,7 @@ async function editSubTask(id, subtask_id) {
                     ${subtask.subtask_title}
                     </span>
                     <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                        <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                        <i class="fas fa-trash-alt text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
                         <input
                             ${subtask.finished ? "checked" : ""}
                             value=${subtask.finished ? "off" : "on"}
@@ -417,7 +417,7 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
                 <div class='d-flex justify-content-center align-items-center gap-3 bg-transparent'>
                     <i class="fas fa-pen text-success task-icon" onclick="update_task('${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
                     <i class="fas fa-add text-success task-icon" onclick="addSubTask('${id}', '${title}')"></i> 
-                    <i class="fas fa-trash text-danger task-icon" onclick="removeTask('${id}')"></i>
+                    <i class="fas fa-trash-alt text-danger task-icon" onclick="removeTask('${id}')"></i>
                 </div>
             </h3>
             <ul class="p-0" id='subtaskContainer${id}'>
@@ -435,7 +435,7 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
                         ${subtask.subtask_title.trim()}
                         </span>
                         <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                            <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                            <i class="fas fa-trash-alt text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
                             <input
                                 ${subtask.finished ? "checked" : ""}
                                 value=${subtask.finished ? "off" : "on"}
@@ -635,7 +635,7 @@ async function findTaskk(){
                         ${title}
                         <span style='font-size: 12px'>${formatDate(start_date)} to ${formatDate(end_date)}</span>
                         <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                            <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
+                            <i class="fas fa-trash-alt text-danger" onclick="removeTask('${id}')"></i>
                             <i class="fas fa-check-circle text-warning " style='display: none'  id='check_task_icon${id}'></i>
                         </div>
                     </li> 
@@ -682,7 +682,7 @@ function genTaskCard(bg_color, description, start_date, end_date, title, id, sub
                 <div class='d-flex justify-content-center gap-3 bg-transparent'>         
                     <i class="fas fa-pen text-success task-icon" onclick="update_task('${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
                     <i class="fas fa-add text-success" onclick="addSubTask('${id}', '${title}')"></i> 
-                    <i class="fas fa-trash text-danger" onclick="removeTask('${id}')"></i>
+                    <i class="fas fa-trash-alt text-danger" onclick="removeTask('${id}')"></i>
                 </div>
             </h3>
             <ul class="p-0" id='subtaskContainer${id}'>
@@ -700,7 +700,7 @@ function genTaskCard(bg_color, description, start_date, end_date, title, id, sub
                         ${subtask.title}
                         </span>
                         <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                            <i class="fas fa-trash text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
+                            <i class="fas fa-trash-alt text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
                             <input
                                 ${subtask.finished ? "checked" : ""}
                                 value=${subtask.finished ? "off" : "on"}

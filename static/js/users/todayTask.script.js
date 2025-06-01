@@ -59,7 +59,12 @@ async function fetchTodayTasks() {
                 >
                 </dotlottie-player>
                 <h4 class='text-center'>You don't have any task for today</h4>
-                <p class='text-center'>You can add a task by clicking the <span class='fw-bold'>'Add new task'</span> button above</p>
+                <p class='text-center'>You can add a task by clicking the 
+                    <button class="btn open-modal border" style="background-color: transparent!important">
+                        <i class="fas fa-add text-success"></i>
+                        Add new task
+                    </button> button above
+                </p>
             `));
         }
     } catch (error) {

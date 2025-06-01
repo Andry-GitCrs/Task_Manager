@@ -26,7 +26,7 @@
                 <i class="fas fa-angle-left"></i>
             </button>
         </div>
-        <div class="my-4">
+        <div class="my-2">
             <h4 class="text-dark fw-bold" >TASKS</h4>
             <ul class="p-0">
                 <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center {% block upcoming %}{% endblock %}">
@@ -92,6 +92,14 @@
                     <i class="text-danger fas fa-bug"></i>
                     <a class="text-dark text-decoration-none" href="mailto:andrianaivonoe403@gmail.com">Bug report</a>
                 </li>
+                <li class="my-2 py-1 {% block userGuide %}{% endblock %}">
+                    <div class="w-100 d-flex align-items-center">
+                        <a  class="text-dark text-decoration-none w-100" href="/dashboard/help">
+                            <i class="fas fa-question-circle text-info"></i>
+                            Help & User guide
+                        </a>
+                    </div>
+                </li>
                 <li class="my-2 py-1 {% block profile %}{% endblock %}">
                     <div class="w-100 d-flex align-items-center">
                         <a  class="text-dark text-decoration-none w-100" href="/dashboard/profile">
@@ -104,7 +112,7 @@
                     <div class="w-100 d-flex align-items-center">
                         <a  class="text-dark text-decoration-none w-100" href="/auth/logout">
                             <i class="fas fa-sign-out-alt text-secondary"></i>
-                            Sing out
+                            Sign out
                         </a>
                     </div>
                 </li>
@@ -142,7 +150,7 @@
         </nav>
         {% block content %}
             <h1>
-                Hello world
+                Task manager app
             </h1>
         {% endblock %}
         <!-- Modal -->
@@ -151,33 +159,34 @@
             <form class="d-flex flex-column justify-content-between h-100 task-form" id="add_task_form">
                 <div>
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="title" class="text-dark" name="tastTitle" >Task title</label>
+                        <label for="title" class="text-dark" name="tastTitle" ><i class="fas fa-heading text-primary"></i> Task title</label>
                         <input name="task_title" class="form-control w-75" type="text" id="title" placeholder="Task title">
                     </div>
                     <!--Start date-->
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="startDate" class="text-dark" name="startDate" >Start date</label>
+                        <label for="startDate" class="text-dark" name="startDate" ><i class="fas fa-calendar-alt text-success"></i> Start date</label>
                         <input name="start_date" class="form-control w-75" type="date" id="startDate" placeholder="Start date">
                     </div>
                     <!--End date-->
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="endDate" class="text-dark" name="endDate" >End date</label>
+                        <label for="endDate" class="text-dark" name="endDate" ><i class="fas fa-calendar-check text-danger"></i> End date</label>
                         <input name="end_date" class="form-control w-75" type="date" id="endDate" placeholder="End date">
                     </div>
                     <!--Description-->
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="description" class="text-dark" name="endDate" >Description</label>
+                        <label for="description" class="text-dark" name="endDate" ><i class="fas fa-align-left text-secondary"></i> Description</label>
                         <input name="task_description" class="form-control w-75" type="text" id="description" placeholder="A short description (optional)">
                     </div>
                     <!--Backgound colour select-->
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="bg-color-piker" class="text-dark" name="endDate" >Select task background-color <span>(default color    <div class="default-color"></div>  </span>)</label>
+                        <label for="bg-color-piker" class="text-dark" name="endDate" > <i class="fas fa-fill-drip text-warning"></i> Select task background-color <span>(default color    <div class="default-color"></div>  </span>)</label>
                         <input name="task_background" class="" type="color" id="bg-color-piker" value="#95ce83">
                     </div>
                     <!--Task content-->
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                        <i class="fas fa-add text-dark"></i>
                         <input name="add_btn" class="form-control" type="text" id="content" placeholder="Add sub-task (Optional)">
-                        <button name="add_btn" class="add btn btn-primary">Add</button>
+                        <button name="add_btn" class="add btn btn-primary"> Add</button>
                     </div>
                     <ul class="text-dark task-list-container text-center ps-0">
                         <span id="subTaskIndicator">No subtask added </br> all subtask will appear here</span>
