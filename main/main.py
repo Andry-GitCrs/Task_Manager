@@ -93,6 +93,11 @@ def dashboard():
 
     return render_template('views/users/dashboard.html', email = current_user.email, task_nbr = getTaskNbr()["task_nbr"], today_task_nbr = getTaskNbr()["today_task"])
 
+@app.route('/dashboard/help') # Help
+@login_required
+def help():
+    return render_template('views/users/help.html', task_nbr = getTaskNbr()["task_nbr"], today_task_nbr = getTaskNbr()["today_task"])
+
 @app.route('/dashboard/calendar') # Calendar
 @login_required
 def calendar():

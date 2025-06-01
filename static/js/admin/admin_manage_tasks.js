@@ -54,7 +54,7 @@ const fetchTasks = async () => {
                     </ul>
                   </div>
                   <button class="btn btn-sm" onclick="deleteTask(${task.task_id})">
-                    <i class="fas fa-trash text-danger"></i>
+                    <i class="fas fa-trash-alt text-danger"></i>
                   </button>
                 </td>
               `;

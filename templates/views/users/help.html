@@ -1,0 +1,414 @@
+{% extends "views/users/base.html" %}
+{% block title %}User guide{% endblock %}
+{% block userGuide %}active-dash-link{% endblock %}
+
+{% block head %}
+<style>
+  html {
+    scroll-behavior: smooth;
+  }
+
+  nav {
+    display: none!important;
+  }
+
+  li {
+    all: unset!important;
+    display: block!important;
+  }
+
+  .guide-section h2,
+  .guide-section h4 {
+    scroll-margin-top: 100px;
+  }
+
+  .container {
+    max-width: 900px;
+  }
+
+  .lead strong {
+    color: #0d6efd;
+  }
+
+  .btn.custom-btn {
+    background: linear-gradient(45deg, #198754, #20c997);
+    border: none;
+    color: white;
+    transition: 0.3s ease;
+  }
+
+  .btn.custom-btn:hover {
+    background: linear-gradient(45deg, #157347, #198754);
+  }
+
+  .content-list a {
+    font-weight: 500;
+    color: #0d6efd;
+  }
+
+  .content-list a:hover {
+    text-decoration: underline;
+  }
+
+  .list-group-item {
+    background: #f8f9fa;
+    border-left: 4px solid #dee2e6;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+  }
+
+  @media (max-width: 576px) {
+    .d-flex {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+    <a href="#title" class="btn btn-primary position-fixed" 
+        style="bottom: 20px; right: 20px; z-index: 1030;"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <div class="container py-4 px-3 guide-section">
+        <div class="d-flex justify-content-center align-items-center gap-3 mb-4">
+            <button class="btn hide-btn">
+                <i class="fas fa-angle-left"></i>
+            </button>
+            <h1 class="text-secondary" id="title">
+                <i class="fas fa-question-circle me-2"></i>Help & User Guide
+            </h1>
+        </div>
+
+        <p class="lead text-center">
+            Welcome to <strong>Task Manager</strong>! This guide will help you understand and use the app efficiently.
+        </p>
+
+        <div aria-label="Table of Contents" class="mb-5">
+            <h5 class="text-info fw-bold">Contents</h5>
+            <ul class="list-unstyled ms-3 content-list">
+                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#sticky-wall"><i class="fas fa-thumbtack me-2 text-info"></i>Sticky Wall</a></li>
+                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#adding-task"><i class="fas fa-plus-circle me-2 text-success"></i>Adding a New Task</a></li>
+                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#edit-delete-subtasks"><i class="fas fa-edit me-2 text-secondary"></i>Edit, Delete, or Add Subtasks</a></li>
+                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#managing-subtasks"><i class="fas fa-tasks me-2 text-warning"></i>Managing Subtasks</a></li>
+                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#calendar-page"><i class="fas fa-calendar-alt me-2 text-primary"></i>Calendar Page</a></li>
+                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#today-page"><i class="fas fa-calendar-day me-2 text-success"></i>Today Page</a></li>
+                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#upcoming-page"><i class="fas fa-hourglass-half me-2 text-warning"></i>Upcoming Page</a></li>
+                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#profile-page"><i class="fas fa-user me-2 text-secondary"></i>Profile Page</a></li>
+                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#about-app"><i class="fas fa-info-circle me-2 text-info"></i>About This App</a></li>
+                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#contact-us"><i class="fas fa-envelope me-2 text-danger"></i>Contact Us</a></li>
+            </ul>
+        </div>
+
+        <hr class="my-4">
+
+        <h2 class="text-success" id="sticky-wall">
+            <i class="text-info fas fa-grip"></i> Sticky Wall
+        </h2>
+        <p>
+            The <strong>Sticky Wall</strong> lets you manage all your tasks visually, using task cards (similar to sticky notes).
+        </p>
+
+        <h4 class="mt-4" id="adding-task">
+            <i class="fas fa-plus-circle text-success"></i> Adding a New Task
+        </h4>
+        <p>
+            Click
+            <button class="btn border" style="background-color: transparent!important">
+                <i class="fas fa-add text-success"></i>
+                Add new task
+            </button>
+            to open a task creation form.
+        </p>
+
+        <div class="row align-items-start">
+            <!-- Image column -->
+            <div class="col-md-6 mb-3">
+                <img src="{{ url_for('static', filename='images/taskModal.PNG') }}" alt="Task Modal" class="img-fluid rounded shadow">
+            </div>
+
+            <!-- Text/Details column -->
+            <div class="col-md-6">
+                <ul class="mb-3 list-group list-group-flush">
+                    <li class="list-group-item"><i class="fas fa-heading text-primary me-2"></i><strong>Task Title</strong> — Describe your task.</li>
+                    <li class="list-group-item"><i class="fas fa-calendar-alt text-success me-2"></i><strong>Start Date</strong> — When it starts.</li>
+                    <li class="list-group-item"><i class="fas fa-calendar-check text-danger me-2"></i><strong>End Date</strong> — When it ends.</li>
+                    <li class="list-group-item"><i class="fas fa-align-left text-secondary me-2"></i><strong>Description</strong> — Optional notes.</li>
+                    <li class="list-group-item"><i class="fas fa-fill-drip text-warning me-2"></i><strong>Background Color</strong> — For visual tags.</li>
+                    <li class="list-group-item"><i class="fas fa-tasks text-dark me-2"></i><strong>Sub-tasks</strong> — Mini goals inside your task.</li>
+                </ul>
+                <p>
+                    Once done, hit
+                    <button class="btn btn-dark btn-sm">Submit</button>
+                    or
+                    <button class="btn btn-danger btn-sm">Close</button>.
+                </p>
+            </div>
+        </div>
+
+        <h4 class="mt-4" id="edit-delete-subtasks">
+            <i class="fas fa-edit text-primary"></i> Edit, Delete, or Add Subtasks
+        </h4>
+        <p>Hover a task card to reveal these actions:</p>
+
+        <div class="row align-items-start">
+            <div class="col-md-5 mb-3">
+                <img src="{{ url_for('static', filename='images/taskCard.PNG') }}" alt="Task" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-md-6">
+                <ul class="mb-3 ps-0">
+                    <li class="list-group-item"><i class="fas fa-pen text-success me-2"></i><strong>Edit</strong> — Update fields in a popup.</li>
+                    <li class="list-group-item"><i class="fas fa-trash-alt text-danger me-2"></i><strong>Delete</strong> — Move to trash for later recovery.</li>
+                    <li class="list-group-item"><i class="fas fa-plus text-success me-2"></i><strong>Add Subtask</strong> — Inline input for fast subtasking.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h4 class="mt-4" id="managing-subtasks">
+            <i class="fas fa-stream text-warning"></i> Managing Subtasks
+        </h4>
+        <div class="row align-items-start">
+            <div class="col-md-5 mb-3">
+                <img src="{{ url_for('static', filename='images/subtask.PNG') }}" alt="Subtask Modal" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-md-6">
+                <ul class="mb-3 ps-0">
+                    <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Mark as Done</strong> — Click check icon.</li>
+                    <li class="list-group-item"><i class="fas fa-trash-alt text-danger me-2"></i><strong>Delete</strong> — Remove individual subtask.</li>
+                    <li class="list-group-item"><i class="fas fa-edit text-primary me-2"></i><strong>Edit</strong> — Double-click to update.</li>
+                </ul>
+            </div>
+        </div>
+
+        <p>Subtasks keep your main tasks neat and actionable.</p>
+
+        <hr class="my-5">
+
+        <h2 id="calendar-page">
+            <i class="fas fa-calendar-alt text-primary"></i> Calendar Page
+        </h2>
+        <p>
+            View tasks scheduled over time. Switch between week, month, and year.
+        </p>
+        <div class="row col-md-12 mb-2">
+            <img src="{{ url_for('static', filename='images/calendarPage.PNG') }}" alt="Calendar">
+        </div>
+        <ul class="mb-3">
+            <li class="list-group-item"><i class="fas fa-calendar-week text-primary me-2"></i>Week View — Immediate deadlines.</li>
+            <li class="list-group-item"><i class="fas fa-calendar-alt text-success me-2"></i>Month View — Monthly planning.</li>
+            <li class="list-group-item"><i class="fas fa-calendar-check text-warning me-2"></i>Year View — Big picture.</li>
+        </ul>
+
+        <p>Click a task to edit directly from the calendar.</p>
+
+        <hr class="my-5">
+
+        <h2 id="today-page">
+            <i class="text-success fas fa-list"></i> Today Page
+        </h2>
+        <p>
+            Displays all urgent tasks due today.
+        </p>
+        <div class="row col-md-12 mb-2">
+            <img src="{{ url_for('static', filename='images/todayPage.PNG') }}" alt="Today Page">
+        </div>
+        
+        <hr class="my-4">
+
+        <h2 id="upcoming-page">
+            <i class="text-warning fas fa-clock"></i>
+            Upcoming page
+        </h2>
+        <div class="container">
+            <p>
+                The <strong>Upcoming page</strong> gives you a quick overview of all tasks due soon, helping you stay on top of your schedule.
+            </p>
+
+            <h4 class="mt-4 text-decoration-underline">
+                <i class="fas fa-forward text-secondary"></i>
+                Viewing Upcoming Tasks
+            </h4>
+            <p>
+                On this page, you can easily see tasks grouped by their due date ranges:
+            </p>
+
+            <ul class="mb-3">
+                <li class="list-group-item">
+                    <strong>Tomorrow's Tasks</strong> — View all tasks that are due the very next day.
+                </li>
+                <li class="list-group-item">
+                    <strong>Tasks Due After Tomorrow</strong> — Get a glimpse of tasks coming up in the days after tomorrow.
+                </li>
+                <li class="list-group-item">
+                    <strong>Next Week's Tasks</strong> — Plan ahead by viewing all tasks scheduled for the upcoming week.
+                </li>
+            </ul>
+
+            <h4 class="mt-4 text-decoration-underline">
+                <i class="fas fa-filter text-info"></i>
+                Custom Date Filtering
+            </h4>
+            <p>
+                You can also filter tasks by selecting specific dates using the filter controls:
+            </p>
+
+            <ul class="mb-3">
+                <li class="list-group-item">
+                    <strong>Select a Date</strong> — Pick any date from the calendar picker to focus on tasks around that day.
+                </li>
+                <li class="list-group-item">
+                    <strong>Filter by Start or End Date</strong> — Choose whether to see tasks that <em>start on</em> or <em>end on</em> the selected date.
+                </li>
+                <li class="list-group-item">
+                    <strong>View Filtered Tasks</strong> — The list updates dynamically to show only tasks matching your date criteria.
+                </li>
+            </ul>
+
+            <p>
+                This filtering system lets you <strong>quickly find and focus on tasks</strong> relevant to any day, making your task management even more flexible and precise.
+            </p>
+
+            <div class="row col-md-12 mb-2">
+                <img src="{{ url_for('static', filename='images/upcomingPage.PNG') }}" alt="Upcoming Page">
+            </div>
+        </div>
+
+        <hr class="my-5"> <!-- End upcoming help -->
+
+        <h2 id="profile-page">
+            <i class="text-secondary fas fa-user-circle"></i>
+            Profile page
+        </h2>
+        <div class="container">
+            <p>
+                The <strong>Profile page</strong> provides a comprehensive overview of your personal account information and activity within the app.
+            </p>
+
+            <h4 class="mt-4 text-decoration-underline">
+                <i class="fas fa-chart-line text-primary"></i>
+                Activity Chart
+            </h4>
+            <p>
+                A dynamic <strong>line chart</strong> is displayed showing your activity since the day you registered. This helps you track your productivity and task history over time.
+            </p>
+
+            <h4 class="mt-4 text-decoration-underline">
+                <i class="fas fa-user-pen text-success"></i>
+                Edit Your Credentials
+            </h4>
+            <p>
+                You can update your login details securely using the credential edit form:
+            </p>
+            <ul class="mb-3">
+                <li class="list-group-item">Update your <strong>password</strong> by entering your current password and a new one.</li>
+                <li class="list-group-item">Confirm your new password before submitting to avoid mistakes.</li>
+                <li class="list-group-item">All updates require your current password for security reasons.</li>
+            </ul>
+
+            <h4 class="mt-4 text-decoration-underline">
+                <i class="fas fa-tasks text-info"></i>
+                Your Task History
+            </h4>
+            <p>
+                This section lists <strong>all your tasks</strong>, even those that have been deleted, so you always have a complete view of your activity.
+            </p>
+            <ul class="mb-3">
+                <li class="list-group-item">Each task is labeled with its current <strong class="text-warning">status</strong>: In Progress or Finished.</li>
+                <li class="list-group-item">A small badge indicates if the task is <strong class="text-success">Active</strong> or has been <strong class="text-danger">Deleted</strong>.</li>
+                <li class="list-group-item">The number of <strong class="text-info">subtasks</strong> under each task is also shown, helping you quickly see task complexity.</li>
+            </ul>
+
+            <p>
+                The <strong>Profile page</strong> is your go-to place for managing personal data and reviewing your full task history with detailed labels and insights.
+            </p>
+
+            <div class="row col-md-12 mb-2">
+                <img src="{{ url_for('static', filename='images/profilePage.PNG') }}" alt="Profile Page">
+            </div>
+        </div>
+
+
+        <hr class="my-5"> <!-- End profile help -->
+
+        <h2 class="text-secondary" id="about-app">
+            <i class="fas fa-info-circle"></i> 
+            About This App
+        </h2>
+        <p>
+            <strong>Task Manager</strong> is a full-featured productivity web app designed to help individuals or teams manage their time, tasks, and priorities effectively. It provides an interactive, browser-based experience with a clean interface and powerful tools for personal task management.
+        </p>
+
+        <ul class="list-unstyled">
+            <li><i class="fas fa-check-circle text-success me-2"></i> Sticky Wall for a dynamic visual task board</li>
+            <li><i class="fas fa-check-circle text-success me-2"></i> Add and manage tasks with subtasks support (add, edit, delete)</li>
+            <li><i class="fas fa-check-circle text-success me-2"></i> Custom tagging and color labels for better organization</li>
+            <li><i class="fas fa-check-circle text-success me-2"></i> Dedicated <strong>Today</strong>, <strong>Calendar</strong>, and <strong>Upcoming</strong> views for better scheduling</li>
+            <li><i class="fas fa-check-circle text-success me-2"></i> Personal <strong>Profile Page</strong> to manage user preferences</li>
+            <li><i class="fas fa-check-circle text-success me-2"></i> Clean, responsive design optimized for desktop use</li>
+            <li><i class="fas fa-check-circle text-success me-2"></i> Lightweight and fully client-side (no installation needed)</li>
+        </ul>
+
+
+        <hr class="my-5">
+        
+        <h2 id="contact-us">
+            <i class="fas fa-question-circle text-info"></i>
+            Need more help or send feedback? Contact us 
+        </h2>
+        <!-- Contact form -->
+        <form class="p-3 h-100 d-flex flex-row align-items-center gap-3" id="contact-form">
+            <div class="side">
+                <div class="d-flex flex-column p-0">
+                    <!--Name input container-->
+                    <div class="p-0 my-1">
+                        <label for="name" class="m-0 d-block">Name</label>
+                        <div class="d-flex gap-2">
+                            <input class="form-control border" type="text" placeholder="First" name="first_name" id="first_name" required>
+                            <input class="form-control border" type="text" placeholder="Last (optional)" name="last_name" id="last_name">
+                        </div>
+                    </div>
+                    
+                    <!--Email input container-->
+                    <div class="p-0 my-1">
+                        <label for="email" class="m-0 d-block"><i class="fas fa-envelope text-secondary"></i> Email</label>
+                        <input class="form-control border" type="email" placeholder="example@email.com" name="email" id="email" required value="{{ current_user.email }}">
+                    </div>
+                    
+                    <!--Phone input container-->
+                    <div class="p-0 my-1">
+                        <label for="phone" class="m-0 d-block"><i class="fas fa-phone text-secondary"></i> Phone (optional)</label>
+                        <input class="form-control border" type="phone" placeholder="XXX-XXX-XXXX" name="phone" id="phone">
+                    </div>
+                    
+                    <!--Message input container-->
+                    <div class="p-0 my-1">
+                        <label for="phone" class="m-0 d-block"><i class="fas fa-comment-dots text-secondary"></i> Message</label>
+                        <textarea name="message" id="messageContent" class="from-control w-100 border" rows="2" required></textarea>
+                    </div>
+    
+                    <!--Submit button-->
+                    <div class="p-0 my-1 text-center">
+                        <button type="submit" class="btn text-light fw-bold rounded-3 bg-success" id="submit_feedback"><i class="fas fa-paper-plane"></i> Submit</button>
+                    </div>
+    
+                </div>
+            </div>
+            <div class="side">
+                <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+                <dotlottie-player src="https://lottie.host/47782c35-0b24-4b8b-8393-13c191e69e12/wz5isskpgk.lottie" background="transparent" speed="1" style="width: 300px; height: 100%; margin: auto;" loop autoplay></dotlottie-player>
+            </div>
+        </form>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script type="module" src="{{ url_for('static', filename='js/users/help.js') }}"></script>
+{% endblock %}
