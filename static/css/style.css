@@ -802,7 +802,7 @@ nav li a{
 
 .notification-date {
     font-size: 0.875rem; 
-    font-style: italic;  
+    font-style: italic; 
     opacity: 0.7; 
 }
 
@@ -812,4 +812,10 @@ nav li a{
 
 li:hover .notification-hover-info {
     display: flex;
+}
+
+.py-0.px-4:focus-within {
+  border: 1px solid #e9540e;
+  background-color: #f0f0f0;
+  transform: .5s ease-in-out;
 }

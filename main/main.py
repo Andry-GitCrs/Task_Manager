@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 ## Dependence module
-from routes import userTaskActivities, addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchUserDailyFinishedSubtask, fetchtask, fetchusers, findtask, getNotification, getTaskByDate, gettodaytasks, getupcomingtasks, login, loginadmin, markNotification, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask, sendNotification, users_statistics
+from routes import forgot_password, userTaskActivities, addsubtask, auth, checksubtask, deletesubtask, deletetask, deleteuser, edituserrole, exportcsv, fetchUserDailyFinishedSubtask, fetchtask, fetchusers, findtask, getNotification, getTaskByDate, gettodaytasks, getupcomingtasks, login, loginadmin, markNotification, register, gettasks, addtask, sendemail, suspenduser, deteteTaskPermanentely, updateprofile, exportpdf, adduser, updatesubtask, updatetask, sendNotification, users_statistics
 from database import pgconnexion
 
 ## App config
@@ -64,6 +64,10 @@ def contact():
 @app.route('/login')
 def login_page():
     return render_template('views/login.html')
+
+@app.route('/auth/forgot_password')
+def forgot_password_page():
+    return render_template('views/forgot_password.html')
 
 ## Auth route
 auth.auth(app)
@@ -247,6 +251,9 @@ edituserrole.edit_user_role(app, database)
 
 ## Update user
 updateprofile.update_profile(app, database)
+
+## Forgot password
+forgot_password.forgot_password(app, database)
 
 ## Verify email
 sendemail.verifyEmail(app)

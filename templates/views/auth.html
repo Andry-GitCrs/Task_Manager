@@ -13,7 +13,7 @@
             </div>
             <!-- Login form -->
             <form class="p-3" id="login_form" method="POST" action="/auth">
-                <h2 class="text-dark text-center">Member login</h2>
+                <h2 class="text-secondary text-center"><i class="fas fa-user-lock text-secondary"></i> Member login</h2>
                 <div>
                     <div class="py-0 px-4">
                         <i class="fa fa-envelope"></i>
@@ -27,13 +27,13 @@
                 <button class="btn fw-bold text-light bg-success" id="log-in">
                     Login <img class="loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
                 </button>
-                <a class="text-dark text-center text-decoration-none fw-bold" href="#">Forgot Password?</a>
+                <a class="text-success text-center text-decoration-none" href="/auth/forgot_password">Forgot Password?</a>
                 <a class="text-center text-decoration-none" href="" id="register-btn"> <i class="fas fa-arrow-left mx-2"></i> Create your account</a>
             </form>
     
             <!--Registration  form-->
             <form class="p-3 d-none" id="register_form" name="register" method="POST" action="/auth">
-                <h2 class="text-dark text-center">Member Register</h2>
+                <h3 class="text-secondary text-center"><i class="fas fa-id-card text-secondary"></i> Member Register</h3>
                 <div>
                     <div class="py-0 px-4">
                         <i class="fas fa-envelope"></i>
