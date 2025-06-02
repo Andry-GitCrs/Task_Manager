@@ -34,7 +34,8 @@ def getTaskByDate(app, database):
                             "subtask_id": sub.subtask_id,
                             "title": sub.subtask_title,
                             "created_at": sub.created_at.isoformat(),
-                            "updated_at": sub.updated_at.isoformat()
+                            "updated_at": sub.updated_at.isoformat(),
+                            "finished": sub.finished
                         }
                         for sub in task.subtasks if sub.stat
                     ]
