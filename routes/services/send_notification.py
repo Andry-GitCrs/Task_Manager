@@ -1,6 +1,10 @@
 from flask import request, jsonify, abort
 from flask_login import current_user, login_required
 from flask_socketio import emit, join_room
+from collections import defaultdict
+
+online_users = defaultdict(set)
+user_sid_map = {}
 
 def send_notification(app, database, socketio):
     Notification = database['tables']['Notification']
@@ -42,11 +46,41 @@ def send_notification(app, database, socketio):
         }, to=f'user_{user_id}')
 
         return jsonify({'message': 'Notification sent successfully'}), 201
+    
     # SocketIO event to join a room for real-time notifications
     @socketio.on('join')
     def on_join(data):
         user_id = data.get('user_id')
         if user_id:
             room = f'user_{user_id}'
-            join_room(room) 
+            join_room(room)
+
+            online_users[room].add(user_id)
+            user_sid_map[request.sid] = (user_id, room)
+            all_online = [user_id for users in online_users.values() for user_id in users]
+            emit('user_online', all_online, broadcast = True)
+
             emit('joined', {'room': room})
+
+
+    # SocketIO event to leave a room
+    @socketio.on('disconnect')
+    def handle_disconnect():
+        sid = request.sid
+        if sid in user_sid_map:
+            user_id, room = user_sid_map.pop(sid)
+            online_users[room].discard(user_id)
+
+            # Remove room if empty (optional cleanup)
+            if not online_users[room]:
+                del online_users[room]
+
+            # Get the full updated list of online users
+            all_online = list(set(
+                user for users in online_users.values() for user in users
+            ))
+
+            emit('user_offline', {
+                'disconnected': user_id,
+                'online_users': all_online
+            }, broadcast=True)

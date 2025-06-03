@@ -194,3 +194,11 @@ hr{
     height: auto !important;
     max-height: 400px;
 }
+
+.online {
+    color: #1c915a94!important;
+    background-color: red!important;
+    border-radius: 50%!important;
+    width: 10px!important;
+    height: 10px!important;
+}

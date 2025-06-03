@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
     <title>
         {% block title %}
@@ -51,7 +52,7 @@
                 <a  href="#" class="ms-2 p-2 text-decoration-none text-dark rounded-3"><i class="fas fa-home mx-2 text-secondary"></i><span>Admins room</span></a>
             </ul>
         </div>
-        <div class="pt-4 text-center">
+        <div class="pt-4 text-center" onclick="socket.disconnect()">
             <a href="/auth/logout" class="text-decoration-none text-dark"><i class="btn bg-danger fas fa-sign-out-alt mx-2 text-light"></i><span>Logout</span></a>
         </div>
 

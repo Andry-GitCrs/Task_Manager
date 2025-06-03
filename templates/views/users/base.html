@@ -109,7 +109,7 @@
                     </div>
                 </li>
                 <li class="my-2 py-1">
-                    <div class="w-100 d-flex align-items-center">
+                    <div class="w-100 d-flex align-items-center" onclick="socket.disconnect();">
                         <a  class="text-dark text-decoration-none w-100" href="/auth/logout">
                             <i class="fas fa-sign-out-alt text-secondary"></i>
                             Sign out
@@ -134,16 +134,16 @@
                 Add new task
             </button>
             {% block additionnal %}{% endblock%}
-            <div class="dropdown position-relative">
-                <button class="btn dropdown-toggle position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="dropdown position-relative"  data-bs-auto-close="outside">
+                <button class="btn dropdown-toggle position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false"  data-bs-auto-close="outside">
                     <i class="fas fa-bell text-secondary me-2"></i> Notification
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
                         0
                         <span class="visually-hidden">unread messages</span>
                     </span>
                 </button>
-                <ul class="dropdown-menu nofitication-container">
-                </ul>
+                <ul class="dropdown-menu nofitication-container" data-bs-auto-close="outside">
+                </ul>   
             </div>
             
             <img class="loading-dash loading mx-3" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">

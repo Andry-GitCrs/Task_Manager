@@ -31,20 +31,35 @@
 {% block content %}
     <div class="container-fluid">
         <div class="container my-5">
-            <div class="text-center mb-4">
-              <h2 class="fw-bold">
+            <div class="row mb-4">
+              <div class="col-md-6 text-center">
+                <h2 class="fw-bold">
                 <i class="fas fa-users text-primary me-2"></i> All Users
-              </h2>
-              <p class="text-muted">List of all users in the system</p>
-              <div class="row justify-content-center g-3">
-                <div class="col-auto">
-                  <h5 class="text-dark mb-0">Total Users:</h5>
-                  <span id="simple_users_nbr" class="badge bg-secondary">N/A</span>
+                </h2>
+                <h3 class="fw-bold">
+                  <i class="fas fa-check-circle text-success me-2"></i> Online : <span id="online_users_nbr">N/A</span>
+                </h3>
+                <p class="text-muted">List of all users in the system</p>
+                <div class="row justify-content-center g-3">
+                  <div class="col-auto">
+                    <h5 class="text-dark mb-0">Total Users:</h5>
+                    <span id="simple_users_nbr" class="badge bg-secondary">N/A</span>
+                  </div>
+                  <div class="col-auto">
+                    <h5 class="text-dark mb-0">Admins:</h5>
+                    <span id="admin_nbr" class="badge bg-warning text-dark">N/A</span>
+                  </div>
                 </div>
-                <div class="col-auto">
-                  <h5 class="text-dark mb-0">Admins:</h5>
-                  <span id="admin_nbr" class="badge bg-warning text-dark">N/A</span>
-                </div>
+              </div>
+              <div class="col-md-6">
+                <form id="announcement_form">
+                  <label for="announcement_subject" class="form-label"><i class="fas fa-bullhorn text-danger me-2"></i> Announcement</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="announcement_subject" placeholder="Enter announcement subject" required>
+                  </div>
+                    <textarea name="announcement" id="announcement" class="form-control my-2" placeholder="Enter announcement content" required></textarea>
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-bullhorn"></i> Send</button>
+                </form>
               </div>
             </div>
           

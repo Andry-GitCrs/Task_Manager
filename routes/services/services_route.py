@@ -1,9 +1,10 @@
-from flask import render_template
+from flask import jsonify, render_template
 from . import(
   export_csv,
   export_pdf,
   send_email,
-  send_notification
+  send_notification,
+  announcement
 )
 
 def use_services_route(app, database, socketio):
@@ -15,6 +16,7 @@ def use_services_route(app, database, socketio):
   send_email.verifyEmail(app)
   send_email.sendEmail(app)
   send_notification.send_notification(app, database, socketio)
+  announcement.announcement(app, database, socketio)
 
   for route in routes:
     route(app, database)

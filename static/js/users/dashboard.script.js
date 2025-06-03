@@ -831,14 +831,16 @@ socket.on('new_notification', (data) => {
         // Add the new notification to the dropdown menu
         const dropdownMenu = document.querySelector('.dropdown-menu');
         const newNotification = `
-            <li id="notification${data.notification_id}" class="position-relative">
-                <a class="text-dark dropdown-item d-flex align-items-center">
-                    <small class="notification-date text-muted me-2">${data.created_at}</small>
-                    ${data.message}
-                    <div class="notification-hover-info align-items-center gap-2 mx-2">
-                        <i class="fas fa-times text-danger" onclick="deleteNotification(${data.notification_id})"></i>
+            <li id="notification${data.notification_id}" class="list-group-item border-0 px-3 py-2 rounded-3 mb-2 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex flex-column">
+                    <span class="text-body">${data.message}</span>
+                    <small class="text-muted mt-1">${data.created_at}</small>
                     </div>
-                </a>
+                    <button type="button" class="btn btn-sm btn-light text-danger ms-3 border-0" onclick="deleteNotification(${data.notification_id})" aria-label="Delete">
+                    <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </li>
         `;
         dropdownMenu?.insertAdjacentHTML('afterbegin', newNotification);
@@ -866,15 +868,17 @@ const fetchNotifications = async () => {
             dropdownMenu.innerHTML = ''; // Clear existing notifications
             notifications.forEach(notification => {
                 const notificationItem = `
-                    <li id="notification${notification.id}" class="position-relative">
-                        <a class="text-dark dropdown-item d-flex align-items-center">
-                            <small class="notification-date text-muted me-2">${notification.created_at}</small>
-                            ${notification.message}
-                            <div class="notification-hover-info align-items-center gap-2 mx-2">
-                                <i class="fas fa-times text-danger" onclick="deleteNotification(${notification.id})"></i>
+                    <li id="notification${notification.id}" class="list-group-item border-0 px-3 py-2 rounded-3 mb-2 shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex flex-column">
+                            <span class="text-body">${notification.message}</span>
+                            <small class="text-muted mt-1">${notification.created_at}</small>
                             </div>
-                        </a>
-                    </li>
+                            <button type="button" class="btn btn-sm btn-light text-danger ms-3 border-0" onclick="deleteNotification(${notification.id})" aria-label="Delete">
+                            <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </li>      
                 `;
                 dropdownMenu.insertAdjacentHTML('beforeend', notificationItem);
             });
