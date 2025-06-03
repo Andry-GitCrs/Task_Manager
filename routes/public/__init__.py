@@ -1,0 +1,1 @@
+from .public_route import use_public_route

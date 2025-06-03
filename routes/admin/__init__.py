@@ -1,0 +1,1 @@
+from .admin_route import use_admin_route
