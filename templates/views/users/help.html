@@ -12,7 +12,7 @@
     display: none!important;
   }
 
-  li {
+  .container li {
     all: unset!important;
     display: block!important;
   }
@@ -92,20 +92,26 @@
             Welcome to <strong>Task Manager</strong>! This guide will help you understand and use the app efficiently.
         </p>
 
-        <div aria-label="Table of Contents" class="mb-5">
-            <h5 class="text-info fw-bold">Contents</h5>
-            <ul class="list-unstyled ms-3 content-list">
-                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#sticky-wall"><i class="fas fa-thumbtack me-2 text-info"></i>Sticky Wall</a></li>
-                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#adding-task"><i class="fas fa-plus-circle me-2 text-success"></i>Adding a New Task</a></li>
-                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#edit-delete-subtasks"><i class="fas fa-edit me-2 text-secondary"></i>Edit, Delete, or Add Subtasks</a></li>
-                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#managing-subtasks"><i class="fas fa-tasks me-2 text-warning"></i>Managing Subtasks</a></li>
-                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#calendar-page"><i class="fas fa-calendar-alt me-2 text-primary"></i>Calendar Page</a></li>
-                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#today-page"><i class="fas fa-calendar-day me-2 text-success"></i>Today Page</a></li>
-                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#upcoming-page"><i class="fas fa-hourglass-half me-2 text-warning"></i>Upcoming Page</a></li>
-                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#profile-page"><i class="fas fa-user me-2 text-secondary"></i>Profile Page</a></li>
-                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#about-app"><i class="fas fa-info-circle me-2 text-info"></i>About This App</a></li>
-                <li class="d-inline"><a class="btn rounded-pill border m-1" href="#contact-us"><i class="fas fa-envelope me-2 text-danger"></i>Contact Us</a></li>
-            </ul>
+        <div aria-label="Table of Contents" class="mb-5 row align-items-start align-items-md-center">
+            <div class="col-md-5">
+                <h5 class="text-info fw-bold">Contents</h5>
+                <ul class="list-unstyled ms-3 content-list">
+                    <li class="d-inline"><a class="btn rounded-pill border m-1" href="#sticky-wall"><i class="fas fa-thumbtack me-2 text-info"></i>Sticky Wall</a></li>
+                    <li class="d-inline"><a class="btn rounded-pill border m-1" href="#adding-task"><i class="fas fa-plus-circle me-2 text-success"></i>Adding a New Task</a></li>
+                    <li class="d-inline"><a class="btn rounded-pill border m-1" href="#edit-delete-subtasks"><i class="fas fa-edit me-2 text-secondary"></i>Edit, Delete, or Add Subtasks</a></li>
+                    <li class="d-inline"><a class="btn rounded-pill border m-1" href="#managing-subtasks"><i class="fas fa-tasks me-2 text-warning"></i>Managing Subtasks</a></li>
+                    <li class="d-inline"><a class="btn rounded-pill border m-1" href="#calendar-page"><i class="fas fa-calendar-alt me-2 text-primary"></i>Calendar Page</a></li>
+                    <li class="d-inline"><a class="btn rounded-pill border m-1" href="#today-page"><i class="fas fa-calendar-day me-2 text-success"></i>Today Page</a></li>
+                    <li class="d-inline"><a class="btn rounded-pill border m-1" href="#upcoming-page"><i class="fas fa-hourglass-half me-2 text-warning"></i>Upcoming Page</a></li>
+                    <li class="d-inline"><a class="btn rounded-pill border m-1" href="#profile-page"><i class="fas fa-user me-2 text-secondary"></i>Profile Page</a></li>
+                    <li class="d-inline"><a class="btn rounded-pill border m-1" href="#about-app"><i class="fas fa-info-circle me-2 text-info"></i>About This App</a></li>
+                    <li class="d-inline"><a class="btn rounded-pill border m-1" href="#contact-us"><i class="fas fa-envelope me-2 text-danger"></i>Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="col-md-7">
+                <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+                <dotlottie-player src="https://lottie.host/765038a6-363b-4a38-a4e9-f9735b0b5724/V71tBNZz3V.lottie" background="transparent" speed="1" style="width: 100%; height: 100%" loop autoplay></dotlottie-player>
+            </div>
         </div>
 
         <hr class="my-4">
@@ -132,7 +138,7 @@
         <div class="row align-items-start">
             <!-- Image column -->
             <div class="col-md-6 mb-3">
-                <img src="{{ url_for('static', filename='images/taskModal.PNG') }}" alt="Task Modal" class="img-fluid rounded shadow">
+                <img src="{{ url_for('static', filename='images/taskModal.PNG') }}" alt="Task Modal" class="img-fluid rounded">
             </div>
 
             <!-- Text/Details column -->
@@ -161,7 +167,7 @@
 
         <div class="row align-items-start">
             <div class="col-md-5 mb-3">
-                <img src="{{ url_for('static', filename='images/taskCard.PNG') }}" alt="Task" class="img-fluid rounded shadow">
+                <img src="{{ url_for('static', filename='images/taskCard.PNG') }}" alt="Task" class="img-fluid rounded">
             </div>
             <div class="col-md-6">
                 <ul class="mb-3 ps-0">
@@ -177,7 +183,7 @@
         </h4>
         <div class="row align-items-start">
             <div class="col-md-5 mb-3">
-                <img src="{{ url_for('static', filename='images/subtask.PNG') }}" alt="Subtask Modal" class="img-fluid rounded shadow">
+                <img src="{{ url_for('static', filename='images/subtask.PNG') }}" alt="Subtask Modal" class="img-fluid rounded">
             </div>
             <div class="col-md-6">
                 <ul class="mb-3 ps-0">
@@ -407,6 +413,9 @@
             </div>
         </form>
 </div>
+<h6 class="text-muted text-center w-100">
+    &copy; 2025 <span class="fw-bold">Task Manager App</span> – Designed by Andry
+</h6>
 {% endblock %}
 
 {% block script %}

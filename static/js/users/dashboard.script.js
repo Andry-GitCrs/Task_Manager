@@ -18,6 +18,7 @@ $(document).ready(function() {
         e.preventDefault();
         $(".overlay, .modal").fadeOut();
         $("#update_task_form").off("submit");
+        $('.task-form').trigger("reset");
         $('.task-form').attr('id', 'add_task_form');
         $("#add_task_form").on("submit");
     });
@@ -785,6 +786,7 @@ function update_task(task_id, title, startDate, endDate, bg_color, description){
         
                 if (response.ok) {  //Response with status code 200
                     showNotification("success", responseData.message)
+                    window.location.reload()
                 } else {
                     showNotification("error", responseData.error)
                     $(".loading").css("display", 'none');
