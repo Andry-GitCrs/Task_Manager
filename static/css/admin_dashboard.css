@@ -194,3 +194,7 @@ hr{
     height: auto !important;
     max-height: 400px;
 }
+
+.online {
+    transform: scale(0.7);
+}

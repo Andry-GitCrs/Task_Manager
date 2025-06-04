@@ -1,3 +1,5 @@
+var CURRENT_USER_ID = undefined;
+var online_users = [];
 const fetchUserData = async () => {
     document.getElementById("loading").style.display = 'inline'
     try {
@@ -5,6 +7,7 @@ const fetchUserData = async () => {
         const data = await response.json();
         if(response.ok){
             userData = data
+            CURRENT_USER_ID = userData.user_id
             showNotification("success", data.message)
             const tableBody = document.getElementById('userTableBody');
             userData.data.all_users.forEach(user => {
@@ -22,6 +25,7 @@ const fetchUserData = async () => {
 
             });
         }else{
+            CURRENT_USER_ID = userData.user_id
             showNotification("success", data.message)
         }
     } catch (error) {
@@ -35,8 +39,8 @@ function user_row(user, activityColor, activityText){
     const row = document.createElement('tr');
     row.id = `row${user.user_id}`
     row.innerHTML = `
-        <td class='fw-bold'>${user.user_id}</td>
-        <td class='text-start'>${user.email}</td>
+        <td class='fw-bold'><i class='fas fa-message'></i></td>
+        <td class='text-start'>${user.email} <span id="user${user.user_id}"></span></td>
         <td>${user.tasks_count}</td>
         <td>${user.finished_tasks_count}</td>
         <td>${user.user_subtasks_count}</td>
@@ -203,7 +207,7 @@ async function toggleAdmin(user_id) {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         "user_id": user_id,
-                        "message": `You have been ${data.data ? 'granted' : 'removed from'} admin role`
+                        "message": `<span class='fw-bold btn bg-light border m-0'> <i class='fas fa-bullhorn text-success'></i> Role update</span> ${data.data ? 'Congratulation' : ''} You have been ${data.data ? 'granted' : 'removed from'} admin role`
                     })
                 }); 
 
@@ -276,3 +280,70 @@ document.getElementById("toggleFormBtn").addEventListener("click", () => {
     const form = document.getElementById("userForm");
     form.classList.toggle("d-none");
 });
+
+// Initialize Socket.IO
+const socket = io({
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+    forceNew: true // Ensures a fresh connection
+  });
+
+socket.on('connect', () => {
+    // Now tell server to join
+    socket.emit('join', { user_id: CURRENT_USER_ID });
+});
+
+socket.on("user_online", (data) => {
+    online_users = data
+    document.getElementById('online_users_nbr').textContent = online_users.length
+    online_users.map(user => {
+        document.getElementById(`user${user}`).innerHTML = `<span class='btn ${ user == CURRENT_USER_ID ? 'btn-warning' : 'btn-success'} px-2 rounded-pill online'>${ user == CURRENT_USER_ID ? 'You' : 'Online'}</span>`
+    })
+});
+
+socket.on("user_offline", (data) => {
+    online_users = data.online_users
+    document.getElementById(`user${data.disconnected}`).innerHTML = '';
+    document.getElementById('online_users_nbr').textContent = online_users.length;
+    online_users.map(user => {
+        document.getElementById(`user${user}`).innerHTML = `<span class='btn ${ user == CURRENT_USER_ID ? 'btn-warning' : 'btn-success'} px-2 rounded-pill online'>${ user == CURRENT_USER_ID ? 'You' : 'Online'}</span>`
+    })
+});
+
+let announcement_form = document.getElementById('announcement_form')
+
+announcement_form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const announcement_subject = document.getElementById("announcement_subject").value.trim('')
+    const announcement = document.getElementById("announcement").value.trim('')
+
+    if (announcement_subject == '' || announcement == '') {
+        showNotification("error", 'All fields are required')
+        return
+    }
+
+    try {
+        const response = await fetch("/api/admin/notifications/announcement", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                "announcement_subject": announcement_subject,
+                "announcement": announcement
+            })
+        });
+
+        const responseData = await response.json();
+
+        if (response.ok) {  //Response with status code 200
+            showNotification("success", responseData.message)
+            announcement_form.reset()
+        } else {
+            showNotification("error", responseData.error)
+        }
+
+    } catch (error) {
+        showNotification("error", error)
+    }
+})

@@ -94,12 +94,14 @@ def fetch_user(app, database):
 
                 return jsonify({
                     "message": f"Users fetched successfully",
-                    "data": data
+                    "data": data,
+                    "user_id": current_user.user_id
                 }), 200
         
             return jsonify({
                     "message": f"There are no users",
-                    "data": data
+                    "data": data,
+                    "user_id": current_user.user_id
                 }), 404
 
         abort(404)

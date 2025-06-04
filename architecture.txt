@@ -1,0 +1,45 @@
+Gestion_des_taches_flask
+│   
+│   database
+│   ├── models
+│   │   ├── table_name_model.py
+│   │   └── ...
+│   └── pg_connexion.py
+│   main
+│   └── main.py
+│   routes
+│   ├── route_name
+│   │   ├── __init__.py
+│   │   ├── route_name_route.py // Endpoint entry
+│   │   ├── feature_name.py
+│   │   └── ...
+│   ├── ...
+│   ├── __init__.py
+│   └── app_route.py // All endpoint index
+│   static
+│   ├── css
+│   │   └── style.css
+│   ├── images
+│   │   └── img.jpg
+│   └── js
+│       ├── admin
+│       │   └── admin_script.js
+│       ├── users
+│       │   └── user_script.js
+│       └── script.js
+│   templates
+│   ├── fragments
+│   └── views
+│       ├── admin
+│       │   ├── admin_page_name.html
+│       │   └── base.html
+│       ├── users
+│       │   ├── users_page_name.html
+│       │   └── base.html
+│       ├── public_page_name.html
+│       ├── ...
+│       └── main.html
+│   .env // Environment variable
+│   .gitignore
+│   Procfile // Production configuration
+│   requirements.txt
