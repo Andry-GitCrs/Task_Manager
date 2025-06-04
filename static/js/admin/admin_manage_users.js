@@ -39,7 +39,7 @@ function user_row(user, activityColor, activityText){
     const row = document.createElement('tr');
     row.id = `row${user.user_id}`
     row.innerHTML = `
-        <td class='fw-bold'>${user.user_id}</td>
+        <td class='fw-bold'><i class='fas fa-message'></i></td>
         <td class='text-start'>${user.email} <span id="user${user.user_id}"></span></td>
         <td>${user.tasks_count}</td>
         <td>${user.finished_tasks_count}</td>
@@ -207,7 +207,7 @@ async function toggleAdmin(user_id) {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         "user_id": user_id,
-                        "message": `You have been ${data.data ? 'granted' : 'removed from'} admin role`
+                        "message": `<span class='fw-bold btn bg-light border m-0'> <i class='fas fa-bullhorn text-success'></i> Role update</span> ${data.data ? 'Congratulation' : ''} You have been ${data.data ? 'granted' : 'removed from'} admin role`
                     })
                 }); 
 
@@ -299,7 +299,7 @@ socket.on("user_online", (data) => {
     online_users = data
     document.getElementById('online_users_nbr').textContent = online_users.length
     online_users.map(user => {
-        document.getElementById(`user${user}`).innerHTML = `<span class='btn ${ user == CURRENT_USER_ID ? 'btn-warning' : 'btn-success'} px-2 rounded-pill'>${ user == CURRENT_USER_ID ? 'You' : 'Online'}</span>`
+        document.getElementById(`user${user}`).innerHTML = `<span class='btn ${ user == CURRENT_USER_ID ? 'btn-warning' : 'btn-success'} px-2 rounded-pill online'>${ user == CURRENT_USER_ID ? 'You' : 'Online'}</span>`
     })
 });
 
@@ -308,7 +308,7 @@ socket.on("user_offline", (data) => {
     document.getElementById(`user${data.disconnected}`).innerHTML = '';
     document.getElementById('online_users_nbr').textContent = online_users.length;
     online_users.map(user => {
-        document.getElementById(`user${user}`).innerHTML = `<span class='btn ${ user == CURRENT_USER_ID ? 'btn-warning' : 'btn-success'} px-2 rounded-pill'>${ user == CURRENT_USER_ID ? 'You' : 'Online'}</span>`
+        document.getElementById(`user${user}`).innerHTML = `<span class='btn ${ user == CURRENT_USER_ID ? 'btn-warning' : 'btn-success'} px-2 rounded-pill online'>${ user == CURRENT_USER_ID ? 'You' : 'Online'}</span>`
     })
 });
 

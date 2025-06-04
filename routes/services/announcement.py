@@ -24,7 +24,7 @@ def announcement(app, database, socketio):
         if not users:
             return jsonify({'error': 'No user on the system'}), 404
         
-        announcement_message = f"{announcement_subject}: {announcement}"
+        announcement_message = f"<span class='fw-bold btn bg-light border m-0'>{announcement_subject}</span> {announcement}"
 
         for user in users:
           user_id = user.user_id

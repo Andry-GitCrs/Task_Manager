@@ -845,7 +845,7 @@ socket.on('new_notification', (data) => {
         `;
         dropdownMenu?.insertAdjacentHTML('afterbegin', newNotification);
 
-        showNotification('success', "You received a new notification: " + data.message);
+        showNotification('success', "You received a new notification: ");
     } else {
         console.warn('Notification received for a different user:', data.user_id); // Debug: Warn if the notification is for another user
     }

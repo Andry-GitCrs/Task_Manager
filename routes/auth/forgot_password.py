@@ -24,7 +24,7 @@ def forgot_password(app, database):
                     user.password = new_password
                     user.updated_at = datetime.utcnow()
                     new_notification = Notification(
-                        message = 'Your password was updated',
+                        message = "<span class='fw-bold btn bg-light border m-0'> <i class='fas fa-shield text-warning'></i> Security update </span> Your password was updated",
                         user_id = user.user_id
                     )
                     db.session.add(new_notification)
