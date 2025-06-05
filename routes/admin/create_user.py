@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 def create_user(app, database):
     db = database["db"]
     User = database["tables"]["User"]
+    List =  database["tables"]["List"]
 
     @app.route('/admin/adduser', methods = ['POST'])
     @login_required
@@ -28,6 +29,8 @@ def create_user(app, database):
                 if bcrypt.check_password_hash(password, confirmation_password):
                     user = User(email = email, password = password, admin = admin_privilege)
                     db.session.add(user)
+                    db.session.commit()
+                    db.session.add( List(list_name = "Personal", user_id = user.user_id) )
                     db.session.commit()
                     user = {
                         "user_id": user.user_id,

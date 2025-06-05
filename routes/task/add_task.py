@@ -6,6 +6,7 @@ def add_task(app, database):
     db = database["db"]
     Task = database["tables"]["Task"]
     Subtask = database["tables"]["Subtask"]
+    List =  database["tables"]["List"]
 
     @app.route('/api/user/addTask', methods=['POST'])
     @login_required
@@ -91,4 +92,5 @@ def add_task(app, database):
             return jsonify({'error': 'Missing required fields'}), 400
         except Exception as e:
             db.session.rollback()
+            print(e)
             return jsonify({"error": f"An error occurred"}), 500

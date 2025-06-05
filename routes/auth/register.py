@@ -5,6 +5,7 @@ def register(app, database):
     db = database["db"]
     User = database["tables"]["User"]
     Notification = database["tables"]["Notification"]
+    List =  database["tables"]["List"]
 
     @app.route('/auth/register', methods = ['POST'])
     def create_user():
@@ -23,7 +24,7 @@ def register(app, database):
                 return jsonify({"error": "Email already taken"}), 400 # User already registered
             
             if bcrypt.check_password_hash(password, confirmation_password) and not suspended:
-                greeting = "<span class='fw-bold btn bg-light border m-0'>💁‍♀️Tips</span> Hi, welcome to <b>Task Manager</b>, you're on the right APP to manage your Task. Please visit the <a class='text-primary' href='/dashboard/help'>guide</a> page before starting using the app, thank you. Don't hesitate to <a class='text-primary' href='/dashboard/help#contact-us'>contact us</a> if needed"
+                greeting = "<span class='fw-bold btn bg-light border m-0'>💁‍♀️Tips</span> Hi, welcome to <b>Task Manager</b>, you're on the right APP to manage your Task. Please visit the <a class='text-primary' href='/dashboard/help'>guide</a> page before starting using the app. Don't hesitate to <a class='text-primary' href='/dashboard/help#contact-us'>contact us</a> if needed"
                 adminMessage = """
                                 <span class='fw-bold btn bg-light border m-0'>
                                     <i class="fas fa-trophy text-warning me-1"></i> Congratulation
@@ -43,6 +44,7 @@ def register(app, database):
                     db.session.add(notification_1)
 
                 db.session.add(notification)
+                db.session.add( List(list_name = "Personal", user_id = user.user_id) )
                 db.session.commit()
                 return jsonify({"message": f"User {email} created successfully"}), 201 # Save user
                 
