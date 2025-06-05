@@ -32,7 +32,7 @@ def connect(app):
     with app.app_context():
         User = user_model.userModel(db)
         Category = task_category_model.categoryModel(db, User)
-        Task = task_model.taskModel(db, User)
+        Task = task_model.taskModel(db, User, Category)
         Subtask = subtask_model.subtaskModel(db, Task)
         Notification = notification_model.notificationModel(db, User)
         db.create_all()
@@ -44,6 +44,7 @@ def connect(app):
             "User": User,
             "Task": Task,
             "Subtask": Subtask,
-            "Notification": Notification
+            "Notification": Notification,
+            "Category": Category
         }
     }

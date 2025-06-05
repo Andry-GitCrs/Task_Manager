@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 
-def taskModel(db, User):
+def taskModel(db, User, Category):
     class Task(db.Model):
         __tablename__ = 'tasks'
 
@@ -17,8 +17,10 @@ def taskModel(db, User):
         stat = Column(Boolean, default=True)
         finished = Column(Boolean, default=False)
         user_id = Column(Integer, ForeignKey('users.user_id', ondelete='CASCADE'), nullable=False)
+        category_id = Column(Integer, ForeignKey('category.category_id', ondelete='CASCADE'), nullable=False)
 
         user = relationship("User", back_populates="tasks")
+        category = relationship("Category", back_populates="tasks")
 
         def deactivate(self):
             self.stat = False
@@ -30,5 +32,6 @@ def taskModel(db, User):
             self.finished = False
 
     User.tasks = relationship("Task", back_populates="user", cascade="all, delete-orphan")
+    Category.tasks = relationship("Task", back_populates="category", cascade="all, delete-orphan")
 
     return Task
