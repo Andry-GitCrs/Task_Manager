@@ -830,6 +830,9 @@ socket.on('new_notification', (data) => {
 
         // Add the new notification to the dropdown menu
         const dropdownMenu = document.querySelector('.dropdown-menu');
+        if (dropdownMenu.innerHTML == '<span class="">No notification yet</span>') {
+            dropdownMenu.innerHTML = '';
+        }
         const newNotification = `
             <li id="notification${data.notification_id}" class="list-group-item border-0 px-3 py-2 rounded-3 mb-2 shadow-sm">
                 <div class="d-flex justify-content-between align-items-center">
@@ -860,11 +863,17 @@ const fetchNotifications = async () => {
         });
 
         if (response.ok) {
+            // Populate the dropdown menu with notifications
+            const dropdownMenu = document.querySelector('.dropdown-menu');
             const responseData = await response.json();
             const notifications = responseData.data;
 
-            // Populate the dropdown menu with notifications
-            const dropdownMenu = document.querySelector('.dropdown-menu');
+            if (notifications.length == 0) {
+                dropdownMenu.style.textAlign = 'center'
+                dropdownMenu.innerHTML = '<span class="">No notification yet</span>'
+                return
+            } 
+
             dropdownMenu.innerHTML = ''; // Clear existing notifications
             notifications.forEach(notification => {
                 const notificationItem = `
@@ -910,8 +919,15 @@ async function deleteNotification(notificationId) {
             if (notificationItem) {
                 notificationItem.remove();
                 const badge = document.querySelector('.dropdown .badge.bg-success');
+                const dropdownMenu = document.querySelector('.dropdown-menu');
                 let count = parseInt(badge.textContent);
                 badge.textContent = count - 1;
+                if (count - 1 == 0) {
+                    dropdownMenu.style.textAlign = 'center'
+                    dropdownMenu.innerHTML = '<span class="">No notification yet</span>'
+                    return
+                }
+
             }
 
         } else {

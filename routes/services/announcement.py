@@ -15,7 +15,7 @@ def announcement(app, database, socketio):
 
         data = request.get_json()
         announcement_subject = data.get('announcement_subject')
-        announcement = data.get('announcement')
+        announcement = data.get('announcement').strip()
 
         if not announcement_subject or not announcement:
             return jsonify({'error': 'All fields are required'}), 400
@@ -26,21 +26,28 @@ def announcement(app, database, socketio):
         
         announcement_message = f"<span class='fw-bold btn bg-light border m-0'>{announcement_subject}</span> {announcement}"
 
-        for user in users:
-          user_id = user.user_id
-          # Store the notification in the database
-          new_notification = Notification(
-              message = announcement_message,
-              user_id = user_id
-          )
-          db.session.add(new_notification)
-          db.session.commit()
 
-          socketio.emit('new_notification', {
-              'message': announcement_message,
-              'user_id': user_id,
-              "created_at": new_notification.created_at.strftime('%Y-%m-%d %H:%M'),
-              "notification_id": new_notification.id
-          }, to=f'user_{user_id}')
+        for user in users:
+            user_id = user.user_id
+            # Store the notification in the database
+            formatted_announcement_message = announcement_message
+            if '#tag' in announcement_message:
+                formatted_announcement_message = announcement_message.replace('#tag', user.email.split('@')[0])
+
+            print("formatted_announcement_message : ", formatted_announcement_message)
+                
+            new_notification = Notification(
+                message = formatted_announcement_message,
+                user_id = user_id
+            )
+            db.session.add(new_notification)
+            db.session.commit()
+
+            socketio.emit('new_notification', {
+                'message': formatted_announcement_message,
+                'user_id': user_id,
+                "created_at": new_notification.created_at.strftime('%Y-%m-%d %H:%M'),
+                "notification_id": new_notification.id
+            }, to=f'user_{user_id}')
 
         return jsonify({'message': 'Notification sent successfully'}), 200

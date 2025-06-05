@@ -796,7 +796,7 @@ nav li a{
 }
 
 .nofitication-container{
-    max-height: 200px;
+    max-height: 400px;
     width: 400px!important;
     overflow-y: auto;
 }

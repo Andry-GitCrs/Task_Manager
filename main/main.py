@@ -18,19 +18,12 @@ from routes import use_app_route
 app = Flask(__name__, template_folder = f'{script_dir}/../templates', static_folder = f'{script_dir}/../static')
 app.secret_key = os.getenv("SECRET_KEY")
 
-# Login Manager config
-login_manager = LoginManager()
+login_manager = LoginManager() # Login Manager config
 login_manager.login_view = 'authentication'
 login_manager.init_app(app)
-
-# Initialize SocketIO
-socketio = SocketIO(app)
-
-# Database Connection
-database = pg_connexion.connect(app)
-
-# Route
-use_app_route(app, database, login_manager, socketio)
+socketio = SocketIO(app) # Initialize SocketIO
+database = pg_connexion.connect(app) # Database Connection
+use_app_route(app, database, login_manager, socketio) # Route
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, port=5001)
