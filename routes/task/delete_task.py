@@ -6,6 +6,7 @@ def delete_task(app, database):
     db = database["db"]
     Task = database["tables"]["Task"]
     Subtask = database["tables"]["Subtask"]
+    List =  database["tables"]["List"]
 
     @app.route('/api/user/deleteTask', methods=['DELETE'])
     @login_required

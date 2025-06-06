@@ -1,7 +1,7 @@
 let CURRENT_USER_ID = undefined;
+let ALL_TASKS = [];
 
 $(document).ready(function() {
-    let addTask = null;
     let subTaskList = [];
     let taskNbr = 0;
     let subTaskNbr = 1;
@@ -50,6 +50,7 @@ $(document).ready(function() {
         let endDate = $("#endDate").val();
         let bgColor = $("#bg-color-piker").val();
         let description = $("#description").val().trim();
+        let list_id = $("#list_id").val();
 
         if (title.trim() !== "" && startDate !== "" && endDate !== "") {
             const task = {
@@ -58,7 +59,8 @@ $(document).ready(function() {
                 "task_end_date": endDate,
                 "task_background_color": bgColor,
                 "description": description || "None",
-                "subtasks": [...subTaskList]
+                "subtasks": [...subTaskList],
+                "list_id": list_id
             };
 
             $(".loading").css("display", 'inline');
@@ -74,6 +76,7 @@ $(document).ready(function() {
                 if (response.ok) {  // Response with status code 200
                     const response_data = responseData.data;
 
+                    const list_id = response_data.list_id;
                     const id = response_data.task_id;
                     const title = response_data.title;
                     const start_date = response_data.start_date;
@@ -82,7 +85,18 @@ $(document).ready(function() {
                     const description = response_data.description;
                     const bg_color = response_data.bg_color;
 
-                    addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
+                    ALL_TASKS.push({
+                        "list_id": list_id,
+                        "task_id": id,
+                        "title": title,
+                        "start_date": start_date,
+                        "end_date": end_date,
+                        "subtasks": subtasks,
+                        "description": description,
+                        "bg_color": bg_color
+                    })
+
+                    addNewTask(list_id, id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
 
                     $(".task-list-container").html("<span id='subTaskIndicator'>No subtask added </br> all subtask will appear here</span>");
 
@@ -343,7 +357,7 @@ async function editSubTask(id, subtask_id) {
 const fetchTasks = async () => {
     $(".loading").css("display", 'inline')
     try {
-        const response = await fetch("/api/user/getTask", {
+        const response = await fetch(`/api/user/getTask`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -355,32 +369,141 @@ const fetchTasks = async () => {
         if (response.ok) {
             CURRENT_USER_ID = responseData.user_id;
             responseData = responseData.data;
-            $("#taskNbr").text(responseData.length); // Set task count in UI
+            ALL_TASKS = responseData; 
+            renderTasks();
             showNotification("success", `You have ${responseData.length} task${responseData.length > 1 ? "s" : ""} to do`);
-
-            responseData.forEach(task => {
-                const id = task.task_id;
-                const title = task.title;
-                const start_date = task.start_date;
-                const end_date = task.end_date;
-                const subtasks = task.subtasks;
-                const description = task.description;
-                const bg_color = task.bg_color;
-                addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
-            });
+            $(".loading").css("display", 'none')
             return responseData;
         } else {
-            showNotification("error", responseData.message);
+            showNotification("error", responseData.error);
             CURRENT_USER_ID = responseData.user_id;
         }
     } catch (error) {
+        console.error(error.message)
         showNotification("error", error.message);
     }
     $(".loading").css("display", 'none')
 };
 
+const fetchList = async () => {
+    $(".loading").css("display", 'inline');
+    try {
+        const response = await fetch("/api/user/lists", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        let responseData = await response.json();
+
+        if (response.ok) {
+            responseData = responseData.data;
+            const selectListContainer = document.getElementById('list_id');
+            selectListContainer.innerHTML = '';
+            const listContainer = document.getElementById('list-container');
+
+            // Append lists and checkboxes
+            responseData.forEach(list => {
+                const listEl = document.createElement('li');
+                const opt = document.createElement('option');
+                opt.value = list.list_id;
+                opt.textContent = list.list_name;
+                selectListContainer.append(opt);
+
+                listEl.classList = 'my-2 p-1 px-3 d-flex justify-content-between align-items-center';
+                listEl.innerHTML = `
+                    <div class="form-check d-flex align-items-center gap-2">
+                        <input 
+                            type="checkbox" 
+                            class="form-check-input mt-0 list-checkbox" 
+                            id="listCheck${list.list_id}" 
+                            ${list.list_name == 'Personal' ? 'checked' : ''}
+                        >
+                        <label class="form-check-label mb-0" for="listCheck${list.list_id}">
+                            <a class="text-dark text-decoration-none">${list.list_name}</a>
+                        </label>
+                    </div>
+                `;
+                listContainer.appendChild(listEl);
+            });
+
+            attachCheckboxListeners();
+
+            // Find the Personal list ID and render tasks for it immediately
+            const personalList = responseData.find(list => list.list_name === 'Personal');
+            if (personalList) {
+                renderTasks([String(personalList.list_id)]);
+            } else {
+                // If Personal list doesn't exist, render all tasks or handle as you wish
+                renderTasks(getCheckedLists()); // fallback to whatever is checked
+            }
+        } else {
+            showNotification("error", responseData.message);
+        }
+    } catch (error) {
+        showNotification("error", error.message);
+    }
+    $(".loading").css("display", 'none');
+};
+
+function attachCheckboxListeners() {
+    const checkboxes = document.querySelectorAll('.list-checkbox');
+
+    const checkAllStatus = () => {
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+    };
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+            checkAllStatus();
+            renderTasks();
+        });
+    });
+}
+
+function getCheckedLists() {
+    const checkboxes = document.querySelectorAll('.list-checkbox');
+    const checked = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.id.replace('listCheck', ''));
+    return checked;
+}
+
 // Call the function to fetch tasks
+fetchList()
 fetchTasks()
+
+function renderTasks(selectedLists = null) {
+    if (!selectedLists) {
+        selectedLists = getCheckedLists();
+    }
+
+    const container = document.getElementById('allTaskContainer');
+
+    container.innerHTML = `
+        <div class="row justify-content-start" id="allTaskContainer">
+            <!--Create task-->
+            <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
+                <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                    <i class="text-dark fas fa-add addSing"></i>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const filteredTasks = ALL_TASKS.filter(task => selectedLists.includes(String(task.list_id)));
+
+    $("#taskNbr").text(filteredTasks.length);
+
+    filteredTasks.forEach(task => {
+        const {list_id, task_id, title, start_date, end_date, subtasks, description, bg_color } = task;
+        addNewTask(list_id, task_id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
+    });
+
+    // Reattach modal event after rendering
+    $('.open-modal').on('click', () => {
+        $('.overlay, .modal').fadeIn();
+    });
+}
 
 const formatDate = (date) => {
     const d = new Date(date);
@@ -399,7 +522,7 @@ const formatDate = (date) => {
 };
 
 // Create display card
-function addNewTask(id, title, start_date, end_date, description, bg_color,  subtasks){
+function addNewTask(list_id, id, title, start_date, end_date, description, bg_color,  subtasks){
     let taskContainer = $(`<div class="col-4 p-1 taskBox" id="task${id}"></div>`)
     taskContainer.html(`    
         <div 
@@ -416,7 +539,7 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
             <h3 class="text-dark task-title">
                 ${title}
                 <div class='d-flex justify-content-center align-items-center gap-3 bg-transparent'>
-                    <i class="fas fa-pen text-success task-icon" onclick="update_task('${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
+                    <i class="fas fa-pen text-success task-icon" onclick="update_task('${list_id}','${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
                     <i class="fas fa-add text-success task-icon" onclick="addSubTask('${id}', '${title}')"></i> 
                     <i class="fas fa-trash-alt text-danger task-icon" onclick="removeTask('${id}')"></i>
                 </div>
@@ -503,7 +626,6 @@ function showNotification(type, message) {
         }, 500); // Match transition duration
     }, 5000);
 }
-
 
 // Check Subtask
 async function check(id){
@@ -606,7 +728,6 @@ var verify = async () => {
 }
 
 verify()
-
 
 // Find task
 async function findTaskk(){
@@ -746,9 +867,10 @@ function convertToISO(dateStr) {
     return `${year}-${month}-${paddedDay}`;
   }
 
-function update_task(task_id, title, startDate, endDate, bg_color, description){
+function update_task(list_id, task_id, title, startDate, endDate, bg_color, description){
     $('.overlay, .modal').fadeIn()
     $('.task-form').attr('id', 'update_task_form')
+    $('#list_id').val(list_id)
     $("#title").val(title)
     $("#startDate").val(convertToISO(startDate))
     $("#endDate").val(convertToISO(endDate))

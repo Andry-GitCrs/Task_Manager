@@ -19,6 +19,7 @@ def add_task(app, database):
         task_background_color = data['task_background_color']
         description = data['description'] or "None"
         subtasks = data['subtasks']
+        list_id = data['list_id']
         date_stat = True
 
         subtasksArray = []
@@ -35,21 +36,28 @@ def add_task(app, database):
         
         try:
 
-            newTask = Task.query.filter_by(task_title = task_title, user_id = user_id, stat = True).first()
+            newTask = Task.query.filter_by(task_title = task_title, user_id = user_id, stat = True, list_id = list_id).first()
+            list = List.query.filter_by(list_id = list_id, user_id = user_id, stat = True).first()
 
             if newTask:
                 return jsonify({
-                    "error": "Task already exists"
+                    "error": "Task already exists on this list"
                 }), 400
+            if not list:
+                return jsonify({
+                    "error": "List not found"
+                }), 404
+        
 
             if task_title and date_stat and task_background_color: ## Add task to DB
                 task = Task(
-                    user_id=user_id,
-                    task_title=task_title,
-                    task_start_date=task_start_date,
-                    task_end_date=task_end_date,
-                    task_background_color=task_background_color,
-                    description=description
+                    user_id = user_id,
+                    task_title = task_title,
+                    task_start_date = task_start_date,
+                    task_end_date = task_end_date,
+                    task_background_color = task_background_color,
+                    description = description,
+                    list_id = list_id
                 )
                 db.session.add(task)
                 db.session.commit()
@@ -61,7 +69,8 @@ def add_task(app, database):
                     "end_date": task.task_end_date,
                     "description": task.description,
                     "bg_color": task.task_background_color,
-                    "subtasks": subtasksArray
+                    "subtasks": subtasksArray,
+                    "list_id": task.list_id
                 }
 
                 if len(subtasks) > 0:

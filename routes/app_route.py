@@ -5,6 +5,7 @@ from .user import use_user_route
 from .task import use_task_route
 from .subtask import use_subtask_route
 from .services import use_services_route
+from .list import use_list_route
 
 def use_app_route(app, database, login_manager, socketio):
   use_user_route(app, database, login_manager)
@@ -13,4 +14,5 @@ def use_app_route(app, database, login_manager, socketio):
   use_auth_route(app, database)
   use_task_route(app, database)
   use_subtask_route(app, database)
+  use_list_route(app, database)
   use_public_route(app)
