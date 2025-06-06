@@ -26,4 +26,4 @@ database = pg_connexion.connect(app) # Database Connection
 use_app_route(app, database, login_manager, socketio) # Route
 
 if __name__ == "__main__":
-    socketio.run(app, debug = True, port = 5001)
+    socketio.run(app, debug = True, port = 5001, host='0.0.0.0')

@@ -11,6 +11,7 @@ def add_list(app, database):
     try:
       data = request.get_json()
       list_name = data['list_name'].strip()
+      list_description = data['list_description'].strip()
       user_id = current_user.user_id
       
       existing_user = User.query.filter_by(user_id = user_id).first()
@@ -31,12 +32,19 @@ def add_list(app, database):
           "error": "List already exist"
         }), 400
       
-      list = List(list_name = list_name, user_id = user_id )
+      list = List(list_name = list_name, user_id = user_id, description = list_description)
       db.session.add(list)
       db.session.commit()
 
+      data = {
+        "list_id": list.list_id,
+        "list_name": list.list_name,
+        "description": list.description
+      }
+
       return jsonify({
-        "message": "List created successfully"
+        "message": "List created successfully",
+        "list": data
       }), 201
     except Exception as e:
       print(str(e))

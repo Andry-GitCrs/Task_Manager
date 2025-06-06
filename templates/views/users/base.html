@@ -58,14 +58,27 @@
             </ul>
         </div>
         <div class="">
-            <h4 class="text-dark fw-bold" >LISTS</h4>
+            <h4 class="text-dark fw-bold d-flex justify-content-between align-items-center" >
+                LIST
+                <button class="btn my-2 p-1 px-3 border d-inline" id="addNewList">
+                    <i class="text-success fas fa-add"></i>
+                    Add new list
+                </button>            
+            </h4>
+            <div class="position-relative mt-2" id="addListDropdown">
+                <div class="p-3" id="addListForm" style="display: none;">
+                    <form name="listForm" id="listForm" onsubmit="return addNewList(event)">
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="listName"  placeholder="Enter list name">
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" id="listDescription"  placeholder="Enter list description (optional)">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Create</button>
+                    </form>
+                </div>
+            </div>
             <ul class="p-2 list-container rounded-3" id="list-container">
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
-                    <div>
-                        <i class="text-success fas fa-add"></i>
-                        <a  class="text-dark text-decoration-none" href="#">Add new list</a>
-                    </div>
-                </li>
             </ul>
         </div>
         <div class="my-2">
@@ -116,16 +129,17 @@
                 Add new task
             </button>
             {% block additionnal %}{% endblock%}
-            <div class="dropdown position-relative"  data-bs-auto-close="outside">
+            <div class="dropdown position-relative" data-bs-auto-close="outside">
                 <button class="btn dropdown-toggle position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false"  data-bs-auto-close="outside">
                     <i class="fas fa-bell text-secondary me-2"></i> Notification
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
-                        0
-                        <span class="visually-hidden">unread messages</span>
+                    0
+                    <span class="visually-hidden">unread messages</span>
                     </span>
                 </button>
                 <ul class="dropdown-menu nofitication-container px-2" data-bs-auto-close="outside">
-                </ul>   
+                    <li>No notification</li>
+                </ul>
             </div>
             
             <img class="loading-dash loading mx-3" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
@@ -215,6 +229,10 @@
            }
              
         })
+        $('#addNewList').on('click', function () {
+            const dropdown = document.getElementById('addListForm');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
     </script>
 </body>
 </html>

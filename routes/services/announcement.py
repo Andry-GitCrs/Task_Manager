@@ -33,8 +33,6 @@ def announcement(app, database, socketio):
             formatted_announcement_message = announcement_message
             if '#tag' in announcement_message:
                 formatted_announcement_message = announcement_message.replace('#tag', user.email.split('@')[0])
-
-            print("formatted_announcement_message : ", formatted_announcement_message)
                 
             new_notification = Notification(
                 message = formatted_announcement_message,

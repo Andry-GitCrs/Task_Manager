@@ -479,30 +479,32 @@ function renderTasks(selectedLists = null) {
 
     const container = document.getElementById('allTaskContainer');
 
-    container.innerHTML = `
-        <div class="row justify-content-start" id="allTaskContainer">
-            <!--Create task-->
-            <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
-                <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
-                    <i class="text-dark fas fa-add addSing"></i>
+    if (container) {
+            container.innerHTML = `
+            <div class="row justify-content-start" id="allTaskContainer">
+                <!--Create task-->
+                <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
+                    <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                        <i class="text-dark fas fa-add addSing"></i>
+                    </div>
                 </div>
             </div>
-        </div>
-    `;
+        `;
 
-    const filteredTasks = ALL_TASKS.filter(task => selectedLists.includes(String(task.list_id)));
+        const filteredTasks = ALL_TASKS.filter(task => selectedLists.includes(String(task.list_id)));
 
-    $("#taskNbr").text(filteredTasks.length);
+        $("#taskNbr").text(filteredTasks.length);
 
-    filteredTasks.forEach(task => {
-        const {list_id, task_id, title, start_date, end_date, subtasks, description, bg_color } = task;
-        addNewTask(list_id, task_id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
-    });
+        filteredTasks.forEach(task => {
+            const {list_id, task_id, title, start_date, end_date, subtasks, description, bg_color } = task;
+            addNewTask(list_id, task_id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
+        });
 
-    // Reattach modal event after rendering
-    $('.open-modal').on('click', () => {
-        $('.overlay, .modal').fadeIn();
-    });
+        // Reattach modal event after rendering
+        $('.open-modal').on('click', () => {
+            $('.overlay, .modal').fadeIn();
+        });
+    }
 }
 
 const formatDate = (date) => {
@@ -1062,3 +1064,63 @@ async function deleteNotification(notificationId) {
 
 // Call fetchNotifications on page load
 fetchNotifications();
+
+// Add new list
+async function addNewList(event) {
+    event.preventDefault();
+
+    const listName = document.getElementById('listName').value.trim();
+    const listDescription = document.getElementById('listDescription').value.trim();
+    
+    $(".loading").css("display", 'inline')
+    try{
+        const response = await fetch(`/api/user/lists/add`,{
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "list_name": listName,
+                "list_description": listDescription,
+            })
+        });
+        const data = await response.json();
+        if(response.ok){
+            list = data.list
+            showNotification("success", data.message)
+            const listContainer = document.getElementById('list-container');
+            const listEl = document.createElement('li');
+            listEl.classList = 'my-2 p-1 px-3 d-flex justify-content-between align-items-center';
+            listEl.innerHTML = `
+                <div class="form-check d-flex align-items-center gap-2">
+                    <input 
+                        type="checkbox" 
+                        class="form-check-input mt-0 list-checkbox" 
+                        id="listCheck${list.list_id}" 
+                        ${list.list_name == 'Personal' ? 'checked' : ''}
+                    >
+                    <label class="form-check-label mb-0" for="listCheck${list.list_id}">
+                        <a class="text-dark text-decoration-none">${list.list_name}</a>
+                    </label>
+                </div>
+            `;
+            listContainer.appendChild(listEl);
+            const opt = document.createElement('option');
+            opt.value = list.list_id;
+            opt.textContent = list.list_name;
+            const selectListContainer = document.getElementById('list_id');
+            selectListContainer.append(opt);
+
+            attachCheckboxListeners();
+
+            event.target.reset();
+        }else{
+            showNotification("error", data.error)
+        }
+    } catch (error) {
+        showNotification("error", error)
+    }    
+    $(".loading").css("display", 'none')
+
+    return false;
+}
