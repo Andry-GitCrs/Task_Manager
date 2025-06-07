@@ -16,6 +16,7 @@ def update_task(app, database):
             task_end_date = data['task_end_date']
             task_background_color = data['task_background_color']
             description = data['description'] or "None"
+            list_id = data['list_id']
             user_id = current_user.user_id
 
             task = db.session.query(Task).filter_by(task_id = task_id).first()
@@ -27,7 +28,8 @@ def update_task(app, database):
                 Task.task_title == task_title,
                 Task.user_id == user_id,
                 Task.stat == True,
-                Task.task_id != task_id
+                Task.task_id != task_id,
+                Task.list_id == list_id
             ).first()
 
             if newTask:
@@ -53,6 +55,7 @@ def update_task(app, database):
             task.task_end_date = task_end_date
             task.task_background_color = task_background_color
             task.description = description
+            task.list_id = list_id
             task.updated_at = datetime.utcnow()
             db.session.commit()
 

@@ -7,7 +7,14 @@
 {% endblock %}
 {% block content %}
     <div class="container py-3">
-        <div class="row justify-content-start" id="todayTaskContainer"></div>
+        <div class="row justify-content-start" id="todayTaskContainer">
+            <!--Create task-->
+            <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
+                <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                    <i class="text-dark fas fa-add addSing"></i>
+                </div>
+            </div>
+        </div>  
     </div>
 {% endblock %}
 {% block script %}

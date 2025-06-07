@@ -23,7 +23,7 @@ def get_today_task(app, database):
             subtasks = [
                 {
                     "subtask_id": sub.subtask_id,
-                    "title": sub.subtask_title,
+                    "subtask_title": sub.subtask_title,
                     "finished": sub.finished
                 }
                 for sub in task.subtasks if sub.stat

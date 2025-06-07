@@ -1,5 +1,6 @@
 let CURRENT_USER_ID = undefined;
 let ALL_TASKS = [];
+let ALL_TODAYS_TASKS = [];
 let ALL_LIST = [];
 
 $(document).ready(function() {
@@ -411,33 +412,41 @@ const fetchList = async () => {
                 opt.textContent = list.list_name;
                 selectListContainer.append(opt);
 
-                listEl.classList = 'my-2 p-1 px-3 d-flex justify-content-between align-items-center';
+                listEl.classList = 'my-2 p-1 px-3';
                 listEl.innerHTML = `
-                    <div class="form-check d-flex align-items-center gap-2">
-                        <input 
-                            type="checkbox" 
-                            class="form-check-input mt-0 list-checkbox" 
-                            id="listCheck${list.list_id}" 
-                            ${list.list_name == 'Personal' ? 'checked' : ''}
-                        >
-                        <label class="form-check-label mb-0" for="listCheck${list.list_id}">
-                            <a class="text-dark text-decoration-none">${list.list_name}</a>
-                        </label>
+                    <div class="form-check d-flex align-items-center justify-content-between gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <input 
+                                type="checkbox" 
+                                class="form-check-input mt-0 list-checkbox" 
+                                id="listCheck${list.list_id}" 
+                                ${list.list_name == 'Personal' ? 'checked' : ''}
+                            >
+                            <label class="form-check-label mb-0" for="listCheck${list.list_id}">
+                                <a class="text-dark text-decoration-none">${list.list_name}</a>
+                            </label>
+                        </div>
+                        <span>${list.task_nbr}</span>
                     </div>
                 `;
                 listContainer.appendChild(listEl);
             });
-
             attachCheckboxListeners();
+            
 
             // Find the Personal list ID and render tasks for it immediately
             const personalList = responseData.find(list => list.list_name === 'Personal');
             if (personalList) {
                 renderTasks([String(personalList.list_id)]);
             } else {
-                // If Personal list doesn't exist, render all tasks or handle as you wish
-                renderTasks(getCheckedLists()); // fallback to whatever is checked
+                renderTasks(getCheckedLists()); 
             }
+            document.getElementById('listCheckAll').addEventListener('click', () => {
+                const checkboxes = document.querySelectorAll('.list-checkbox');
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                checkboxes.forEach(cb => cb.checked = !allChecked);
+            });
+
         } else {
             showNotification("error", responseData.message);
         }
@@ -479,7 +488,8 @@ function renderTasks(selectedLists = null) {
         selectedLists = getCheckedLists();
     }
 
-    const container = document.getElementById('allTaskContainer');
+    const container = document.getElementById('allTaskContainer'); // User dashboard
+    const todayContainer = document.getElementById('todayTaskContainer'); // Today dashboard
 
     if (container) {
             container.innerHTML = `
@@ -496,6 +506,28 @@ function renderTasks(selectedLists = null) {
         const filteredTasks = ALL_TASKS.filter(task => selectedLists.includes(String(task.list_id)));
 
         $("#taskNbr").text(filteredTasks.length);
+
+        filteredTasks.forEach(task => {
+            const {list_id, task_id, title, start_date, end_date, subtasks, description, bg_color } = task;
+            addNewTask(list_id, task_id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
+        });
+
+        // Reattach modal event after rendering
+        $('.open-modal').on('click', () => {
+            $('.overlay, .modal').fadeIn();
+        });
+    } else if (todayContainer) {
+        todayContainer.innerHTML = `
+            <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
+                <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                    <i class="text-dark fas fa-add addSing"></i>
+                </div>
+            </div>
+        `;
+
+        const filteredTasks = ALL_TODAYS_TASKS.filter(task => selectedLists.includes(String(task.list_id)));
+
+        $("#todayTaskNbr").text(filteredTasks.length);
 
         filteredTasks.forEach(task => {
             const {list_id, task_id, title, start_date, end_date, subtasks, description, bg_color } = task;
@@ -538,7 +570,7 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
     taskContainer.html(`    
         <div 
             class=" h-100 p-2 rounded-4 d-flex flex-column justify-content-start position-relative"
-            style='background-color: ${bg_color}' 
+            style="background: linear-gradient(135deg, ${bg_color}99,rgb(211, 213, 215));"
             title="${(description !== 'None')?description:'No description'}"
         >
             <div class="position-relative mb-2 bg-transparent w-100">
@@ -549,8 +581,8 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
                     ${end_date}
                 </span>
             </div>
-            <span class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
-                <i class="fa-solid fa-bookmark text-secondary"></i>
+            <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
+                <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
                 ${list_name}
             </span>
             <h3 class="text-dark task-title">
@@ -565,7 +597,7 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
             ${
                 subtasks.map( subtask => `
                     <li 
-                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
+                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id} rounded-pill px-3 py-2' 
                         id='subtask${subtask.subtask_id}'
                         style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
                         ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
@@ -598,7 +630,11 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
             </ul>
         </div>
     `)
-    $(".task").after(taskContainer)
+    if ($(".task")) {
+        $(".task").after(taskContainer)
+    }else {
+        alert("No task container found")
+    }
 }
 
 //Notification displayer
@@ -815,7 +851,7 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
     const card = `   
         <div 
             class=" h-100 p-2 rounded-4 d-flex flex-column justify-content-start position-relative"
-            style='background-color: ${bg_color}' 
+            style="background: linear-gradient(135deg, ${bg_color}99,rgb(211, 213, 215));"
             title="${(description !== 'None')?description:'No description'}"
         >
             <div class="position-relative mb-2 bg-transparent w-100">
@@ -826,8 +862,8 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
                     ${end_date}
                 </span>
             </div>
-            <span class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
-                <i class="fa-solid fa-bookmark text-secondary"></i>
+            <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
+                <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
                 ${list_name}
             </span>
             <h3 class="text-dark task-title">
@@ -842,7 +878,7 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
             ${
                 subtasks.map(subtask => `
                     <li 
-                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
+                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id} rounded-pill px-3 py-2'
                         id='subtask${subtask.subtask_id}'
                         style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
                         ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
@@ -850,7 +886,7 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
                         <span 
                             style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
                         > 
-                        ${subtask.title}
+                        ${subtask.subtask_title}
                         </span>
                         <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
                             <i class="fas fa-trash-alt text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
@@ -912,6 +948,7 @@ function update_task(list_id, task_id, title, startDate, endDate, bg_color, desc
 
     $("#update_task_form").on("submit", async function(e) {
         e.preventDefault()
+        let list_id = $("#list_id").val()
         let title = $("#title").val().trim()
         let startDate = $("#startDate").val()
         let endDate = $("#endDate").val()
@@ -924,7 +961,8 @@ function update_task(list_id, task_id, title, startDate, endDate, bg_color, desc
                 "task_start_date": startDate,
                 "task_end_date": endDate,
                 "task_background_color": bgColor,
-                "description": description || "None"
+                "description": description || "None",
+                "list_id": list_id
             }
     
             $(".loading").css("display", 'inline');
@@ -1080,7 +1118,6 @@ async function deleteNotification(notificationId) {
                     dropdownMenu.innerHTML = '<span class="">No notification yet</span>'
                     return
                 }
-
             }
 
         } else {
@@ -1119,18 +1156,21 @@ async function addNewList(event) {
             showNotification("success", data.message)
             const listContainer = document.getElementById('list-container');
             const listEl = document.createElement('li');
-            listEl.classList = 'my-2 p-1 px-3 d-flex justify-content-between align-items-center';
+            listEl.classList = 'my-2 p-1 px-3';
             listEl.innerHTML = `
-                <div class="form-check d-flex align-items-center gap-2">
-                    <input 
-                        type="checkbox" 
-                        class="form-check-input mt-0 list-checkbox" 
-                        id="listCheck${list.list_id}" 
-                        ${list.list_name == 'Personal' ? 'checked' : ''}
-                    >
-                    <label class="form-check-label mb-0" for="listCheck${list.list_id}">
-                        <a class="text-dark text-decoration-none">${list.list_name}</a>
-                    </label>
+                <div class="form-check d-flex align-items-center justify-content-between gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <input 
+                            type="checkbox" 
+                            class="form-check-input mt-0 list-checkbox" 
+                            id="listCheck${list.list_id}" 
+                            ${list.list_name == 'Personal' ? 'checked' : ''}
+                        >
+                        <label class="form-check-label mb-0" for="listCheck${list.list_id}">
+                            <a class="text-dark text-decoration-none">${list.list_name}</a>
+                        </label>
+                    </div>
+                    <span>${list.task_nbr}</span>
                 </div>
             `;
             listContainer.appendChild(listEl);

@@ -14,6 +14,7 @@ from datetime import date
 def use_user_route(app, database, login_manager):
   User = database["tables"]["User"]
   Task = database['tables']['Task']
+  List = database['tables']['List']
   db = database["db"]
   routes = [
     user_task_activities.fetch_task_profile,
@@ -31,10 +32,12 @@ def use_user_route(app, database, login_manager):
       today = date.today()
       today_task_nbr = Task.query.filter(Task.user_id == current_user.user_id, func.date(Task.task_end_date) == today, Task.stat == True).count()
       task_nbr = db.session.query(Task).filter_by(user_id = current_user.user_id, stat = True).count()
+      list_nbr = db.session.query(List).filter_by(user_id = current_user.user_id, stat = True).count()
 
       return {
           "today_task": today_task_nbr,
-          "task_nbr": task_nbr
+          "task_nbr": task_nbr,
+          "list_nbr": list_nbr
       }
 
   # Flask-Login User Loader
@@ -46,32 +49,59 @@ def use_user_route(app, database, login_manager):
   @app.route('/dashboard') # Dashboard
   @login_required
   def dashboard():
-      if current_user.admin:
-          current_user.stat = False
-      return render_template('views/users/dashboard.html', email = current_user.email, task_nbr = getTaskNbr()["task_nbr"], today_task_nbr = getTaskNbr()["today_task"])
+        if current_user.admin:
+            current_user.stat = False
+        return render_template('views/users/dashboard.html',
+                email = current_user.email,
+                task_nbr = getTaskNbr()["task_nbr"],
+                today_task_nbr = getTaskNbr()["today_task"],
+                list_nbr = getTaskNbr()["list_nbr"]
+            )
 
   @app.route('/dashboard/help') # Help
   @login_required
   def help():
-      return render_template('views/users/help.html', task_nbr = getTaskNbr()["task_nbr"], today_task_nbr = getTaskNbr()["today_task"])
+        return render_template('views/users/help.html',
+                email = current_user.email,
+                task_nbr = getTaskNbr()["task_nbr"],
+                today_task_nbr = getTaskNbr()["today_task"],
+                list_nbr = getTaskNbr()["list_nbr"]
+            )
 
   @app.route('/dashboard/calendar') # Calendar
   @login_required
   def calendar():
-      return render_template('views/users/calendar.html', email = current_user.email, task_nbr = getTaskNbr()["task_nbr"], today_task_nbr = getTaskNbr()["today_task"])
-
+      return render_template('views/users/calendar.html',
+                email = current_user.email,
+                task_nbr = getTaskNbr()["task_nbr"],
+                today_task_nbr = getTaskNbr()["today_task"],
+                list_nbr = getTaskNbr()["list_nbr"]
+            )
   @app.route('/dashboard/today') # Today tasks
   @login_required
   def today():
-      return render_template('views/users/today.html', email = current_user.email, task_nbr = getTaskNbr()["task_nbr"], today_task_nbr = getTaskNbr()["today_task"])
-
+      return render_template('views/users/today.html',
+                email = current_user.email,
+                task_nbr = getTaskNbr()["task_nbr"],
+                today_task_nbr = getTaskNbr()["today_task"],
+                list_nbr = getTaskNbr()["list_nbr"]
+            )
   @app.route('/dashboard/upcoming') # Upcoming tasks
   @login_required
   def upcoming():
-      return render_template('views/users/upcoming.html', email = current_user.email, task_nbr = getTaskNbr()["task_nbr"], today_task_nbr = getTaskNbr()["today_task"])
-
+      return render_template('views/users/upcoming.html',
+                email = current_user.email,
+                task_nbr = getTaskNbr()["task_nbr"],
+                today_task_nbr = getTaskNbr()["today_task"],
+                list_nbr = getTaskNbr()["list_nbr"]
+            )
 
   @app.route('/dashboard/profile') # Upcoming tasks
   @login_required
   def profile():
-      return render_template('views/users/profile.html', email = current_user.email, task_nbr = getTaskNbr()["task_nbr"], today_task_nbr = getTaskNbr()["today_task"])
+      return render_template('views/users/profile.html',
+                email = current_user.email,
+                task_nbr = getTaskNbr()["task_nbr"],
+                today_task_nbr = getTaskNbr()["today_task"],
+                list_nbr = getTaskNbr()["list_nbr"]
+            )

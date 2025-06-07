@@ -39,6 +39,7 @@ def add_list(app, database):
       data = {
         "list_id": list.list_id,
         "list_name": list.list_name,
+        "task_nbr": 0,
         "description": list.description
       }
 
