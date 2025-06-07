@@ -1,4 +1,3 @@
-
 const fetchUserData = async () => {
     document.getElementById("loading").style.display = 'inline'
     try {

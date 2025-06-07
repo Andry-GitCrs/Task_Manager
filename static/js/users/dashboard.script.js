@@ -1,5 +1,6 @@
 let CURRENT_USER_ID = undefined;
 let ALL_TASKS = [];
+let ALL_LIST = [];
 
 $(document).ready(function() {
     let subTaskList = [];
@@ -400,6 +401,7 @@ const fetchList = async () => {
             const selectListContainer = document.getElementById('list_id');
             selectListContainer.innerHTML = '';
             const listContainer = document.getElementById('list-container');
+            ALL_LIST = responseData
 
             // Append lists and checkboxes
             responseData.forEach(list => {
@@ -525,18 +527,31 @@ const formatDate = (date) => {
 
 // Create display card
 function addNewTask(list_id, id, title, start_date, end_date, description, bg_color,  subtasks){
+    let list_name  = null
+    
+    ALL_LIST.forEach(list => {
+        if( list.list_id == list_id){
+            list_name = list.list_name
+        }   
+    })
     let taskContainer = $(`<div class="col-4 p-1 taskBox" id="task${id}"></div>`)
     taskContainer.html(`    
         <div 
-            class=" h-100 p-2 rounded-3 d-flex flex-column justify-content-start"
+            class=" h-100 p-2 rounded-4 d-flex flex-column justify-content-start position-relative"
             style='background-color: ${bg_color}' 
             title="${(description !== 'None')?description:'No description'}"
         >
-            <span class="text-dark date date-range w-auto ">
-                <i class="fa-solid fa-calendar-days text-success"></i>
-                ${start_date}
-                <i class="fa-solid fa-arrow-right text-warning"></i>
-                ${end_date}
+            <div class="position-relative mb-2 bg-transparent w-100">
+                <span class="text-dark date date-range text-center w-100 d-flex justify-content-center">
+                    <i class="fa-solid fa-calendar-days text-success"></i>
+                    ${start_date}
+                    <i class="fa-solid fa-arrow-right text-warning"></i>
+                    ${end_date}
+                </span>
+            </div>
+            <span class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
+                <i class="fa-solid fa-bookmark text-secondary"></i>
+                ${list_name}
             </span>
             <h3 class="text-dark task-title">
                 ${title}
@@ -710,8 +725,6 @@ var verify = async () => {
             method: "GET",
         });
     
-        let responseData = await response.json();
-    
         if (response.ok) {
             $('._user_action').append(`
                 <li class="my-2 py-1">
@@ -792,14 +805,30 @@ $('#findTask').on('focus', function() {
 });
 
 // Task card generator
-function genTaskCard(bg_color, description, start_date, end_date, title, id, subtasks){
+function genTaskCard(list_id, bg_color, description, start_date, end_date, title, id, subtasks){
+    let list_name = null
+    ALL_LIST.forEach(list => {
+        if( list.list_id == list_id){
+            list_name = list.list_name
+        }   
+    })
     const card = `   
-        <div class="h-100 p-2 rounded-3 d-flex flex-column justify-content-start" style='background-color: ${bg_color}' title="${(description !== 'None')?description:'No description'}">
-            <span class="text-dark date date-range w-auto ">
-                <i class="fa-solid fa-calendar-days text-success"></i>
-                ${start_date}
-                <i class="fa-solid fa-arrow-right text-warning"></i>
-                ${end_date}
+        <div 
+            class=" h-100 p-2 rounded-4 d-flex flex-column justify-content-start position-relative"
+            style='background-color: ${bg_color}' 
+            title="${(description !== 'None')?description:'No description'}"
+        >
+            <div class="position-relative mb-2 bg-transparent w-100">
+                <span class="text-dark date date-range text-center w-100 d-flex justify-content-center">
+                    <i class="fa-solid fa-calendar-days text-success"></i>
+                    ${start_date}
+                    <i class="fa-solid fa-arrow-right text-warning"></i>
+                    ${end_date}
+                </span>
+            </div>
+            <span class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
+                <i class="fa-solid fa-bookmark text-secondary"></i>
+                ${list_name}
             </span>
             <h3 class="text-dark task-title">
                 ${title}

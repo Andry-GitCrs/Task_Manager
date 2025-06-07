@@ -36,7 +36,8 @@ def get_today_task(app, database):
                 "end_date": task.task_end_date,
                 "description": task.description,
                 "bg_color": task.task_background_color,
-                "subtasks": subtasks
+                "subtasks": subtasks,
+                "list_id": task.list_id
             }
 
             task_data_list.append(taskData)

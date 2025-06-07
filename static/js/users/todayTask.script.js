@@ -1,5 +1,6 @@
 // Fetch today tasks
 let taskcount = 0;
+let ALL_TODAYS_TASKS = [];
 async function fetchTodayTasks() {
     $(".loading-dash").css("display", 'inline');
     try {
@@ -20,6 +21,11 @@ async function fetchTodayTasks() {
             const todayTasks = responseData.data;
             showNotification("success", `You have ${todayTasks.length} task${taskcount > 1 ? "s" : ""} to do today`);
 
+            ALL_TODAYS_TASKS = todayTasks
+
+            
+            console.log(ALL_TODAYS_TASKS)
+
             todayTasks.forEach(task => {
                 const {
                     task_id: id,
@@ -28,9 +34,11 @@ async function fetchTodayTasks() {
                     end_date,
                     description,
                     bg_color,
-                    subtasks
+                    subtasks,
+                    list_id
                 } = task;
                 const taskElement = addTodayTask(
+                    list_id,
                     id,
                     title,
                     formatDate(start_date),
@@ -72,9 +80,9 @@ async function fetchTodayTasks() {
     }
     $(".loading-dash").css("display", 'none');
 }
-function addTodayTask(id, title, start_date, end_date, description, bg_color, subtasks) {
+function addTodayTask(list_id, id, title, start_date, end_date, description, bg_color, subtasks) {
     let taskContainer = $(`<div class="col-4 p-1 taskBox" id="${id}"></div>`);
-    const newTaskCard = genTaskCard(bg_color, description, start_date, end_date, title, id, subtasks)
+    const newTaskCard = genTaskCard(list_id, bg_color, description, start_date, end_date, title, id, subtasks)
     taskContainer.html(newTaskCard);
     $("#todayTaskContainer").append(taskContainer);
 }
