@@ -877,4 +877,9 @@ li:hover .notification-hover-info {
 .switch-sm input:checked + .slider-sm::before {
   transform: translateX(14px);
 }
+
+#send-otp{
+    cursor: pointer;
+    border: none;
+}
     

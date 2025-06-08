@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import jsonify, request
 from flask_login import current_user, login_required
 
@@ -13,12 +14,12 @@ def deleteSubTask(app, database):
         user_id = current_user.user_id
         subtask_id = data['subtask_id']
 
-        subtasks = Subtask.query.filter_by(subtask_id = subtask_id).all()
+        subtask = Subtask.query.filter_by(subtask_id = subtask_id).first()
 
-        if subtasks:
-            for subtask in subtasks:
-                db.session.delete(subtask)
-                db.session.commit()
-            return jsonify({"message": f"Subtask deleted successfully by {user_id}"}), 200
+        if subtask:
+            subtask.stat = False
+            subtask.update_date = datetime.utcnow()
+            db.session.commit()
+            return jsonify({"message": f"Subtask deleted successfully"}), 200
         
         return jsonify({"error": "Subtask not found"}), 404

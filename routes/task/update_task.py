@@ -77,4 +77,4 @@ def update_task(app, database):
         except KeyError:
             return jsonify({
                 "error": "Missing required property"
-            })
+            }), 400

@@ -24,28 +24,6 @@ async function fetchTodayTasks() {
             renderTasks()
         } else {
             showNotification("error", "You don't have any task for today");
-            $("#todayTaskContainer").append($(`
-                <script
-                    src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
-                    type="module"
-                ></script>
-                <dotlottie-player
-                    src="https://lottie.host/dc3962cd-5129-4c78-b3f5-172d5a86dec7/6sEHo0DGkz.lottie"
-                    background="transparent"
-                    speed="1"
-                    style="width: 450px; height: 450px; margin: auto; display: block;"
-                    loop
-                    autoplay
-                >
-                </dotlottie-player>
-                <h4 class='text-center'>You don't have any task for today</h4>
-                <p class='text-center'>You can add a task by clicking the 
-                    <button class="btn open-modal border" style="background-color: transparent!important">
-                        <i class="fas fa-add text-success"></i>
-                        Add new task
-                    </button> button above
-                </p>
-            `));
         }
     } catch (error) {
         showNotification("error", error.message);

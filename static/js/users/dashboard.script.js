@@ -168,6 +168,13 @@ async function  removeTask(id){
                 showNotification("success", responseData.message)
                 $("#taskNbr").text(parseInt($("#taskNbr").text()) - 1); // Update task count in UI
                 $(`#task${id}`).remove()
+
+                ALL_TASKS = ALL_TASKS.filter(task => task.task_id !== Number(id));
+
+                if (ALL_TASKS.length == 0 || ALL_TODAYS_TASKS == 0) {
+                    $("#no_task").fadeIn()
+                }
+
             } else {
                 showNotification("error", responseData.error)
                 $(".loading").css("display", 'none');
@@ -423,7 +430,7 @@ const fetchList = async () => {
                                 type="checkbox" 
                                 class="form-check-input mt-0 list-checkbox" 
                                 id="listCheck${list.list_id}" 
-                                ${list.list_name == 'Personal' || list.task_nbr > 0 ? 'checked' : ''}
+                                ${list.task_nbr > 0 ? 'checked' : ''}
                             >
                             <label class="form-check-label mb-0" for="listCheck${list.list_id}">
                                 <a class="text-dark text-decoration-none">${list.list_name}</a>
@@ -435,7 +442,6 @@ const fetchList = async () => {
                 listContainer.appendChild(listEl);
             });
             attachCheckboxListeners();
-            
 
             renderTasks(getCheckedLists());
             document.getElementById('listCheckAll').addEventListener('click', () => {
@@ -489,18 +495,21 @@ function renderTasks(selectedLists = null) {
     const todayContainer = document.getElementById('todayTaskContainer'); // Today dashboard
 
     if (container) {
-            container.innerHTML = `
-            <div class="row justify-content-start" id="allTaskContainer">
-                <!--Create task-->
-                <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
-                    <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
-                        <i class="text-dark fas fa-add addSing"></i>
-                    </div>
-                </div>
-            </div>
-        `;
 
         const filteredTasks = ALL_TASKS.filter(task => selectedLists.includes(String(task.list_id)));
+        if (ALL_TASKS.length > 0) {
+            container.innerHTML = `
+                <div class="row justify-content-start" id="allTaskContainer">
+                    <!--Create task-->
+                    <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
+                        <div class="rounded-4  h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                            <i class="text-dark fas fa-add addSing"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
+            $("#no_task").fadeOut()
+        }
 
         $("#taskNbr").text(filteredTasks.length);
 
@@ -514,15 +523,19 @@ function renderTasks(selectedLists = null) {
             $('.overlay, .modal').fadeIn();
         });
     } else if (todayContainer) {
-        todayContainer.innerHTML = `
-            <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
-                <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
-                    <i class="text-dark fas fa-add addSing"></i>
-                </div>
-            </div>
-        `;
 
         const filteredTasks = ALL_TODAYS_TASKS.filter(task => selectedLists.includes(String(task.list_id)));
+
+        if (ALL_TODAYS_TASKS.length > 0) {
+            todayContainer.innerHTML = `
+                <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
+                    <div class="rounded-4 h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                        <i class="text-dark fas fa-add addSing"></i>
+                    </div>
+                </div>
+            `;
+            $("#no_task").fadeOut()
+        }
 
         $("#todayTaskNbr").text(filteredTasks.length);
 
@@ -557,6 +570,10 @@ const formatDate = (date) => {
 // Create display card
 function addNewTask(list_id, id, title, start_date, end_date, description, bg_color,  subtasks){
     let list_name  = null
+
+    if (ALL_TASKS.length > 0 || ALL_TODAYS_TASKS > 0) {
+        $("#no_task").fadeOut()
+    }
     
     ALL_LIST.forEach(list => {
         if( list.list_id == list_id){
@@ -630,7 +647,7 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
     if ($(".task")) {
         $(".task").after(taskContainer)
     }else {
-        alert("No task container found")
+        showNotification('error', "No task container found")
     }
 }
 
@@ -938,7 +955,7 @@ function update_task(list_id, task_id, title, startDate, endDate, bg_color, desc
     $("#title").val(title)
     $("#startDate").val(convertToISO(startDate))
     $("#endDate").val(convertToISO(endDate))
-    $("#bg-color-piker").val(bg_color)
+    $("#bg-color-picker").val(bg_color)
     $("#description").val(description)
 
     $("#update_task_form").off("submit");
@@ -949,7 +966,7 @@ function update_task(list_id, task_id, title, startDate, endDate, bg_color, desc
         let title = $("#title").val().trim()
         let startDate = $("#startDate").val()
         let endDate = $("#endDate").val()
-        let bgColor = $("#bg-color-piker").val()
+        let bgColor = $("#bg-color-picker").val()
         let description = $("#description").val().trim()
     
         if (title.trim() !== "" && startDate !== "" && endDate !== "") {
@@ -1150,6 +1167,7 @@ async function addNewList(event) {
         const data = await response.json();
         if(response.ok){
             list = data.list
+            ALL_LIST.push(list)
             showNotification("success", data.message)
             const listContainer = document.getElementById('list-container');
             const listEl = document.createElement('li');
