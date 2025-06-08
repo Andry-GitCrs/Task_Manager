@@ -1,7 +1,10 @@
-let CURRENT_USER_ID = undefined;
-let ALL_TASKS = [];
-let ALL_TODAYS_TASKS = [];
-let ALL_LIST = [];
+(() => {
+  window.CURRENT_USER_ID = window.CURRENT_USER_ID ?? null;
+  window.ALL_TASKS = window.ALL_TASKS ?? [];
+  window.ALL_TODAYS_TASKS = window.ALL_TODAYS_TASKS ?? [];
+  window.ALL_LIST = window.ALL_LIST ?? [];
+})();
+
 
 $(document).ready(function() {
     let subTaskList = [];
@@ -20,7 +23,7 @@ $(document).ready(function() {
         e.preventDefault();
         $(".overlay, .modal").fadeOut();
         $("#update_task_form").off("submit");
-        $('.task-form').trigger("reset");
+        //$('.task-form').trigger("reset");
         $('.task-form').attr('id', 'add_task_form');
         $("#add_task_form").on("submit");
     });
@@ -36,7 +39,7 @@ $(document).ready(function() {
                     $(".task-list-container").text("");
                 }
                 subTaskList.push(content);
-                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask rounded-2' id='subtask${taskNbr}${subTaskNbr}' ondblclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></li>`).html(`${content}  <div class="w-auto d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash-alt text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`));
+                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask rounded-pill border px-3 py-2' id='subtask${taskNbr}${subTaskNbr}' ondblclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></li>`).html(`${content}  <div class="w-auto d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash-alt text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`));
             } else {
                 showNotification("error", `This task already has "${content}" subtask`);
             }
@@ -50,7 +53,7 @@ $(document).ready(function() {
         let title = $("#title").val().trim();
         let startDate = $("#startDate").val();
         let endDate = $("#endDate").val();
-        let bgColor = $("#bg-color-piker").val();
+        let bgColor = $("#bg-color-picker").val();
         let description = $("#description").val().trim();
         let list_id = $("#list_id").val();
 
@@ -237,9 +240,9 @@ async function addSubTask(id, title){
                 const subtask = responseData.data
                 let subtaskElement = $(`
                     <li 
-                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
+                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id} rounded-pill px-3 py-2'
                         id='subtask${subtask.subtask_id}'
-                        style="background-color: '#f8f9fa'"
+                        style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
                         ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
                     >
                     <span 
@@ -250,7 +253,7 @@ async function addSubTask(id, title){
                     <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
                         <i class="fas fa-trash-alt text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
                         <input
-                            class="from-control mx-2 my-0"
+                            class="form-check-input mx-2 my-0"
                             type="checkbox" name="subtask_status" 
                             id="input${subtask.subtask_id}" 
                             onchange="check(${subtask.subtask_id})"
@@ -326,7 +329,7 @@ async function editSubTask(id, subtask_id) {
                         <input
                             ${subtask.finished ? "checked" : ""}
                             value=${subtask.finished ? "off" : "on"}
-                            class="from-control mx-2 my-0"
+                            class="form-check-input mx-2 my-0"
                             type="checkbox" name="subtask_status" 
                             id="input${subtask.subtask_id}" 
                             onchange="check(${subtask.subtask_id})"
@@ -420,7 +423,7 @@ const fetchList = async () => {
                                 type="checkbox" 
                                 class="form-check-input mt-0 list-checkbox" 
                                 id="listCheck${list.list_id}" 
-                                ${list.list_name == 'Personal' ? 'checked' : ''}
+                                ${list.list_name == 'Personal' || list.task_nbr > 0 ? 'checked' : ''}
                             >
                             <label class="form-check-label mb-0" for="listCheck${list.list_id}">
                                 <a class="text-dark text-decoration-none">${list.list_name}</a>
@@ -434,13 +437,7 @@ const fetchList = async () => {
             attachCheckboxListeners();
             
 
-            // Find the Personal list ID and render tasks for it immediately
-            const personalList = responseData.find(list => list.list_name === 'Personal');
-            if (personalList) {
-                renderTasks([String(personalList.list_id)]);
-            } else {
-                renderTasks(getCheckedLists()); 
-            }
+            renderTasks(getCheckedLists());
             document.getElementById('listCheckAll').addEventListener('click', () => {
                 const checkboxes = document.querySelectorAll('.list-checkbox');
                 const allChecked = Array.from(checkboxes).every(cb => cb.checked);
@@ -612,7 +609,7 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
                             <input
                                 ${subtask.finished ? "checked" : ""}
                                 value=${subtask.finished ? "off" : "on"}
-                                class="from-control mx-2 my-0"
+                                class="form-check-input mx-2 my-0"
                                 type="checkbox" name="subtask_status" 
                                 id="input${subtask.subtask_id}" 
                                 onchange="check(${subtask.subtask_id})"
@@ -851,7 +848,7 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
     const card = `   
         <div 
             class=" h-100 p-2 rounded-4 d-flex flex-column justify-content-start position-relative"
-            style="background: linear-gradient(135deg, ${bg_color}99,rgb(211, 213, 215));"
+            style="background: linear-gradient(135deg, ${bg_color}99,#d3d5d7);"
             title="${(description !== 'None')?description:'No description'}"
         >
             <div class="position-relative mb-2 bg-transparent w-100">
@@ -869,7 +866,7 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
             <h3 class="text-dark task-title">
                 ${title}
                 <div class='d-flex justify-content-center gap-3 bg-transparent'>         
-                    <i class="fas fa-pen text-success task-icon" onclick="update_task('${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
+                    <i class="fas fa-pen text-success task-icon" onclick="update_task(${list_id}, '${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
                     <i class="fas fa-add text-success" onclick="addSubTask('${id}', '${title}')"></i> 
                     <i class="fas fa-trash-alt text-danger" onclick="removeTask('${id}')"></i>
                 </div>

@@ -17,6 +17,7 @@ from routes import use_app_route
 # App config
 app = Flask(__name__, template_folder = f'{script_dir}/../templates', static_folder = f'{script_dir}/../static')
 app.secret_key = os.getenv("SECRET_KEY")
+port = os.getenv("PORT")
 
 login_manager = LoginManager() # Login Manager config
 login_manager.login_view = 'authentication'
@@ -26,4 +27,4 @@ database = pg_connexion.connect(app) # Database Connection
 use_app_route(app, database, login_manager, socketio) # Route
 
 if __name__ == "__main__":
-    socketio.run(app, debug = True, port = 5001, host='0.0.0.0')
+    socketio.run(app, debug = True, port = port, host = '0.0.0.0')

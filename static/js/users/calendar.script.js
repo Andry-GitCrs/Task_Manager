@@ -5,9 +5,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   const fetchTasksAndInitCalendar = async () => {
     try {
       const tasks = await fetchTasks();
-
-      console.log(tasks)
-
       const events = tasks.map(task => ({
         title: task.title,
         start: new Date(task.start_date),

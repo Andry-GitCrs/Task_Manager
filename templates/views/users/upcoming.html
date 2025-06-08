@@ -7,16 +7,16 @@
 {% endblock %}
 {% block additionnal %}
     <form class="mx-3 d-flex gap-2">
-        <label class="form-control" for="date_select">Select specific date</label>
-        <select name="" id="select_arg" class="border-none px-1">
+        <label class="form-control rounded-pill" for="date_select">Select specific date</label>
+        <select name="" id="select_arg" class="border-none px-1 rounded-pill">
             <option value="start">Starts on</option>
             <option value="end">Ends on</option>
         </select>
-        <input class="form-control" type="date" name="date_select" id="date_select">
+        <input class="form-control rounded-pill" type="date" name="date_select" id="date_select">
     </form>
 {% endblock%}
 {% block content %}
-    <div class="container py-3">
+    <div class="container py-4">
         <h4 id="message"></h4>
         <div class="row justify-content-start" id="result"></div>
         <div class="row justify-content-start" id="upComingTaskContainer1"></div>
