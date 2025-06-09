@@ -204,9 +204,12 @@ function createTaskRow(task) {
 
   const subtaskRows = task.subtasks.length > 0
     ? task.subtasks.map((subtask, index) => {
+        const status = subtask.stat
+          ? '<span class="badge bg-success p-2 rounded-pill"><i class="fas fa-check-circle me-1"></i>Active</span>'
+          : '<span class="badge bg-danger p-2 rounded-pill"><i class="fas fa-times me-1"></i>Deleted</span>'
         const finishedBadge = subtask.finished
-          ? '<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Done</span>'
-          : '<span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half me-1"></i>Pending</span>';
+          ? '<span class="badge bg-success p-2 rounded-pill"><i class="fas fa-check-circle me-1"></i>Done</span>'
+          : '<span class="badge bg-warning p-2 rounded-pill text-dark"><i class="fas fa-hourglass-half me-1"></i>Pending</span>';
 
         return `
           <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3 mb-2 subtask-item border-0 shadow-sm rounded-3 bg-white hover-shadow">
@@ -214,7 +217,10 @@ function createTaskRow(task) {
               <i class="fas fa-angle-right me-3 text-primary fs-5"></i>
               <span class="fw-semibold text-secondary">${index + 1}. ${subtask.subtask_title}</span>
             </span>
-            ${finishedBadge}
+            <span class="d-flex align-items-center gap-2">
+              ${finishedBadge}
+              ${status}
+            </span>
           </li>
         `;
       }).join('')
@@ -222,7 +228,7 @@ function createTaskRow(task) {
   const cardId = `collapseSubtasks${task.task_id}`;
 
   return `
-    <div class="task-card p-4 rounded-4 border shadow-sm mb-4" style="background: linear-gradient(135deg, ${task.task_background_color}44, #ffffff);">
+    <div class="task-card p-4 rounded-4 border shadow-sm mb-4" style="background: linear-gradient(135deg, ${task.task_background_color}44, #ffffff);" id='task${task.task_id}'>
       <div class="d-flex justify-content-between align-items-center mb-2">
         <h3 class="h5 fw-bold text-dark mb-0">${task.task_title}</h3>
         <span class="small text-muted"><i class="fas fa-clock me-1"></i>Updated: ${formatProfileDate(task.updated_at)}</span>
@@ -250,7 +256,20 @@ function createTaskRow(task) {
 
       <div class="d-flex justify-content-between text-muted small px-2 mb-3">
         <span><i class="fas fa-calendar-plus me-1"></i>Created: ${formatProfileDate(task.created_at)}</span>
-        <span>Status flag: <strong class="${activeColor}">${activeText}</strong></span>
+        <span id='statFlag${task.task_id}'>Status flag: <strong class="${activeColor}">${activeText}</strong></span>
+      </div>
+
+      <div class="d-flex justify-content-between text-muted small px-2 mb-3" id='taskBtn${task.task_id}'>
+        ${ task.stat ? '' : `
+          <button class="rounded-pill btn btn-success btn-sm px-3 py-1" onclick='restoreTask(${task.task_id})' >
+            <i class="fas fa-trash-restore me-1"></i>
+            Restore
+          </button>
+          <button class="rounded-pill btn btn-danger btn-sm px-3 py-1" onclick='deleteTask(${task.task_id})' >
+            <i class="fas fa-trash-alt me-1"></i>
+            Delete Permanently
+          </button>
+        `}
       </div>
 
       <div class="accordion" id="accordionTask${task.task_id}">
@@ -296,5 +315,51 @@ async function fetchUserTasks() {
   }
 }
 
-
 fetchUserTasks();
+
+// Delete a task permantely
+async function deleteTask(task_id) {
+  if (confirm(`Are you sure you want this task ${task_id}?`)) {
+    $(".loading-dash").css("display", 'inline');
+      try{
+          const response = await fetch(`/api/user/deleteTaskPermanentely/${task_id}`,{
+              method: "DELETE",
+          });
+          const data = await response.json();
+          if(response.ok){
+              showNotification("success", data.message)
+              document.getElementById(`task${task_id}`).remove()
+          }else{
+              showNotification("error", data.message)
+          }
+      } catch (error) {
+          showNotification("error", error)
+      }
+      $(".loading-dash").css("display", 'none');
+  }
+}
+
+// Restore task
+async function restoreTask(task_id) {
+  if (confirm(`Are you sure you want restore this task ?`)) {
+    $(".loading-dash").css("display", 'inline');
+      try{
+          const response = await fetch(`/api/user/restoreTask/${task_id}`,{
+              method: "PUT",
+          });
+          const data = await response.json();
+          if(response.ok){
+              showNotification("success", data.message)
+              document.getElementById(`taskBtn${task_id}`).remove()
+              $(`#statFlag${task_id}`).html(`
+                Status flag: <strong class="text-success">Active</strong>
+              `)
+          }else{
+              showNotification("error", data.message)
+          }
+      } catch (error) {
+          showNotification("error", error)
+      }
+      $(".loading-dash").css("display", 'none');
+  }
+}

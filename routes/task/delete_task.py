@@ -5,8 +5,6 @@ from flask_login import current_user, login_required
 def delete_task(app, database):
     db = database["db"]
     Task = database["tables"]["Task"]
-    Subtask = database["tables"]["Subtask"]
-    List =  database["tables"]["List"]
 
     @app.route('/api/user/deleteTask', methods=['DELETE'])
     @login_required
@@ -16,14 +14,8 @@ def delete_task(app, database):
         task_id = data['task_id']
 
         task = Task.query.filter_by(task_id = task_id, user_id = user_id, stat = True).first()
-        subtasks = Subtask.query.filter_by(task_id = task_id, stat = True).all()
 
-        if task:
-            if subtasks:
-                for subtask in subtasks:
-                    subtask.updated_at = datetime.utcnow()
-                    subtask.deactivate()
-                
+        if task:                
             task.updated_at = datetime.utcnow()
             task.deactivate()
             db.session.commit()

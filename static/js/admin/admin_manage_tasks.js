@@ -140,7 +140,7 @@ function assignSubtasks(taskId) {
 }
 
 async function deleteTask(task_id) {
-  if (confirm(`Are you sure you want this task ${task_id}?`)) {
+  if (confirm(`Are you sure you want this task ?`)) {
     document.getElementById("loading").style.display = 'inline';
       try{
           const response = await fetch(`/api/user/deleteTaskPermanentely/${task_id}`,{
