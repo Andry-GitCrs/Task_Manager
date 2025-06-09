@@ -170,50 +170,105 @@ let chartInstance = null;
   return new Date(dateStr).toLocaleDateString(undefined, options);
 }
 
-function createTaskRow(task) {
-  const isDone = task.subtask_nbr != 0 && task.subtask_nbr === task.finished_subtask_nbr;
-  const statusColor = isDone 
-    ? 'bg-success text-light' 
-    : 'bg-dark text-warning';
+function renderTaskLists(lists) {
+  return lists.map(createListCard).join('');
+}
 
-  const statusText = isDone ? 'Done' : 'In Progress';
-  const activeColor = task.stat ? 'text-success' : 'text-danger';
-  const activeText = task.stat ? 'Active' : 'Deleted';
-
+function createListCard(list) {
   return `
-    <div class="w-100 text-dark dark:bg-dark dark:text-light p-4 rounded-3 shadow-sm border mb-3" style="background-color: ${task.task_background_color}aa;">
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <h2 class="h5 mb-0 fw-bold">${task.task_title}</h2>
-        <span class="small text-muted">Created: ${formatProfileDate(task.created_at)}</span>
+    <div class="list-card w-100 mb-4 p-3 border rounded-4 shadow-sm" style="background-color: #f8f9fa;">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 fw-bold text-dark"><i class="fas fa-bookmark me-2 text-secondary"></i> ${list.list_name}</h2>
+        <small class="text-muted">Created: ${formatProfileDate(list.created_at)}</small>
+        <small class="text-muted">${list.tasks.length} Tasks</small>
       </div>
+      <p class="text-muted">${list.list_description || "No description"}</p>
 
-      <div class="row text-muted small mb-3">
-        <div class="col-sm-6 col-md-3 mb-2">
-          <div><strong>Task ID</strong></div>
-          <div>#${task.task_id}</div>
-        </div>
-        <div class="col-sm-6 col-md-3 mb-2">
-          <div><strong>Subtasks</strong></div>
-          <div>${task.subtask_nbr} total</div>
-        </div>
-        <div class="col-sm-6 col-md-3 mb-2">
-          <div><strong>Completed</strong></div>
-          <div>${task.finished_subtask_nbr}/${task.subtask_nbr}</div>
-        </div>
-        <div class="col-sm-6 col-md-3 mb-2">
-          <div><strong>Status</strong></div>
-          <span class="badge rounded-pill ${statusColor} fw-bold">${statusText}</span>
-        </div>
-      </div>
-
-      <div class="d-flex justify-content-between text-muted small">
-        <span>Last update: ${formatProfileDate(task.updated_at)}</span>
-        <span>Status flag: <strong class="${activeColor}">${activeText}</strong></span>
+      <div class="task-list">
+        ${list.tasks.length > 0 ? list.tasks.map(createTaskRow).join('') : '<p class="text-muted">No tasks in this list</p>'}
       </div>
     </div>
   `;
 }
 
+function createTaskRow(task) {
+  const isDone = task.subtasks.length !== 0 && task.finished_subtask_nbr === task.subtasks.length;
+  const statusColor = isDone ? 'bg-success text-light' : 'bg-dark text-warning';
+  const statusText = isDone ? '<i class="fas fa-check-circle me-1"></i> Done' : '<i class="fas fa-hourglass-half me-1"></i> In Progress';
+  const activeColor = task.stat ? 'text-success' : 'text-danger';
+  const activeText = task.stat ? 'Active' : 'Deleted';
+
+  const progressPercent = task.subtasks.length
+    ? Math.round((task.finished_subtask_nbr / task.subtasks.length) * 100)
+    : 0;
+
+  const subtaskRows = task.subtasks.length > 0
+    ? task.subtasks.map((subtask, index) => {
+        const finishedBadge = subtask.finished
+          ? '<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Done</span>'
+          : '<span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half me-1"></i>Pending</span>';
+
+        return `
+          <li class="list-group-item d-flex justify-content-between align-items-center px-3 py-2 subtask-item">
+            <span><i class="fas fa-angle-right me-2 text-primary"></i>${index + 1}. ${subtask.subtask_title}</span>
+            ${finishedBadge}
+          </li>
+        `;
+      }).join('')
+    : '<li class="list-group-item text-muted small">No subtasks</li>';
+  const cardId = `collapseSubtasks${task.task_id}`;
+
+  return `
+    <div class="task-card p-4 rounded-4 border shadow-sm mb-4" style="background: linear-gradient(135deg, ${task.task_background_color}44, #ffffff);">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3 class="h5 fw-bold text-dark mb-0">${task.task_title}</h3>
+        <span class="small text-muted"><i class="fas fa-clock me-1"></i>Updated: ${formatProfileDate(task.updated_at)}</span>
+      </div>
+
+      <div class="mb-3 px-2">
+        <p class="mb-1 text-muted"><i class="fas fa-align-left me-2 text-primary"></i><strong>Description:</strong> ${task.task_description || "No description"}</p>
+        <p class="mb-1 text-muted"><i class="fas fa-play-circle me-2 text-success"></i><strong>Start:</strong> ${formatProfileDate(task.start_date)}</p>
+        <p class="mb-1 text-muted"><i class="fas fa-flag-checkered me-2 text-danger"></i><strong>End:</strong> ${formatProfileDate(task.end_date)}</p>
+      </div>
+
+      <div class="row text-muted small mb-3 px-2">
+        <div class="col-6 col-md-3"><i class="fas fa-hashtag me-1"></i><strong>Task ID:</strong> #${task.task_id}</div>
+        <div class="col-6 col-md-3"><i class="fas fa-stream me-1"></i><strong>Subtasks:</strong> ${task.subtasks.length}</div>
+        <div class="col-6 col-md-3"><i class="fas fa-check-double me-1"></i><strong>Completed:</strong> ${task.finished_subtask_nbr}/${task.subtasks.length}</div>
+        <div class="col-6 col-md-3"><i class="fas fa-info-circle me-1"></i><strong>Status:</strong> <span class="badge rounded-pill ${statusColor} p-2">${statusText}</span></div>
+      </div>
+
+      <div class="px-2 mb-3">
+        <div class="progress" style="height: 6px;">
+          <div class="progress-bar ${statusColor}" role="progressbar" style="width: ${progressPercent}%" aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="text-end small text-muted mt-1">${progressPercent}% complete</div>
+      </div>
+
+      <div class="d-flex justify-content-between text-muted small px-2 mb-3">
+        <span><i class="fas fa-calendar-plus me-1"></i>Created: ${formatProfileDate(task.created_at)}</span>
+        <span>Status flag: <strong class="${activeColor}">${activeText}</strong></span>
+      </div>
+
+      <div class="accordion" id="accordionTask${task.task_id}">
+        <div class="accordion-item border-0">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed px-2 py-1 small fw-bold text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#${cardId}">
+              <i class="fas fa-tasks me-2 text-warning"></i>View Subtasks
+            </button>
+          </h2>
+          <div id="${cardId}" class="accordion-collapse collapse" data-bs-parent="#accordionTask${task.task_id}">
+            <div class="accordion-body px-0 pt-2">
+              <ul class="list-group list-group-flush">
+                ${subtaskRows}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
 
 async function fetchUserTasks() {
   try {
@@ -221,21 +276,22 @@ async function fetchUserTasks() {
     const data = await response.json();
 
     if (response.ok) {
-      if (data.length === 0) {
-        document.getElementById('task-list').innerHTML = '<p class="text-gray-500 dark:text-gray-400">No tasks found.</p>';
+      const tasksContainer = document.getElementById('task-list');
+
+      if (!data.data || data.data.length === 0) {
+        tasksContainer.innerHTML = '<p class="text-muted">No task lists found.</p>';
         return;
       }
-      const tasks = data.data;
-      const taskList = document.getElementById('task-list');
-      for (const task of tasks) {
-        taskList.innerHTML += createTaskRow(task);
-      }
+
+      tasksContainer.innerHTML = renderTaskLists(data.data);
+      showNotification("success", data.message);
+    } else {
+      showNotification("error", data.message);
     }
-    showNotification("success", data.message);
-    
   } catch (err) {
     showNotification("error", `Failed to fetch tasks: ${err}`);
   }
 }
+
 
 fetchUserTasks();
