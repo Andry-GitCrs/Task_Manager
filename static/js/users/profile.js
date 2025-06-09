@@ -209,13 +209,16 @@ function createTaskRow(task) {
           : '<span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half me-1"></i>Pending</span>';
 
         return `
-          <li class="list-group-item d-flex justify-content-between align-items-center px-3 py-2 subtask-item">
-            <span><i class="fas fa-angle-right me-2 text-primary"></i>${index + 1}. ${subtask.subtask_title}</span>
+          <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3 mb-2 subtask-item border-0 shadow-sm rounded-3 bg-white hover-shadow">
+            <span class="d-flex align-items-center">
+              <i class="fas fa-angle-right me-3 text-primary fs-5"></i>
+              <span class="fw-semibold text-secondary">${index + 1}. ${subtask.subtask_title}</span>
+            </span>
             ${finishedBadge}
           </li>
         `;
       }).join('')
-    : '<li class="list-group-item text-muted small">No subtasks</li>';
+    : '<li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3 mb-2 subtask-item border-0 shadow-sm rounded-3 bg-white hover-shadow"><span class="d-flex align-items-center">No subtasks</span></li>';
   const cardId = `collapseSubtasks${task.task_id}`;
 
   return `
@@ -258,7 +261,7 @@ function createTaskRow(task) {
             </button>
           </h2>
           <div id="${cardId}" class="accordion-collapse collapse" data-bs-parent="#accordionTask${task.task_id}">
-            <div class="accordion-body px-0 pt-2">
+            <div class="accordion-body px-0 pt-2 pb-0">
               <ul class="list-group list-group-flush">
                 ${subtaskRows}
               </ul>
