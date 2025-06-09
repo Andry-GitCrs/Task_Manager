@@ -20,15 +20,16 @@ async function fetchUpcomingTasks(element_id, condition, day, message) {
             upComingTasks.forEach(task => {
                 const {
                     task_id: id,
-                    title,
+                    title = task.subtask_title,
                     start_date,
                     end_date,
                     description,
                     bg_color,
-                    subtasks
+                    subtasks,
+                    list_id
                 } = task;
                 
-                addUpcomingTask(element_id, id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks)
+                addUpcomingTask(element_id, list_id, id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks)
             });
         }
         else {
@@ -61,9 +62,9 @@ async function fetchUpcomingTasks(element_id, condition, day, message) {
     $(".loading-dash").css("display", 'none');
 }
 
-function addUpcomingTask(element_id, id, title, start_date, end_date, description, bg_color, subtasks) {
+function addUpcomingTask(element_id, list_id, id, title, start_date, end_date, description, bg_color, subtasks) {
     let taskContainer = $(`<div class="col-4 p-1 taskBox" id="${id}"></div>`);
-    let newTaskCard = genTaskCard(bg_color, description, start_date, end_date, title, id, subtasks)
+    let newTaskCard = genTaskCard(list_id, bg_color, description, start_date, end_date, title, id, subtasks)
     taskContainer.html(newTaskCard);
     $(`#${element_id}`).append(taskContainer);
 }
@@ -120,11 +121,12 @@ async function getTaskByDate(arg, year, month, day){
                         end_date,
                         description,
                         bg_color,
-                        subtasks
+                        subtasks,
+                        list_id
                     } = task;
         
                     
-                    addUpcomingTask("result", id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks)
+                    addUpcomingTask("result", list_id, id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks)
                 });
             }else{
                 showNotification("error", responseData.message);

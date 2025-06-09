@@ -40,7 +40,7 @@ function user_row(user, activityColor, activityText){
     row.id = `row${user.user_id}`
     row.innerHTML = `
         <td class='fw-bold'><i class='fas fa-message'></i></td>
-        <td class='text-start'>${user.email} <span id="user${user.user_id}"></span></td>
+        <td class='text-start'><span class="small text-muted">#${user.user_id}</span> ${user.email} <span id="user${user.user_id}"></span></td>
         <td>${user.tasks_count}</td>
         <td>${user.finished_tasks_count}</td>
         <td>${user.user_subtasks_count}</td>

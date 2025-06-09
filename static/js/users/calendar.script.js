@@ -4,8 +4,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   // Fetch tasks from your backend
   const fetchTasksAndInitCalendar = async () => {
     try {
-      const tasks = await fetchTasks(); 
-
+      const tasks = await fetchTasks();
       const events = tasks.map(task => ({
         title: task.title,
         start: new Date(task.start_date),

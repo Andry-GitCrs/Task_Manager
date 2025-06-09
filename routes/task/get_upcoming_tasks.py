@@ -44,7 +44,7 @@ def get_upcoming_task(app, database):
             subtasks = [
                 {
                     "subtask_id": sub.subtask_id,
-                    "title": sub.subtask_title,
+                    "subtask_title": sub.subtask_title,
                     "finished": sub.finished
                 }
                 for sub in task.subtasks if sub.stat
@@ -57,7 +57,8 @@ def get_upcoming_task(app, database):
                 "end_date": task.task_end_date,
                 "description": task.description,
                 "bg_color": task.task_background_color,
-                "subtasks": subtasks
+                "subtasks": subtasks,
+                "list_id": task.list_id
             }
 
             task_data_list.append(taskData)

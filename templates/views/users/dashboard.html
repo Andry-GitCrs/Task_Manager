@@ -4,14 +4,29 @@
     active-dash-link
 {% endblock %}
 {% block content %}
-    <div class="container py-3">
-        <div class="row justify-content-start" id="allTaskContainer">
-            <!--Create task-->
-            <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
-                <div class=" h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
-                    <i class="text-dark fas fa-add addSing"></i>
-                </div>
-            </div>
+    <div class="container py-4">
+        <div class="row justify-content-start" id="allTaskContainer"></div>
+        <div id="no_task">
+            <script
+                    src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+                    type="module"
+                ></script>
+                <dotlottie-player
+                    src="https://lottie.host/eb0026d5-1067-411b-956e-810f06efe9e7/4zhpscTJAi.lottie"
+                    background="transparent"
+                    speed="1"
+                    style="width: 400px; height: 400px; margin: auto; display: block;"
+                    loop
+                    autoplay
+                >
+                </dotlottie-player>
+                <h4 class='text-center'>You don't have any task yet</h4>
+                <p class='text-center'>You can add a task by clicking the 
+                    <button class="btn open-modal border" style="background-color: transparent!important">
+                        <i class="fas fa-add text-success"></i>
+                        Add new task
+                    </button> button above
+                </p>
         </div>
     </div>
     <script src="/static/js/users/dashboard.script.js"></script>

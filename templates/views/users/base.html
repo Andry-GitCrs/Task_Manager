@@ -58,33 +58,35 @@
             </ul>
         </div>
         <div class="">
-            <h4 class="text-dark fw-bold" >LISTS</h4>
-            <ul class="p-2 list-container rounded-3">
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center active-dash-link" onclick="showNotification('error', 'Sorry this feature is not available right now')">
-                    <div>
-                        <i class="text-secondary fas fa-user"></i>
-                        <a  class="text-dark text-decoration-none" href="#">Personal</a>
-                    </div>
-                </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
-                    <div>
-                        <i class="text-secondary fas fa-users"></i>
-                        <a  class="text-dark text-decoration-none" href="#">Team</a>
-                    </div>
-                </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
-                    <div>
-                        <i class="text-warning fas fa-briefcase"></i>
-                        <a  class="text-dark text-decoration-none" href="#">Work</a>
-                    </div>
-                </li>
-                <li class="my-2 p-1 px-3 d-flex justify-content-between align-items-center" onclick="showNotification('error', 'Sorry this feature is not available right now')">
-                    <div>
-                        <i class="text-success fas fa-add"></i>
-                        <a  class="text-dark text-decoration-none" href="#">Add new list</a>
-                    </div>
-                </li>
-            </ul>
+            <h4 class="text-dark fw-bold d-flex justify-content-between align-items-center" >
+               <span>
+                    <input 
+                        type="checkbox" 
+                        class="form-check-input mt-0 list-checkbox" 
+                        id="listCheckAll"
+                    >
+                    LIST
+                    <span class="text-dark bg-light px-1 rounded-2" id="listNbr">{{ list_nbr }}</span>
+                </span>
+                <button class="btn my-2 p-1 px-3 border d-inline rounded-pill" id="addNewList">
+                    <i class="text-success fas fa-add"></i>
+                    Add new list
+                </button>            
+            </h4>
+            <div class="position-relative mt-2" id="addListDropdown">
+                <div class="p-3" id="addListForm" style="display: none;">
+                    <form name="listForm" id="listForm" onsubmit="return addNewList(event)">
+                        <div class="mb-2">
+                            <input type="text" class="form-control rounded-pill" id="listName"  placeholder="Enter list name">
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control rounded-pill" id="listDescription"  placeholder="Enter list description (optional)">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 rounded-pill">Create</button>
+                    </form>
+                </div>
+            </div>
+            <ul class="p-2 list-container rounded-3 border" id="list-container"></ul>
         </div>
         <div class="my-2">
             <ul class="p-0 _user_action m-0">
@@ -119,12 +121,12 @@
             </ul>
         </div>
     </aside>
-    <main class="sticky-wall-main p-3 py-4">
+    <main class="sticky-wall-main p-3 pb-4 pt-2">
         <nav class="nav shadow p-1 align-items-center">
             <button class="btn hide-btn hide-btn2" style="color: transparent;">
                 <i class="fas fa-angle-left"></i>
             </button>
-            <form class="d-flex justify-content-start align-items-center border px-3 mx-3 rounded-2" action="">
+            <form class="d-flex justify-content-start align-items-center border px-3 mx-3 rounded-pill" action="">
                 <i class="text-primary fa fa-search"></i>
                 <input name="search_bar" class="px-3 py-2 text-dark bg-transparent" type="search" id="findTask" onkeyup="findTaskk()" placeholder="Find task">
                 <div id="searchResultsContainer" class="mt-3 p-2"></div>
@@ -134,16 +136,17 @@
                 Add new task
             </button>
             {% block additionnal %}{% endblock%}
-            <div class="dropdown position-relative"  data-bs-auto-close="outside">
+            <div class="dropdown position-relative" data-bs-auto-close="outside">
                 <button class="btn dropdown-toggle position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false"  data-bs-auto-close="outside">
                     <i class="fas fa-bell text-secondary me-2"></i> Notification
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
-                        0
-                        <span class="visually-hidden">unread messages</span>
+                    0
+                    <span class="visually-hidden">unread messages</span>
                     </span>
                 </button>
-                <ul class="dropdown-menu nofitication-container" data-bs-auto-close="outside">
-                </ul>   
+                <ul class="dropdown-menu nofitication-container px-2 shadow" data-bs-auto-close="outside">
+                    <li>No notification</li>
+                </ul>
             </div>
             
             <img class="loading-dash loading mx-3" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
@@ -155,46 +158,56 @@
         {% endblock %}
         <!-- Modal -->
         <div class="overlay"></div>
-        <div class="modal">
+        <div class="modal rounded-4">
             <form class="d-flex flex-column justify-content-between h-100 task-form" id="add_task_form">
                 <div>
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
+                        <label for="list" class="text-dark" name="tastlist" ><i class="fas fa-square text-primary"></i> Add to list</label>
+                        <select name="task_list" class="form-control w-75 rounded-pill custom-select-light" type="text" id="list_id" placeholder="Task list"></select>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
                         <label for="title" class="text-dark" name="tastTitle" ><i class="fas fa-heading text-primary"></i> Task title</label>
-                        <input name="task_title" class="form-control w-75" type="text" id="title" placeholder="Task title">
+                        <input name="task_title" class="form-control w-75  rounded-pill" type="text" id="title" placeholder="Task title">
                     </div>
                     <!--Start date-->
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
                         <label for="startDate" class="text-dark" name="startDate" ><i class="fas fa-calendar-alt text-success"></i> Start date</label>
-                        <input name="start_date" class="form-control w-75" type="date" id="startDate" placeholder="Start date">
+                        <input name="start_date" class="form-control w-75  rounded-pill" type="date" id="startDate" placeholder="Start date">
                     </div>
                     <!--End date-->
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
                         <label for="endDate" class="text-dark" name="endDate" ><i class="fas fa-calendar-check text-danger"></i> End date</label>
-                        <input name="end_date" class="form-control w-75" type="date" id="endDate" placeholder="End date">
+                        <input name="end_date" class="form-control w-75  rounded-pill" type="date" id="endDate" placeholder="End date">
                     </div>
                     <!--Description-->
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
                         <label for="description" class="text-dark" name="endDate" ><i class="fas fa-align-left text-secondary"></i> Description</label>
-                        <input name="task_description" class="form-control w-75" type="text" id="description" placeholder="A short description (optional)">
+                        <input name="task_description" class="form-control w-75  rounded-pill" type="text" id="description" placeholder="A short description (optional)">
                     </div>
                     <!--Backgound colour select-->
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="bg-color-piker" class="text-dark" name="endDate" > <i class="fas fa-fill-drip text-warning"></i> Select task background-color <span>(default color    <div class="default-color"></div>  </span>)</label>
-                        <input name="task_background" class="" type="color" id="bg-color-piker" value="#95ce83">
+                        <label for="bg-color-piker" class="text-dark" name="endDate" > <i class="fas fa-fill-drip text-warning"></i> Select task background-color <span>(default color    <div class="default-color rounded-pill"></div>  </span>)</label>
+                        <input 
+                            name="task_background"
+                            class="rounded-pill form-control form-control-color p-0"
+                            type="color"
+                            id="bg-color-picker"
+                            value="#95ce83"
+                        />
                     </div>
                     <!--Task content-->
                     <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
                         <i class="fas fa-add text-dark"></i>
-                        <input name="add_btn" class="form-control" type="text" id="content" placeholder="Add sub-task (Optional)">
-                        <button name="add_btn" class="add btn btn-primary"> Add</button>
+                        <input name="add_btn" class="form-control rounded-pill" type="text" id="content" placeholder="Add subtask (Optional)">
+                        <button name="add_btn" class="add btn btn-primary rounded-pill"> Add</button>
                     </div>
                     <ul class="text-dark task-list-container text-center ps-0">
                         <span id="subTaskIndicator">No subtask added </br> all subtask will appear here</span>
                     </ul>
                 </div>                        
                 <div class="btn-container">
-                    <button class="shadow submit text-light" id="submit">Submit <img class="loading-dash loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt=""></button>
-                    <button class="shadow bg-danger text-light" id="closeModal">Close</button>
+                    <button class="shadow submit text-light rounded-pill bg-success" id="submit">Submit <img class="loading-dash loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt=""></button>
+                    <button class="shadow bg-danger text-light rounded-pill" id="closeModal">Close</button>
                 </div>
             </from>
         </div>
@@ -229,6 +242,10 @@
            }
              
         })
+        $('#addNewList').on('click', function () {
+            const dropdown = document.getElementById('addListForm');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
     </script>
 </body>
 </html>

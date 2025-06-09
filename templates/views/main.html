@@ -11,15 +11,17 @@
       <div class="d-flex justify-content-center align-items-center flex-column z-1 w-auto">
         
         <div class="d-flex align-items-center flex-column gap-3 z-1 welcome-text">
-            <h2 class="ad text-center fs-1">Manage your task efficiently with our app</h2>
-            <p class="text-center desc-text">
-                <span class="contact-title fs-3">"</span>Welcome to Task Manager App – Your Ultimate Productivity Companion!
-                Managing tasks has never been easier! With our intuitive and user-friendly interface, you can organize your daily activities, track progress, and stay productive effortlessly. Whether you're handling personal to-do lists, work projects, or long-term goals, our app is designed to help you stay on track.
-                No more scattered notes or forgotten tasks—everything you need is in one place! Take control of your workflow and boost your productivity. Click "Get Started" now and experience the power of seamless task management!<span class="contact-title fs-3">"</span>
-            </p>
-            <a href="/auth">
-                <button class="shadow mb-3 py-3 px-5 fw-bold get-started-btn text-light">GET STARTED</button>
-            </a>
+          <h2 class="fw-bold display-5 mb-4">Manage your tasks efficiently</h2>
+          <p class="lead desc-text mb-2">
+            <span class="fs-3 text-primary">"</span>
+            Welcome to <strong>Task Manager App</strong> – Your Ultimate Productivity Companion!<br>
+            Organize your day, track your progress, and stay productive with ease. Say goodbye to sticky notes and forgotten tasks. Everything is now in one place.<br>
+            Take control of your workflow and boost productivity.
+            <span class="fs-3 text-primary">"</span>
+          </p>
+          <a href="/auth" class="btn btn-primary shadow px-5 p-3 rounded-pill get-started-btn">
+            GET STARTED
+          </a>
         </div>
         
         <div class="justify-content-between gap-2 slide-btn-container" id="slide-btn-container"></div>
@@ -30,14 +32,16 @@
 {% block pub %}
 <div class="container-fluid">
     <!-- Features Section -->
-    <!-- Features Section -->
 <div class="container my-5">
+  <h2 class="section-title text-center mb-2"><i class="fas fa-rocket text-primary"></i> Features</h2>
   <div class="row text-center text-light">
     <!-- Feature 1 -->
     <div class="col-md-4 mb-4">
-      <div class="card h-100 bg-light border-0 shadow-sm">
-        <div class="card-body border">
-          <h5 class="card-title text-secondary">
+      <div class="card rounded-4 h-100 mb-2 border-0 shadow-sm">
+        <div class="card-body rounded-4 border">
+          <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+          <dotlottie-player src="https://lottie.host/3230d998-fe9c-428d-9ef2-37e508aff6d9/M9VPqqQfwG.lottie" background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
+          <h5 class="card-title mt-2 text-secondary">
             <i class="fas fa-clipboard-list text-primary"></i> Task Organization
           </h5>
           <p class="card-text text-secondary">
@@ -49,9 +53,18 @@
 
     <!-- Feature 2 -->
     <div class="col-md-4 mb-4">
-      <div class="card h-100 bg-light border-0 shadow-sm">
-        <div class="card-body border">
-          <h5 class="card-title text-secondary">
+      <div class="card rounded-4 h-100 mb-2 border-0 shadow-sm">
+        <div class="card-body rounded-4 border">
+          <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+          <dotlottie-player
+            src="https://lottie.host/7818dcb5-a824-4e59-98a1-c996b86691d3/3KZSdo5r00.lottie"
+            background="transparent"
+            speed="1"
+            style="width: 300px; height: 300px; margin: auto"
+            loop
+            autoplay
+          ></dotlottie-player>
+          <h5 class="card-title mt-2 text-secondary">
             <i class="fas fa-hourglass-half text-danger"></i> Progress Tracking
           </h5>
           <p class="card-text text-secondary">
@@ -63,9 +76,11 @@
 
     <!-- Feature 3 -->
     <div class="col-md-4 mb-4">
-      <div class="card h-100 bg-light border-0 shadow-sm">
-        <div class="card-body border">
-          <h5 class="card-title text-secondary">
+      <div class="card rounded-4 h-100 mb-2 border-0 shadow-sm">
+        <div class="card-body rounded-4 border">
+          <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+          <dotlottie-player src="https://lottie.host/7f785e2e-c0c1-4912-ab93-eaa7bebce25c/aZ1EAO8LRp.lottie" background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
+          <h5 class="card-title mt-2 text-secondary">
             <i class="fas fa-lightbulb text-warning"></i> Simple & Smart
           </h5>
           <p class="card-text text-secondary">
@@ -80,9 +95,11 @@
   <div class="row text-center text-light mt-3">
     <!-- Feature 4 -->
     <div class="col-md-4 mb-4">
-      <div class="card h-100 bg-light border-0 shadow-sm">
-        <div class="card-body border">
-          <h5 class="card-title text-secondary">
+      <div class="card rounded-4 h-100 mb-2 border-0 shadow-sm">
+        <div class="card-body rounded-4 border">
+          <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+          <dotlottie-player src="https://lottie.host/c7de3cf8-405c-4f5d-b534-93a19d9972dd/DNskI6jHVU.lottie" background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
+          <h5 class="card-title mt-2 text-secondary">
             <i class="fas fa-calendar-alt text-success"></i> Smart Scheduling
           </h5>
           <p class="card-text text-secondary">
@@ -94,9 +111,11 @@
 
     <!-- Feature 5 -->
     <div class="col-md-4 mb-4">
-      <div class="card h-100 bg-light border-0 shadow-sm">
-        <div class="card-body border">
-          <h5 class="card-title text-secondary">
+      <div class="card rounded-4 h-100 mb-2 border-0 shadow-sm">
+        <div class="card-body rounded-4 border">
+          <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+          <dotlottie-player src="https://lottie.host/0a0d046a-2820-4452-8848-7987eaa88889/TT4zn9nZYf.lottie" background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
+          <h5 class="card-title mt-2 text-secondary">
             <i class="fas fa-layer-group text-info"></i> Sticky Wall
           </h5>
           <p class="card-text text-secondary">
@@ -108,9 +127,11 @@
 
     <!-- Feature 6 -->
     <div class="col-md-4 mb-4">
-      <div class="card h-100 bg-light border-0 shadow-sm">
-        <div class="card-body border">
-          <h5 class="card-title text-secondary">
+      <div class="card rounded-4 h-100 mb-2 border-0 shadow-sm">
+        <div class="card-body rounded-4 border">
+          <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+          <dotlottie-player src="https://lottie.host/a8c2ecfe-afcc-4043-951a-c61b9e8ad172/IqfrFnBHZY.lottie" background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
+          <h5 class="card-title mt-2 text-secondary">
             <i class="fas fa-user-circle text-dark"></i> Personal Dashboard
           </h5>
           <p class="card-text text-secondary">

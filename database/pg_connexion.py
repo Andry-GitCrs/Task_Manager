@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from .models import notification_model, subtask_model, task_model, user_model
+from .models import notification_model, subtask_model, task_list_model, task_model, user_model
 from dotenv import load_dotenv
 import os
 
@@ -31,7 +31,8 @@ def connect(app):
     ## Tables
     with app.app_context():
         User = user_model.userModel(db)
-        Task = task_model.taskModel(db, User)
+        List = task_list_model.listModel(db, User)
+        Task = task_model.taskModel(db, User, List)
         Subtask = subtask_model.subtaskModel(db, Task)
         Notification = notification_model.notificationModel(db, User)
         db.create_all()
@@ -43,6 +44,7 @@ def connect(app):
             "User": User,
             "Task": Task,
             "Subtask": Subtask,
-            "Notification": Notification
+            "Notification": Notification,
+            "List": List
         }
     }

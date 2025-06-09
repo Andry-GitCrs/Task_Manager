@@ -6,7 +6,8 @@ from . import(
   get_tasks,
   get_today_tasks,
   get_upcoming_tasks,
-  update_task
+  update_task,
+  task_restore
 )
 
 def use_task_route(app, database):
@@ -18,7 +19,8 @@ def use_task_route(app, database):
     get_task_by_date.get_task_by_date,
     get_today_tasks.get_today_task,
     get_upcoming_tasks.get_upcoming_task,
-    find_task.find_task
+    find_task.find_task,
+    task_restore.task_restore
   ]
 
   for route in routes:

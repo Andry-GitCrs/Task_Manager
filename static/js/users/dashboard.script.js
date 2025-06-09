@@ -1,7 +1,12 @@
-let CURRENT_USER_ID = undefined;
+(() => {
+  window.CURRENT_USER_ID = window.CURRENT_USER_ID ?? null;
+  window.ALL_TASKS = window.ALL_TASKS ?? [];
+  window.ALL_TODAYS_TASKS = window.ALL_TODAYS_TASKS ?? [];
+  window.ALL_LIST = window.ALL_LIST ?? [];
+})();
+
 
 $(document).ready(function() {
-    let addTask = null;
     let subTaskList = [];
     let taskNbr = 0;
     let subTaskNbr = 1;
@@ -18,7 +23,7 @@ $(document).ready(function() {
         e.preventDefault();
         $(".overlay, .modal").fadeOut();
         $("#update_task_form").off("submit");
-        $('.task-form').trigger("reset");
+        //$('.task-form').trigger("reset");
         $('.task-form').attr('id', 'add_task_form');
         $("#add_task_form").on("submit");
     });
@@ -34,7 +39,7 @@ $(document).ready(function() {
                     $(".task-list-container").text("");
                 }
                 subTaskList.push(content);
-                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask rounded-2' id='subtask${taskNbr}${subTaskNbr}' ondblclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></li>`).html(`${content}  <div class="w-auto d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash-alt text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`));
+                $(".task-list-container").append($(`<li class='text-dark justify-content-between align-items-center subTask rounded-pill border px-3 py-2' id='subtask${taskNbr}${subTaskNbr}' ondblclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></li>`).html(`${content}  <div class="w-auto d-flex justify-content-center gap-3 bg-transparent" ><i class="fas fa-pen" onclick="editSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i><i class="fas fa-trash-alt text-danger" onclick="removeSubTask_on_adding('subtask${taskNbr}${subTaskNbr}')"></i></div>`));
             } else {
                 showNotification("error", `This task already has "${content}" subtask`);
             }
@@ -48,8 +53,9 @@ $(document).ready(function() {
         let title = $("#title").val().trim();
         let startDate = $("#startDate").val();
         let endDate = $("#endDate").val();
-        let bgColor = $("#bg-color-piker").val();
+        let bgColor = $("#bg-color-picker").val();
         let description = $("#description").val().trim();
+        let list_id = $("#list_id").val();
 
         if (title.trim() !== "" && startDate !== "" && endDate !== "") {
             const task = {
@@ -58,7 +64,8 @@ $(document).ready(function() {
                 "task_end_date": endDate,
                 "task_background_color": bgColor,
                 "description": description || "None",
-                "subtasks": [...subTaskList]
+                "subtasks": [...subTaskList],
+                "list_id": list_id
             };
 
             $(".loading").css("display", 'inline');
@@ -74,6 +81,7 @@ $(document).ready(function() {
                 if (response.ok) {  // Response with status code 200
                     const response_data = responseData.data;
 
+                    const list_id = response_data.list_id;
                     const id = response_data.task_id;
                     const title = response_data.title;
                     const start_date = response_data.start_date;
@@ -82,7 +90,18 @@ $(document).ready(function() {
                     const description = response_data.description;
                     const bg_color = response_data.bg_color;
 
-                    addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
+                    ALL_TASKS.push({
+                        "list_id": list_id,
+                        "task_id": id,
+                        "title": title,
+                        "start_date": start_date,
+                        "end_date": end_date,
+                        "subtasks": subtasks,
+                        "description": description,
+                        "bg_color": bg_color
+                    })
+
+                    addNewTask(list_id, id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
 
                     $(".task-list-container").html("<span id='subTaskIndicator'>No subtask added </br> all subtask will appear here</span>");
 
@@ -149,6 +168,14 @@ async function  removeTask(id){
                 showNotification("success", responseData.message)
                 $("#taskNbr").text(parseInt($("#taskNbr").text()) - 1); // Update task count in UI
                 $(`#task${id}`).remove()
+
+                ALL_TASKS = ALL_TASKS.filter(task => task.task_id !== Number(id));
+
+                if (ALL_TASKS.length == 0 && ALL_TODAYS_TASKS == 0) {
+                    $("#addNewTask").fadeOut()
+                    $("#no_task").fadeIn()
+                }
+
             } else {
                 showNotification("error", responseData.error)
                 $(".loading").css("display", 'none');
@@ -221,9 +248,9 @@ async function addSubTask(id, title){
                 const subtask = responseData.data
                 let subtaskElement = $(`
                     <li 
-                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
+                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id} rounded-pill px-3 py-2'
                         id='subtask${subtask.subtask_id}'
-                        style="background-color: '#f8f9fa'"
+                        style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
                         ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
                     >
                     <span 
@@ -234,7 +261,7 @@ async function addSubTask(id, title){
                     <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
                         <i class="fas fa-trash-alt text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
                         <input
-                            class="from-control mx-2 my-0"
+                            class="form-check-input mx-2 my-0"
                             type="checkbox" name="subtask_status" 
                             id="input${subtask.subtask_id}" 
                             onchange="check(${subtask.subtask_id})"
@@ -310,7 +337,7 @@ async function editSubTask(id, subtask_id) {
                         <input
                             ${subtask.finished ? "checked" : ""}
                             value=${subtask.finished ? "off" : "on"}
-                            class="from-control mx-2 my-0"
+                            class="form-check-input mx-2 my-0"
                             type="checkbox" name="subtask_status" 
                             id="input${subtask.subtask_id}" 
                             onchange="check(${subtask.subtask_id})"
@@ -343,7 +370,7 @@ async function editSubTask(id, subtask_id) {
 const fetchTasks = async () => {
     $(".loading").css("display", 'inline')
     try {
-        const response = await fetch("/api/user/getTask", {
+        const response = await fetch(`/api/user/getTask`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -355,32 +382,173 @@ const fetchTasks = async () => {
         if (response.ok) {
             CURRENT_USER_ID = responseData.user_id;
             responseData = responseData.data;
-            $("#taskNbr").text(responseData.length); // Set task count in UI
+            ALL_TASKS = responseData; 
+            renderTasks();
             showNotification("success", `You have ${responseData.length} task${responseData.length > 1 ? "s" : ""} to do`);
-
-            responseData.forEach(task => {
-                const id = task.task_id;
-                const title = task.title;
-                const start_date = task.start_date;
-                const end_date = task.end_date;
-                const subtasks = task.subtasks;
-                const description = task.description;
-                const bg_color = task.bg_color;
-                addNewTask(id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
-            });
+            $(".loading").css("display", 'none')
             return responseData;
         } else {
-            showNotification("error", responseData.message);
+            showNotification("error", responseData.error);
             CURRENT_USER_ID = responseData.user_id;
         }
     } catch (error) {
+        console.error(error.message)
         showNotification("error", error.message);
     }
     $(".loading").css("display", 'none')
 };
 
+const fetchList = async () => {
+    $(".loading").css("display", 'inline');
+    try {
+        const response = await fetch("/api/user/lists", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        let responseData = await response.json();
+
+        if (response.ok) {
+            responseData = responseData.data;
+            const selectListContainer = document.getElementById('list_id');
+            selectListContainer.innerHTML = '';
+            const listContainer = document.getElementById('list-container');
+            ALL_LIST = responseData
+
+            // Append lists and checkboxes
+            responseData.forEach(list => {
+                const listEl = document.createElement('li');
+                const opt = document.createElement('option');
+                opt.value = list.list_id;
+                opt.textContent = list.list_name;
+                selectListContainer.append(opt);
+
+                listEl.classList = 'my-2 p-1 px-3';
+                listEl.innerHTML = `
+                    <div class="form-check d-flex align-items-center justify-content-between gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <input 
+                                type="checkbox" 
+                                class="form-check-input mt-0 list-checkbox" 
+                                id="listCheck${list.list_id}" 
+                                ${list.task_nbr > 0 ? 'checked' : ''}
+                            >
+                            <label class="form-check-label mb-0" for="listCheck${list.list_id}">
+                                <a class="text-dark text-decoration-none">${list.list_name}</a>
+                            </label>
+                        </div>
+                        <span>${list.task_nbr}</span>
+                    </div>
+                `;
+                listContainer.appendChild(listEl);
+            });
+            attachCheckboxListeners();
+
+            renderTasks(getCheckedLists());
+            document.getElementById('listCheckAll').addEventListener('click', () => {
+                const checkboxes = document.querySelectorAll('.list-checkbox');
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                checkboxes.forEach(cb => cb.checked = !allChecked);
+            });
+
+        } else {
+            showNotification("error", responseData.message);
+        }
+    } catch (error) {
+        showNotification("error", error.message);
+    }
+    $(".loading").css("display", 'none');
+};
+
+function attachCheckboxListeners() {
+    const checkboxes = document.querySelectorAll('.list-checkbox');
+
+    const checkAllStatus = () => {
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+    };
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+            checkAllStatus();
+            renderTasks();
+        });
+    });
+}
+
+function getCheckedLists() {
+    const checkboxes = document.querySelectorAll('.list-checkbox');
+    const checked = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.id.replace('listCheck', ''));
+    return checked;
+}
+
 // Call the function to fetch tasks
+fetchList()
 fetchTasks()
+
+function renderTasks(selectedLists = null) {
+    if (!selectedLists) {
+        selectedLists = getCheckedLists();
+    }
+
+    const container = document.getElementById('allTaskContainer'); // User dashboard
+    const todayContainer = document.getElementById('todayTaskContainer'); // Today dashboard
+
+    if (container) {
+
+        const filteredTasks = ALL_TASKS.filter(task => selectedLists.includes(String(task.list_id)));
+        if (ALL_TASKS.length > 0) {
+            container.innerHTML = `
+                <!--Create task-->
+                <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task" id="addNewTask">
+                    <div class="rounded-4  h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                        <i class="text-dark fas fa-add addSing"></i>
+                    </div>
+                </div>
+            `;
+            $("#no_task").fadeOut()
+        }
+
+        $("#taskNbr").text(filteredTasks.length);
+
+        filteredTasks.forEach(task => {
+            const {list_id, task_id, title, start_date, end_date, subtasks, description, bg_color } = task;
+            addNewTask(list_id, task_id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
+        });
+
+        // Reattach modal event after rendering
+        $('.open-modal').on('click', () => {
+            $('.overlay, .modal').fadeIn();
+        });
+    } else if (todayContainer) {
+
+        const filteredTasks = ALL_TODAYS_TASKS.filter(task => selectedLists.includes(String(task.list_id)));
+
+        if (ALL_TODAYS_TASKS.length > 0) {
+            todayContainer.innerHTML = `
+                <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task" id="addNewTask">
+                    <div class="rounded-4 h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                        <i class="text-dark fas fa-add addSing"></i>
+                    </div>
+                </div>
+            `;
+            $("#no_task").fadeOut()
+        }
+
+        $("#todayTaskNbr").text(filteredTasks.length);
+
+        filteredTasks.forEach(task => {
+            const {list_id, task_id, title, start_date, end_date, subtasks, description, bg_color } = task;
+            addNewTask(list_id, task_id, title, formatDate(start_date), formatDate(end_date), description, bg_color, subtasks);
+        });
+
+        // Reattach modal event after rendering
+        $('.open-modal').on('click', () => {
+            $('.overlay, .modal').fadeIn();
+        });
+    }
+}
 
 const formatDate = (date) => {
     const d = new Date(date);
@@ -399,24 +567,59 @@ const formatDate = (date) => {
 };
 
 // Create display card
-function addNewTask(id, title, start_date, end_date, description, bg_color,  subtasks){
+function addNewTask(list_id, id, title, start_date, end_date, description, bg_color,  subtasks){
+    let list_name  = null
+
+    if (ALL_TASKS.length > 0 || ALL_TODAYS_TASKS > 0) {
+        $("#no_task").fadeOut()
+    }
+
+    if(!document.getElementById('addNewTask')){
+        const container = document.getElementById('allTaskContainer');
+        container.innerHTML = `
+            <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task" id="addNewTask">
+                <div class="rounded-4  h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                    <i class="text-dark fas fa-add addSing"></i>
+                </div>
+            </div>`
+        
+            // Open modal and store clicked element
+            $(".open-modal").on("click", function() {
+                addTask = $(this);
+                $(".overlay, .modal").fadeIn();
+            });
+    }else {
+        $("#addNewTask").fadeIn()
+    }
+    
+    ALL_LIST.forEach(list => {
+        if( list.list_id == list_id){
+            list_name = list.list_name
+        }   
+    })
     let taskContainer = $(`<div class="col-4 p-1 taskBox" id="task${id}"></div>`)
     taskContainer.html(`    
         <div 
-            class=" h-100 p-2 rounded-3 d-flex flex-column justify-content-start"
-            style='background-color: ${bg_color}' 
+            class=" h-100 p-2 rounded-4 d-flex flex-column justify-content-start position-relative"
+            style="background: linear-gradient(135deg, ${bg_color}99,rgb(211, 213, 215));"
             title="${(description !== 'None')?description:'No description'}"
         >
-            <span class="text-dark date date-range w-auto ">
-                <i class="fa-solid fa-calendar-days text-success"></i>
-                ${start_date}
-                <i class="fa-solid fa-arrow-right text-warning"></i>
-                ${end_date}
+            <div class="position-relative mb-2 bg-transparent w-100">
+                <span class="text-dark date date-range text-center w-100 d-flex justify-content-center">
+                    <i class="fa-solid fa-calendar-days text-success"></i>
+                    ${start_date}
+                    <i class="fa-solid fa-arrow-right text-warning"></i>
+                    ${end_date}
+                </span>
+            </div>
+            <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
+                <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
+                ${list_name}
             </span>
             <h3 class="text-dark task-title">
                 ${title}
                 <div class='d-flex justify-content-center align-items-center gap-3 bg-transparent'>
-                    <i class="fas fa-pen text-success task-icon" onclick="update_task('${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
+                    <i class="fas fa-pen text-success task-icon" onclick="update_task('${list_id}','${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
                     <i class="fas fa-add text-success task-icon" onclick="addSubTask('${id}', '${title}')"></i> 
                     <i class="fas fa-trash-alt text-danger task-icon" onclick="removeTask('${id}')"></i>
                 </div>
@@ -425,7 +628,7 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
             ${
                 subtasks.map( subtask => `
                     <li 
-                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
+                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id} rounded-pill px-3 py-2' 
                         id='subtask${subtask.subtask_id}'
                         style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
                         ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
@@ -440,7 +643,7 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
                             <input
                                 ${subtask.finished ? "checked" : ""}
                                 value=${subtask.finished ? "off" : "on"}
-                                class="from-control mx-2 my-0"
+                                class="form-check-input mx-2 my-0"
                                 type="checkbox" name="subtask_status" 
                                 id="input${subtask.subtask_id}" 
                                 onchange="check(${subtask.subtask_id})"
@@ -458,7 +661,11 @@ function addNewTask(id, title, start_date, end_date, description, bg_color,  sub
             </ul>
         </div>
     `)
-    $(".task").after(taskContainer)
+    if ($(".task")) {
+        $(".task").after(taskContainer)
+    }else {
+        showNotification('error', "No task container found")
+    }
 }
 
 //Notification displayer
@@ -503,7 +710,6 @@ function showNotification(type, message) {
         }, 500); // Match transition duration
     }, 5000);
 }
-
 
 // Check Subtask
 async function check(id){
@@ -586,8 +792,6 @@ var verify = async () => {
             method: "GET",
         });
     
-        let responseData = await response.json();
-    
         if (response.ok) {
             $('._user_action').append(`
                 <li class="my-2 py-1">
@@ -606,7 +810,6 @@ var verify = async () => {
 }
 
 verify()
-
 
 // Find task
 async function findTaskk(){
@@ -669,19 +872,35 @@ $('#findTask').on('focus', function() {
 });
 
 // Task card generator
-function genTaskCard(bg_color, description, start_date, end_date, title, id, subtasks){
+function genTaskCard(list_id, bg_color, description, start_date, end_date, title, id, subtasks){
+    let list_name = null
+    ALL_LIST.forEach(list => {
+        if( list.list_id == list_id){
+            list_name = list.list_name
+        }   
+    })
     const card = `   
-        <div class="h-100 p-2 rounded-3 d-flex flex-column justify-content-start" style='background-color: ${bg_color}' title="${(description !== 'None')?description:'No description'}">
-            <span class="text-dark date date-range w-auto ">
-                <i class="fa-solid fa-calendar-days text-success"></i>
-                ${start_date}
-                <i class="fa-solid fa-arrow-right text-warning"></i>
-                ${end_date}
+        <div 
+            class=" h-100 p-2 rounded-4 d-flex flex-column justify-content-start position-relative"
+            style="background: linear-gradient(135deg, ${bg_color}99,#d3d5d7);"
+            title="${(description !== 'None')?description:'No description'}"
+        >
+            <div class="position-relative mb-2 bg-transparent w-100">
+                <span class="text-dark date date-range text-center w-100 d-flex justify-content-center">
+                    <i class="fa-solid fa-calendar-days text-success"></i>
+                    ${start_date}
+                    <i class="fa-solid fa-arrow-right text-warning"></i>
+                    ${end_date}
+                </span>
+            </div>
+            <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
+                <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
+                ${list_name}
             </span>
             <h3 class="text-dark task-title">
                 ${title}
                 <div class='d-flex justify-content-center gap-3 bg-transparent'>         
-                    <i class="fas fa-pen text-success task-icon" onclick="update_task('${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
+                    <i class="fas fa-pen text-success task-icon" onclick="update_task(${list_id}, '${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i> 
                     <i class="fas fa-add text-success" onclick="addSubTask('${id}', '${title}')"></i> 
                     <i class="fas fa-trash-alt text-danger" onclick="removeTask('${id}')"></i>
                 </div>
@@ -690,7 +909,7 @@ function genTaskCard(bg_color, description, start_date, end_date, title, id, sub
             ${
                 subtasks.map(subtask => `
                     <li 
-                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id}' 
+                        class='justify-content-between align-items-center subTask subtask${subtask.subtask_id} rounded-pill px-3 py-2'
                         id='subtask${subtask.subtask_id}'
                         style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
                         ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
@@ -698,7 +917,7 @@ function genTaskCard(bg_color, description, start_date, end_date, title, id, sub
                         <span 
                             style="color: ${(subtask.finished)?'#f8f9fa' : ''}"
                         > 
-                        ${subtask.title}
+                        ${subtask.subtask_title}
                         </span>
                         <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
                             <i class="fas fa-trash-alt text-danger" onclick="removeSubTask('${subtask.subtask_id}')"></i>
@@ -746,23 +965,25 @@ function convertToISO(dateStr) {
     return `${year}-${month}-${paddedDay}`;
   }
 
-function update_task(task_id, title, startDate, endDate, bg_color, description){
+function update_task(list_id, task_id, title, startDate, endDate, bg_color, description){
     $('.overlay, .modal').fadeIn()
     $('.task-form').attr('id', 'update_task_form')
+    $('#list_id').val(list_id)
     $("#title").val(title)
     $("#startDate").val(convertToISO(startDate))
     $("#endDate").val(convertToISO(endDate))
-    $("#bg-color-piker").val(bg_color)
+    $("#bg-color-picker").val(bg_color)
     $("#description").val(description)
 
     $("#update_task_form").off("submit");
 
     $("#update_task_form").on("submit", async function(e) {
         e.preventDefault()
+        let list_id = $("#list_id").val()
         let title = $("#title").val().trim()
         let startDate = $("#startDate").val()
         let endDate = $("#endDate").val()
-        let bgColor = $("#bg-color-piker").val()
+        let bgColor = $("#bg-color-picker").val()
         let description = $("#description").val().trim()
     
         if (title.trim() !== "" && startDate !== "" && endDate !== "") {
@@ -771,7 +992,8 @@ function update_task(task_id, title, startDate, endDate, bg_color, description){
                 "task_start_date": startDate,
                 "task_end_date": endDate,
                 "task_background_color": bgColor,
-                "description": description || "None"
+                "description": description || "None",
+                "list_id": list_id
             }
     
             $(".loading").css("display", 'inline');
@@ -830,6 +1052,9 @@ socket.on('new_notification', (data) => {
 
         // Add the new notification to the dropdown menu
         const dropdownMenu = document.querySelector('.dropdown-menu');
+        if (dropdownMenu.innerHTML == '<span class="">No notification yet</span>') {
+            dropdownMenu.innerHTML = '';
+        }
         const newNotification = `
             <li id="notification${data.notification_id}" class="list-group-item border-0 px-3 py-2 rounded-3 mb-2 shadow-sm">
                 <div class="d-flex justify-content-between align-items-center">
@@ -860,11 +1085,17 @@ const fetchNotifications = async () => {
         });
 
         if (response.ok) {
+            // Populate the dropdown menu with notifications
+            const dropdownMenu = document.querySelector('.dropdown-menu');
             const responseData = await response.json();
             const notifications = responseData.data;
 
-            // Populate the dropdown menu with notifications
-            const dropdownMenu = document.querySelector('.dropdown-menu');
+            if (notifications.length == 0) {
+                dropdownMenu.style.textAlign = 'center'
+                dropdownMenu.innerHTML = '<span class="">No notification yet</span>'
+                return
+            } 
+
             dropdownMenu.innerHTML = ''; // Clear existing notifications
             notifications.forEach(notification => {
                 const notificationItem = `
@@ -910,8 +1141,14 @@ async function deleteNotification(notificationId) {
             if (notificationItem) {
                 notificationItem.remove();
                 const badge = document.querySelector('.dropdown .badge.bg-success');
+                const dropdownMenu = document.querySelector('.dropdown-menu');
                 let count = parseInt(badge.textContent);
                 badge.textContent = count - 1;
+                if (count - 1 == 0) {
+                    dropdownMenu.style.textAlign = 'center'
+                    dropdownMenu.innerHTML = '<span class="">No notification yet</span>'
+                    return
+                }
             }
 
         } else {
@@ -924,3 +1161,67 @@ async function deleteNotification(notificationId) {
 
 // Call fetchNotifications on page load
 fetchNotifications();
+
+// Add new list
+async function addNewList(event) {
+    event.preventDefault();
+
+    const listName = document.getElementById('listName').value.trim();
+    const listDescription = document.getElementById('listDescription').value.trim();
+    
+    $(".loading").css("display", 'inline')
+    try{
+        const response = await fetch(`/api/user/lists/add`,{
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "list_name": listName,
+                "list_description": listDescription,
+            })
+        });
+        const data = await response.json();
+        if(response.ok){
+            list = data.list
+            ALL_LIST.push(list)
+            showNotification("success", data.message)
+            const listContainer = document.getElementById('list-container');
+            const listEl = document.createElement('li');
+            listEl.classList = 'my-2 p-1 px-3';
+            listEl.innerHTML = `
+                <div class="form-check d-flex align-items-center justify-content-between gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <input 
+                            type="checkbox" 
+                            class="form-check-input mt-0 list-checkbox" 
+                            id="listCheck${list.list_id}" 
+                            ${list.list_name == 'Personal' ? 'checked' : ''}
+                        >
+                        <label class="form-check-label mb-0" for="listCheck${list.list_id}">
+                            <a class="text-dark text-decoration-none">${list.list_name}</a>
+                        </label>
+                    </div>
+                    <span>${list.task_nbr}</span>
+                </div>
+            `;
+            listContainer.appendChild(listEl);
+            const opt = document.createElement('option');
+            opt.value = list.list_id;
+            opt.textContent = list.list_name;
+            const selectListContainer = document.getElementById('list_id');
+            selectListContainer.append(opt);
+
+            attachCheckboxListeners();
+
+            event.target.reset();
+        }else{
+            showNotification("error", data.error)
+        }
+    } catch (error) {
+        showNotification("error", error)
+    }    
+    $(".loading").css("display", 'none')
+
+    return false;
+}

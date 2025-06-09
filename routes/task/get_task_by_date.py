@@ -32,7 +32,7 @@ def get_task_by_date(app, database):
                     subtasks = [
                         {
                             "subtask_id": sub.subtask_id,
-                            "title": sub.subtask_title,
+                            "subtask_title": sub.subtask_title,
                             "created_at": sub.created_at.isoformat(),
                             "updated_at": sub.updated_at.isoformat(),
                             "finished": sub.finished
@@ -47,7 +47,8 @@ def get_task_by_date(app, database):
                         "end_date": task.task_end_date.isoformat(),
                         "description": task.description,
                         "bg_color": task.task_background_color,
-                        "subtasks": subtasks
+                        "subtasks": subtasks,
+                        "list_id": task.list_id
                     }
                     task_list.append(task_data)
                 
