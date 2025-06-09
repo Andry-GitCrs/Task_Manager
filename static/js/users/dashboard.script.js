@@ -171,7 +171,8 @@ async function  removeTask(id){
 
                 ALL_TASKS = ALL_TASKS.filter(task => task.task_id !== Number(id));
 
-                if (ALL_TASKS.length == 0 || ALL_TODAYS_TASKS == 0) {
+                if (ALL_TASKS.length == 0 && ALL_TODAYS_TASKS == 0) {
+                    $("#addNewTask").fadeOut()
                     $("#no_task").fadeIn()
                 }
 
@@ -499,12 +500,10 @@ function renderTasks(selectedLists = null) {
         const filteredTasks = ALL_TASKS.filter(task => selectedLists.includes(String(task.list_id)));
         if (ALL_TASKS.length > 0) {
             container.innerHTML = `
-                <div class="row justify-content-start" id="allTaskContainer">
-                    <!--Create task-->
-                    <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
-                        <div class="rounded-4  h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
-                            <i class="text-dark fas fa-add addSing"></i>
-                        </div>
+                <!--Create task-->
+                <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task" id="addNewTask">
+                    <div class="rounded-4  h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                        <i class="text-dark fas fa-add addSing"></i>
                     </div>
                 </div>
             `;
@@ -528,7 +527,7 @@ function renderTasks(selectedLists = null) {
 
         if (ALL_TODAYS_TASKS.length > 0) {
             todayContainer.innerHTML = `
-                <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task">
+                <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task" id="addNewTask">
                     <div class="rounded-4 h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
                         <i class="text-dark fas fa-add addSing"></i>
                     </div>
@@ -573,6 +572,24 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
 
     if (ALL_TASKS.length > 0 || ALL_TODAYS_TASKS > 0) {
         $("#no_task").fadeOut()
+    }
+
+    if(!document.getElementById('addNewTask')){
+        const container = document.getElementById('allTaskContainer');
+        container.innerHTML = `
+            <div class="col-4 p-1 rounded-3 task taskBox" title="Add new task" id="addNewTask">
+                <div class="rounded-4  h-100  p-2 rounded-3 d-flex align-items-center justify-content-center open-modal">
+                    <i class="text-dark fas fa-add addSing"></i>
+                </div>
+            </div>`
+        
+            // Open modal and store clicked element
+            $(".open-modal").on("click", function() {
+                addTask = $(this);
+                $(".overlay, .modal").fadeIn();
+            });
+    }else {
+        $("#addNewTask").fadeIn()
     }
     
     ALL_LIST.forEach(list => {
