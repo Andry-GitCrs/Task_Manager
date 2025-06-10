@@ -188,7 +188,8 @@ $("#send-otp").on('click', () => {
     }
     $("#send-otp").prop("disabled", true);
     $(".loading").css("display", 'inline');
-    $.post(`/api/user/sendOtp/${email}`)
+    const encodedEmail = encodeURIComponent(email);
+    $.post(`/api/user/sendOtp?email=${encodedEmail}`)
     .done((data) => {
         showNotification("success", data.message);
     })
@@ -199,7 +200,7 @@ $("#send-otp").on('click', () => {
     })
     .always(() => {
         $("#send-otp").prop("disabled", false);
-        $(".loading").css("display", 'none');
+        $(".loading").hide();
     });
 })
 

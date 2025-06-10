@@ -1,6 +1,6 @@
 import os
 import random
-from flask import jsonify, render_template
+from flask import jsonify, render_template, request
 import string
 import secrets
 import requests
@@ -18,19 +18,36 @@ def send_otp(app, database):
   app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
   mail = Mail(app)
 
+  @app.route('/api/user/sendOtp', defaults={'email': None}, methods=['POST'])
   @app.route('/api/user/sendOtp/<string:email>', methods=['POST'])
   def otp_send(email):
         try:
+            forgot_password = True
+            if email is None:
+                email = request.args.get('email')
+                forgot_password = False
+            
+            if not email:
+                return jsonify(error="Email is required"), 400
+            
             user = User.query.filter_by(email=email).first()
 
+            if not user and forgot_password:
+                return jsonify({"error": "User does not exist"}), 404
+
             if user:
-                if user.verified:
+                if user.verified and not forgot_password:
                     return jsonify({"error": "User already exists"}), 409
                 
                 # User exists but not verified — update OTP and expiration
                 user.otp = ''.join(secrets.choice(string.digits) for _ in range(6))
                 user.exp_date = datetime.utcnow() + timedelta(minutes=10)
-                user.stat = False
+                
+                if not forgot_password:
+                    user.stat = False
+                else:
+                    user.stat = True
+                
                 db.session.commit()
                 otp = user.otp  
             else:
