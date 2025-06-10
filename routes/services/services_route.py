@@ -4,13 +4,15 @@ from . import(
   export_pdf,
   send_email,
   send_notification,
-  announcement
+  announcement,
+  send_otp,
 )
 
 def use_services_route(app, database, socketio):
   routes = [
     export_csv.export_to_csv,
-    export_pdf.export_to_pdf
+    export_pdf.export_to_pdf,
+    send_otp.send_otp
   ]
 
   send_email.verifyEmail(app)

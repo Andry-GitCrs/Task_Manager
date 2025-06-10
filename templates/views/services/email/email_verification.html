@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Verify Your Email</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+
+    .email-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      color: #198754;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #6c757d;
+      font-weight: bold;
+      margin-bottom: 25px;
+    }
+
+    .description {
+      font-size: 16px;
+      color: #495057;
+      margin-bottom: 30px;
+    }
+
+    .otp-box {
+      font-size: 32px;
+      font-weight: bold;
+      letter-spacing: 10px;
+      background-color: #f1f3f5;
+      padding: 15px 20px;
+      border-radius: 8px;
+      display: inline-block;
+      color: #fd850d;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #6c757d;
+      margin-top: 30px;
+    }
+
+    .footer {
+      font-size: 12px;
+      color: #adb5bd;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 600px) {
+      .otp-box {
+        letter-spacing: 6px;
+        font-size: 28px;
+      }
+
+      .email-container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="title">Task Manager</div>
+    <div class="subtitle">✓ OTP Verification</div>
+
+    <p class="description">
+      Hello, <strong>{{ email }}</strong><br>
+      Use the verification code below to complete your email verification.
+    </p>
+
+    <div class="otp-box">{{ otp }}</div>
+
+    <p class="note">
+      This code will expire in 10 minutes. If you didn’t request this, you can safely ignore this message.
+    </p>
+
+    <div class="footer">
+      Task Manager &copy; 2025. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>

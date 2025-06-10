@@ -882,3 +882,7 @@ li:hover .notification-hover-info {
     cursor: pointer;
     border: none;
 }
+
+#otp{
+    letter-spacing: 5px;
+}

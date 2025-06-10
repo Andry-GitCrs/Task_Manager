@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>New Contact Message Received</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      padding: 30px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .header h2 {
+      margin: 0;
+      color: #343a40;
+      font-weight: bold;
+    }
+
+    .header span {
+      display: block;
+      color: #198754;
+      font-size: 20px;
+      margin-top: 5px;
+    }
+
+    .summary {
+      font-size: 16px;
+      color: #495057;
+      margin-bottom: 20px;
+    }
+
+    .info-box {
+      background-color: #f1f3f5;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .info-item {
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #212529;
+    }
+
+    .info-item strong {
+      color: #212529;
+      display: inline-block;
+      width: 90px;
+    }
+
+    .message-content {
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px solid #dee2e6;
+      font-size: 14px;
+      color: #495057;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #adb5bd;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      .info-item strong {
+        width: 100%;
+        display: block;
+        margin-bottom: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>New Message Received</h2>
+      <span>via Task Manager Contact Form</span>
+    </div>
+
+    <p class="summary">
+      You’ve received a new message from <strong>{{ user_first_name }} {{ user_last_name }}</strong>.
+    </p>
+
+    <div class="info-box">
+      <div class="info-item"><strong>Email:</strong> {{ user_email }}</div>
+      <div class="info-item"><strong>Phone:</strong> {{ user_phone }}</div>
+      <div class="message-content">
+        <strong>Message:</strong><br>
+        "{{ user_message }}"
+      </div>
+    </div>
+
+    <div class="footer">
+      Task Manager &copy; 2025
+    </div>
+  </div>
+</body>
+</html>

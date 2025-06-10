@@ -46,6 +46,13 @@
                         <i class="fas fa-envelope"></i>
                         <input class="text-dark" type="email" placeholder="Email" name="new_email" id="new_email" required>
                     </div>
+                    <div class="py-0 ps-4">
+                        <i class="fas fa-key"></i>
+                        <input type="text" maxlength="6" pattern="[A-Za-z0-9]*" inputmode="text" class="fw-bold text-dark" placeholder="- - - - - -" id="otp" required>
+                        <button type="button" class="border-transparent fw-bold text-success w-50 py-1 bg-transparent" id="send-otp">
+                            <i class="fas fa-paper-plane text-success"></i> Send
+                        </button>
+                    </div>
                     <div class="py-0 px-4">
                         <i class="fas fa-key"></i>
                         <input class="text-dark" type="password" placeholder="Password" name="new_password" id="new_password" required>
