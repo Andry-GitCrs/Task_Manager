@@ -886,3 +886,34 @@ li:hover .notification-hover-info {
 #otp{
     letter-spacing: 5px;
 }
+
+.security-update {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  font-family: Arial, sans-serif;
+  color: #2e7d32;
+  line-height: 1.4;
+  user-select: text;
+}
+
+.security-update h3, .security-update h4 {
+  margin: 0.4em 0 0.2em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.security-update p {
+  margin: 0.3em 0 0.8em;
+  font-size: 0.9rem;
+}
+
+.security-update strong {
+  font-weight: 700;
+}
+
+.security-update i {
+  min-width: 1.2em;
+  text-align: center;
+}
