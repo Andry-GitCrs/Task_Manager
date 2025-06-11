@@ -14,11 +14,18 @@ def forgot_password(app, database):
         email = data['email']
         new_password = data['new_password']
         new_confirmation_password = data['confirmation_password']
+        otp = data['otp']
 
-        if email and new_password and new_confirmation_password:
+        if email and new_password and new_confirmation_password and otp:
             user = User.query.filter_by(email = email).first()
 
             if user:
+                if user.otp != otp:
+                    return jsonify({"error": "Invalid OTP"}), 400
+
+                if user.exp_date and user.exp_date < datetime.utcnow():
+                    return jsonify({"error": "OTP has expired"}), 410  
+                 
                 if new_password == new_confirmation_password:
                     new_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
                     user.password = new_password

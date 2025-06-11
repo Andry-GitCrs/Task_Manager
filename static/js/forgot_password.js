@@ -4,12 +4,14 @@ $('#forgot-password-form').on('submit', async function(e) {
     const email = document.getElementById('email').value.trim('');
     const new_password = document.getElementById('new_password').value.trim('');
     const confirm_password = document.getElementById('confirm_password').value.trim('');
+    const otp = document.getElementById('otp').value.trim('');
     let submitBtn = document.getElementById('submit');
 
     user = {
         "email": email,
         "new_password": new_password,
-        "confirmation_password": confirm_password
+        "confirmation_password": confirm_password,
+        "otp": otp
     }
     $(".loading-dash").css("display", 'inline');
     submitBtn.disabled = true;
@@ -85,5 +87,29 @@ function showNotification(type, message) {
         }, 500); // Match transition duration
     }, 5000);
 }
+
+$("#send-otp").on('click', () => {
+    const email = $("#email").val().trim()
+    if(email === "") {
+        showNotification("error", "Please enter your email address");
+        return
+    }
+    $("#send-otp").prop("disabled", true);
+    $(".loading").css("display", 'inline');
+    $.post(`/api/user/sendOtp/${email}`)
+    .done((data) => {
+        showNotification("success", data.message);
+    })
+    .fail((xhr) => {
+        const error = xhr.responseJSON?.error || "An unexpected error occurred";
+        console.error(error);
+        showNotification("error", error);
+    })
+    .always(() => {
+        $("#send-otp").prop("disabled", false);
+        $(".loading").css("display", 'none');
+    });
+})
+
 
 $("body").css("background-image", "url('../../static/images/bg-4.jpg')")

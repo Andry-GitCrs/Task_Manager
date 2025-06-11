@@ -27,7 +27,7 @@ def login(app, database):
                 if user.admin:
                     user.deactivate()
                     db.session.commit()
-                login_user(user)
+                login_user(user, remember=True)
                 return jsonify({
                     "message": f"User {user.email} logged in successfully"
                 }), 200

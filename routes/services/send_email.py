@@ -1,5 +1,5 @@
 from flask_mail import Mail, Message
-from flask import jsonify, request
+from flask import jsonify, render_template, request
 from dotenv import load_dotenv
 import requests
 import os
@@ -23,6 +23,24 @@ def sendEmail(app):
             user_last_name = data['last_name']
             user_phone = data['phone']
             user_message = data['message']
+
+            senderHtml = render_template(
+                '/views/services/email/confirmation_message.html',
+                user_email = user_email,
+                user_first_name = user_first_name,
+                user_last_name = user_last_name,
+                user_phone = user_phone,
+                user_message = user_message
+            )
+
+            adminHtml = render_template(
+                '/views/services/email/received_message.html',
+                user_email = user_email,
+                user_first_name = user_first_name,
+                user_last_name = user_last_name,
+                user_phone = user_phone,
+                user_message = user_message
+            )
             if not user_email or not user_first_name or not user_message:
                 return jsonify({'error': "All fields are required"}), 400
             
@@ -30,14 +48,14 @@ def sendEmail(app):
                 subject = f'Task Manager APP notification',
                 sender = app.config['MAIL_USERNAME'],
                 recipients = [app.config['MAIL_USERNAME']],
-                body = f"Sender Email: {user_email}\nName: {user_first_name} {user_last_name}\nPhone: {user_phone}\nMessage: {user_message}"
+                html = adminHtml
             )
 
             msg2 = Message(
                 subject = f'Task Manager App demand confirmation',
                 sender = app.config['MAIL_USERNAME'],
                 recipients = [user_email],
-                body = f"Mr/Ms , {user_first_name} {user_last_name} thank you for reaching out to us. Your feedback has been received. We'll respond you a soon as possible\nYour message: {user_message}"
+                html = senderHtml
             )
 
             try:

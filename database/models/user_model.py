@@ -13,6 +13,9 @@ def userModel(db):
         updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
         admin = Column(Boolean, default=False)
         stat = Column(Boolean, default=True)
+        otp = Column(String(6), nullable=True)
+        verified = Column(Boolean, default=False)
+        exp_date = Column(DateTime, nullable=True)
 
         tasks = None
 

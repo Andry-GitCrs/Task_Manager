@@ -88,9 +88,10 @@ $("#login_form").on("submit", async (e) => {
 // Register handler
 $("#register_form").on("submit", async (e) => {
     e.preventDefault()
-    const email = document.getElementById("new_email").value
+    const email = $("#new_email").val().trim()
     const password = document.getElementById("new_password").value
     const confirmation_password = document.getElementById("new_confirmation_password").value
+    const otp = document.getElementById("otp").value
     
     $("#register").prop("disabled", true);
     $(".loading").css("display", 'inline');
@@ -99,7 +100,7 @@ $("#register_form").on("submit", async (e) => {
         const response = await fetch("/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password, confirmation_password })
+            body: JSON.stringify({ email, password, confirmation_password, otp })
         });
 
         const responseData = await response.json();
@@ -178,6 +179,30 @@ function showNotification(type, message) {
         }, 500); // Match transition duration
     }, 5000);
 }
+
+$("#send-otp").on('click', () => {
+    const email = $("#new_email").val().trim()
+    if(email === "") {
+        showNotification("error", "Please enter your email address");
+        return
+    }
+    $("#send-otp").prop("disabled", true);
+    $(".loading").css("display", 'inline');
+    const encodedEmail = encodeURIComponent(email);
+    $.post(`/api/user/sendOtp?email=${encodedEmail}`)
+    .done((data) => {
+        showNotification("success", data.message);
+    })
+    .fail((xhr) => {
+        const error = xhr.responseJSON?.error || "An unexpected error occurred";
+        console.error(error);
+        showNotification("error", error);
+    })
+    .always(() => {
+        $("#send-otp").prop("disabled", false);
+        $(".loading").hide();
+    });
+})
 
 /* End Login and Register */
 $("body").css("background-image", "url('../../static/images/bg-4.jpg')")
