@@ -96,7 +96,7 @@ def verifyEmail(app):
                         'is_valid': True
                     }), 200
                 return jsonify({
-                    'error': "Your email address does not exist",
+                    'error': "Cannot send inbox to this address",
                     'is_valid': False
                 }), 400
             except ConnectionError as e:

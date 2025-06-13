@@ -8,6 +8,7 @@ const fetchStat = async () => {
         const data = await response.json();
 
         if (response.ok) {
+            
             const labels = data.data.map(item => item.date);
             const counts = data.data.map(item => item.count);
             const year = new Date().getFullYear();
@@ -35,115 +36,20 @@ const fetchStat = async () => {
             gradient.addColorStop(0, 'rgba(13, 110, 253, 0.5)');
             gradient.addColorStop(1, 'rgba(13, 110, 253, 0)');
 
-            userStatisticsChart = new Chart(ctx, {
-                type: 'line',
+            userStatisticsChart = new Chart(document.getElementById('userStatisticsChart'), {
+                type: 'bar',
                 data: {
-                    labels: filteredLabels.map(label => {
-                        const date = new Date(label);
-                        const today = new Date();
-                        if (date.toDateString() === today.toDateString()) {
-                            return "🟢 Today";
-                        }
-                        return `${date.getDate().toString().padStart(2, '0')} ${date.toLocaleString('default', { month: 'short' })}`;
-                    }),
-                    datasets: [{
-                        label: '📈 Users Created Per Day',
-                        data: filteredCounts,
-                        fill: true,
-                        backgroundColor: gradient,
-                        borderColor: '#0d6efd',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#0d6efd',
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        tension: 0.4
-                    }]
+                labels: filteredLabels,
+                datasets: [{
+                    label: 'Registrations',
+                    data: filteredCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderRadius: 8
+                }]
                 },
                 options: {
-                    responsive: true,
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                color: '#333',
-                                font: { size: 14 }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#343a40',
-                            titleColor: '#fff',
-                            bodyColor: '#f8f9fa',
-                            cornerRadius: 6,
-                            borderColor: '#0d6efd',
-                            borderWidth: 1,
-                            callbacks: {
-                                title: function (tooltipItems) {
-                                    const date = new Date(filteredLabels[tooltipItems[0].dataIndex]);
-                                    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
-                                },
-                                label: function (tooltipItem) {
-                                    return `👥 ${tooltipItem.formattedValue} user(s)`;
-                                }
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Daily User Registrations',
-                            font: {
-                                size: 20,
-                                weight: 'bold'
-                            },
-                            color: '#212529',
-                            padding: {
-                                top: 10,
-                                bottom: 20
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: '📅 Date (DD MMM)',
-                                color: '#6c757d',
-                                font: {
-                                    size: 14
-                                }
-                            },
-                            ticks: {
-                                color: '#495057',
-                                font: {
-                                    size: 12
-                                }
-                            },
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: `${year} Users Created`,
-                                color: '#6c757d',
-                                font: {
-                                    size: 14
-                                }
-                            },
-                            beginAtZero: true,
-                            ticks: {
-                                color: '#495057',
-                                callback: value => Number.isInteger(value) ? value : null
-                            },
-                            grid: {
-                                color: 'rgba(0,0,0,0.05)'
-                            }
-                        }
-                    }
+                responsive: true,
+                plugins: { legend: { display: false } }
                 }
             });
         } else {

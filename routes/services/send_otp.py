@@ -40,7 +40,8 @@ def send_otp(app, database):
                     return jsonify({"error": "User already exists"}), 409
                 
                 # User exists but not verified — update OTP and expiration
-                user.otp = ''.join(secrets.choice(string.digits) for _ in range(6))
+                otp = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(6))
+                user.otp = otp
                 user.exp_date = datetime.utcnow() + timedelta(minutes=10)
                 
                 if not forgot_password:
@@ -49,7 +50,6 @@ def send_otp(app, database):
                     user.stat = True
                 
                 db.session.commit()
-                otp = user.otp  
             else:
                 url = 'https://emailvalidation.abstractapi.com/v1/'
                 params = {
@@ -61,21 +61,22 @@ def send_otp(app, database):
                     data = response.json()
                     if data.get("deliverability") != "DELIVERABLE":
                         return jsonify({
-                            "error": "Email address is not deliverable",
+                            "error": "Cannot send inbox to this address",
                             "is_valid": False
                         }), 400
-                except requests.ConnectionError as e:
-                    return jsonify({"error": str(e)}), 503
+                except ConnectionError as e:
+                    return jsonify({"error": str(e)}), 403
                 except requests.RequestException:
-                    return jsonify({"error": "Unable to validate email due to network error"}), 500
+                    return jsonify({"error": 'No internet connection'}), 401
                 
-                otp = ''.join(secrets.choice(string.digits) for _ in range(6))
+                
+                otp = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(6))
                 exp_date = datetime.utcnow() + timedelta(minutes=10)
                 
                 temp_user = User(
                     email=email,
                     password="",
-                    otp=otp,
+                    otp=otp,                            
                     verified=False,
                     exp_date=exp_date,
                     stat=False

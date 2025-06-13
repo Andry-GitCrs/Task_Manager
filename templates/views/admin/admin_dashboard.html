@@ -1,113 +1,139 @@
 {% extends 'views/admin/base.html' %}
-{% block title %}
-    Admin Dashboard
-{% endblock %}
+{% block title %}Admin Dashboard{% endblock %}
+
 {% block head %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-    <style>
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        .stat-card {
-            transition: transform 0.2s ease-in-out;
-        }
-        .stat-card:hover {
-            transform: scale(1.03);
-        }
-        #percentage {
-            font-size: 2rem;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 20px;
-        }
-        #user_activity_lineChart, #usersChart {
-            max-height: 350px;
-            width: 100% !important;
-        }
-        #user_circularChart {
-            max-width: 100%;
-            height: auto;
-        }
-    </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --clr-bg: #ffffff;
+      --clr-card: #ffffff;
+      --clr-text: #1e1e1e;
+      --clr-border: rgba(0,0,0,.1);
+    }
+    [data-theme="dark"] {
+      --clr-bg: #12131a;
+      --clr-card: #1d1e26;
+      --clr-text: #e4e4e4;
+      --clr-border: rgba(255,255,255,.08);
+    }
+    body {background: var(--clr-bg); color: var(--clr-text); transition: background .3s,color .3s; font-family: Arial, Helvetica, sans-serif;}
+    /* cards */
+    .stat-card, .dashboard-card {background: var(--clr-card); border:1px solid var(--clr-border); border-radius:.85rem; transition:transform .2s,box-shadow .2s;}
+    .stat-card:hover, .dashboard-card:hover {transform:translateY(-4px); box-shadow:0 .5rem 1rem rgba(0,0,0,.15)}
+    .card-icon-wrapper {width:3.5rem;height:3.5rem;display:grid;place-items:center;border-radius:50%;margin:0 auto .75rem;}
+    .charts_container {background:var(--clr-card);border:1px solid var(--clr-border); height: 86%;}
+    #percentage_nbr[data-value]{animation:counter 1.4s forwards ease-out}@keyframes counter{from{content:attr(data-from)}to{content:attr(data-value)}}
+    .theme-toggle {cursor:pointer;font-size:1.25rem;border:none;background:transparent;color:var(--clr-text)}
+    /* active users list */
+    .avatar-sm{width:36px;height:36px;object-fit:cover;border-radius:50%}
+    .list-group-item {background:var(--clr-card);border-color:var(--clr-border)}
+    .list-group-item:hover{background:rgba(0,0,0,.02)}
+    /* percentage display */
+    #percentage{width:50px;height:50px;display:flex;justify-content:center;align-items:center;font-size:45px;}
+    .card-title i {vertical-align: middle;}
+  </style>
 {% endblock %}
-{% block dashboardActive %}
-    border shadow
-{% endblock %}
+
+{% block dashboardActive %}border bg-gradient-primary{% endblock %}
+
 {% block content %}
+<!-- Stat cards ------------------------------------------------------------- -->
 <div class="container-fluid rounded-3 py-3">
-    <div class="row g-3">
-        <div class="col-md-6 col-xl-3">
-            <div class="card stat-card text-bg-warning text-center shadow-sm h-100">
-                <div class="card-body bg-light rounded-3">
-                    <i class="fas fa-users text-secondary card-icon"></i>
-                    <h5 class="card-title">Total Users</h5>
-                    <p class="card-text display-6" id="total_users">n/a</p>
-                    <hr class="border-secondary">
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card stat-card text-bg-success text-center shadow-sm h-100">
-                <div class="card-body bg-light rounded-3">
-                    <i class="fas fa-tasks text-success card-icon"></i>
-                    <h5 class="card-title text-dark">Users Tasks</h5>
-                    <p class="card-text display-6 text-dark" id="users_tasks">n/a</p>
-                    <hr class="border-success">
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card stat-card text-bg-info text-center shadow-sm h-100">
-                <div class="card-body bg-light rounded-3">
-                    <i class="fas fa-list text-warning card-icon"></i>
-                    <h5 class="card-title text-dark">Subtasks</h5>
-                    <p class="card-text display-6 text-dark" id="users_subtasks">n/a</p>
-                    <hr class="border-warning" id="users_subtasks_percent">
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card stat-card text-bg-danger text-center shadow-sm h-100">
-                <div class="card-body bg-light rounded-3">
-                    <i class="fas fa-check-double text-success card-icon"></i>
-                    <h5 class="card-title text-dark">Finished Subtasks</h5>
-                    <p class="card-text display-6 text-dark" id="finished_subtasks">n/a</p>
-                    <hr class="border-success">
-                </div>
-            </div>
-        </div>
+  <div class="row g-3">
+    {% set stats = [
+      {'id':'total_users','icon':'users','clr':'secondary','title':'Total Users'},
+      {'id':'users_tasks','icon':'tasks','clr':'dark','title':'Users Tasks'},
+      {'id':'users_subtasks','icon':'list','clr':'warning','title':'Subtasks'},
+      {'id':'finished_subtasks','icon':'check-double','clr':'success','title':'Finished Subtasks'}
+    ] %}
+    {% for s in stats %}
+    <div class="col-sm-6 col-lg-3">
+      <div class="card stat-card text-center p-3 h-100">
+        <div class="card-icon-wrapper bg-{{s.clr}}-subtle text-{{s.clr}}"><i class="fas fa-{{s.icon}}"></i></div>
+        <h6 class="fw-semibold mb-0">{{s.title}}</h6>
+        <p id="{{s.id}}" class="display-6 my-1">0</p>
+      </div>
     </div>
+    {% endfor %}
+  </div>
 </div>
 
-<div class="container-fluid bg-white shadow-sm p-3 charts_container rounded-3 mt-4">
-    <div class="row g-3">
-        <div class="col-lg-7">
-            <div class="border rounded-3 p-3 h-100">
-                <h4 class="text-center mb-3">
-                    <i class="fas fa-chart-line text-primary"></i> User Activity Line Chart
-                </h4>
-                <canvas id="user_activity_lineChart"></canvas>
-            </div>
-        </div>
-        <div class="col-lg-5">
-            <div class="border rounded-3 p-3 h-100 d-flex flex-column justify-content-center align-items-center">
-                <div id="percentage">
-                    <span id="percentage_nbr">n/a</span><span style="font-size: 1rem;">%</span>
-                </div>
-                <canvas id="user_circularChart"></canvas>
-            </div>
-        </div>
-    </div>
-    <div class="row mt-4">
+<!-- Charts & Active users -------------------------------------------------- -->
+<div class="container-fluid shadow-sm p-4 charts_container rounded-4 mt-4">
+  <div class="row g-4">
+    <!-- Area: Charts (8/12 on lg) -->
+    <div class="col-lg-8 order-2 order-lg-1">
+      <div class="row g-4">
+        <!-- Line chart card -->
         <div class="col-12">
-            <div class="border rounded-3 p-3">
-                <canvas id="usersChart"></canvas>
+          <div class="card dashboard-card border-0 h-100">
+            <div class="card-body">
+              <h5 class="card-title text-center mb-4"><i class="fas fa-chart-line text-primary me-2"></i>User Activity Over Time</h5>
+              <canvas id="user_activity_lineChart" style="min-height:280px"></canvas>
             </div>
+          </div>
         </div>
+        <!-- Users chart -->
+        <div class="col-12">
+          <div class="card dashboard-card border-0 h-100">
+            <div class="card-body">
+              <h5 class="card-title text-center mb-3"><i class="fas fa-users text-secondary me-2"></i>Total Users Overview</h5>
+              <canvas id="usersChart" style="height:300px; max-height: 300px;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Sidebar: Circular % + Active users (4/12 on lg) -->
+    <div class="col-lg-4 order-1 order-lg-2">
+      <!-- Top active users list -->
+      <div class="card dashboard-card border-0 h-50">
+        <div class="card-body">
+          <h6 class="fw-semibold mb-3"><i class="fas fa-fire text-danger me-2"></i>Top 10 Most Active Users</h6>
+          <ul class="list-group list-group-flush small" id="activeUsersList" style="max-height: 70%;overflow-y: scroll;"></ul>
+        </div>
+      </div>
+      <!-- Completion circle -->
+      <div class="card dashboard-card border-0 mb-4 mb-lg-3 text-center h-50">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center">
+          <div id="percentage" class="mb-3">
+            <span id="percentage_nbr" data-from="0" data-value="" class="display-5 fw-bold text-success"></span>
+            <span class="fs-5">%</span>
+          </div>
+          <canvas id="user_circularChart" style="height:220px!important"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent activity log ---------------------------------------------------- -->
+<div class="container-fluid mt-4">
+  <div class="card dashboard-card border-0">
+    <div class="card-body">
+      <h6 class="fw-semibold mb-3"><i class="fas fa-clock text-info me-2"></i>Recent Activity Log</h6>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0" id="activityTable">
+          <thead class="table-light">
+            <tr><th>Time</th><th>User</th><th>Action</th><th class="text-end">Details</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>08:32</td><td>Alice</td><td>Created Task</td><td class="text-end">Task #239</td></tr>
+            <tr><td>08:30</td><td>Bob</td><td>Updated Subtask</td><td class="text-end">Fix login bug</td></tr>
+            <tr><td>08:28</td><td>Charlie</td><td>Marked Complete</td><td class="text-end">Sprint Planning</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
+
 {% block script %}
-    <script src="{{ url_for('static', filename='js/admin/admin_dashboard.js') }}" ></script>
+  <script src="{{ url_for('static', filename='js/admin/admin_dashboard.js') }}"></script>
+  <script>
+    /* animate percentage */
+    function animatePercentage(val){const el=document.getElementById('percentage_nbr');let cur=0;const end=parseInt(val,10)||0;const step=Math.max(1,Math.ceil(end/90));const tick=()=>{cur+=step;cur=end<cur?end:cur;el.textContent=cur;if(cur<end)requestAnimationFrame(tick)};tick()}
+  </script>
 {% endblock %}

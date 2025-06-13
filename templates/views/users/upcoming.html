@@ -7,12 +7,11 @@
 {% endblock %}
 {% block additionnal %}
     <form class="mx-3 d-flex gap-2">
-        <label class="form-control rounded-pill" for="date_select">Select specific date</label>
-        <select name="" id="select_arg" class="border-none px-1 rounded-pill">
+        <select name="" id="select_arg" class="border-none px-2 rounded-pill bg-transparent">
             <option value="start">Starts on</option>
             <option value="end">Ends on</option>
         </select>
-        <input class="form-control rounded-pill" type="date" name="date_select" id="date_select">
+        <input class="form-control rounded-pill bg-transparent" type="date" name="date_select" id="date_select">
     </form>
 {% endblock%}
 {% block content %}

@@ -1,42 +1,118 @@
 {% extends "views/admin/base.html" %}
-{% block title %}
-    Users Analytics
+{% block title %}Users Analytics{% endblock %}
+{% block usersAnalyticsActive %}border shadow{% endblock %}
+
+{% block head %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+  <style>
+    canvas {
+      max-width: 100%;
+      height: auto;
+    }
+    .filter-container {
+      display: flex;
+      justify-content: end;
+      margin-bottom: 1.5rem;
+    }
+    .analytics-card {
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: .85rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-title i {
+      margin-right: .5rem;
+    }
+  </style>
 {% endblock %}
-{% block usersAnalyticsActive %}
-    border shadow
-{% endblock %}{% block head %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-    <style>
-        canvas {
-            max-width: 90%;
-            height: auto;
-        }
-        .filter-container {
-            margin-bottom: 20px;
-        }
-    </style>
-{% endblock %}
+
 {% block content %}
-    <div class="filter-container">
-        <label for="monthSelect">Filter by Month:</label>
-        <select id="monthSelect" class="form-select w-auto d-inline-block">
-            <option value="all">All</option>
-            <option value="1">January</option>
-            <option value="2">February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">June</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">September</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
-        </select>
+<div class="container-fluid">
+  <div class="filter-container">
+    <select id="monthSelect" class="form-select w-auto">
+      <option value="all">All</option>
+      <option value="1">January</option>
+      <option value="2">February</option>
+      <option value="3">March</option>
+      <option value="4">April</option>
+      <option value="5">May</option>
+      <option value="6">June</option>
+      <option value="7">July</option>
+      <option value="8">August</option>
+      <option value="9">September</option>
+      <option value="10">October</option>
+      <option value="11">November</option>
+      <option value="12">December</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="analytics-card">
+        <h6 class="card-title"><i class="fas fa-chart-bar text-primary"></i>User Registrations per Month</h6>
+        <canvas id="userStatisticsChart"></canvas>
+      </div>
     </div>
-    <canvas id="userStatisticsChart"></canvas>
+    <div class="col-lg-6">
+      <div class="analytics-card">
+        <h6 class="card-title"><i class="fas fa-wave-square text-warning"></i>Daily User Activity</h6>
+        <canvas id="userDailyActivityChart"></canvas>
+      </div>
+    </div>
+    <div class="col-lg-6 m-auto">
+      <div class="analytics-card">
+        <h6 class="card-title text-center mb-3"><i class="fas fa-user-tag text-success"></i>User Types</h6>
+        <canvas id="userTypePieChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block script %}
-    <script src="{{ url_for('static', filename='js/admin/admin_user_analytics.js') }}" ></script>
+<script>
+  
+
+  // Chart 2: Daily activity
+  new Chart(document.getElementById('userDailyActivityChart'), {
+    type: 'line',
+    data: {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      datasets: [{
+        label: 'Active Users',
+        data: [12, 19, 14, 22, 30, 18, 25],
+        borderColor: '#ffc107',
+        backgroundColor: 'rgba(255, 193, 7, 0.2)',
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+
+  // Chart 3: User types
+  new Chart(document.getElementById('userTypePieChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Admin', 'Editor', 'Viewer'],
+      datasets: [{
+        data: [4, 10, 22],
+        backgroundColor: ['#28a745', '#ffc107', '#6c757d']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+</script>
+
+<script src="{{ url_for('static', filename='js/admin/admin_user_analytics.js') }}" ></script>
 {% endblock %}

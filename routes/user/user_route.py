@@ -3,7 +3,8 @@ from . import(
   get_notification,
   mark_notification,
   update_profile,
-  user_task_activities
+  user_task_activities,
+  most_active_user
 )
 
 from flask import render_template
@@ -21,7 +22,8 @@ def use_user_route(app, database, login_manager):
     update_profile.update_profile,
     fetch_user_daily_finished_subtask.fetch_user_daily_finished_subtask,
     get_notification.get_notification,
-    mark_notification.mark_notification
+    mark_notification.mark_notification,
+    most_active_user.most_active_user
   ]
 
   for route in routes:

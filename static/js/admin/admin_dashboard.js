@@ -64,18 +64,20 @@ function makeLineChart(userData) {
     const taskData = userData.data.active_users.map(user => user.tasks_count);
     const finishedSubtaskData = userData.data.active_users.map(user => user.finished_subtasks_count);
 
+    // Blue gradient
     const gradientBlue = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradientBlue.addColorStop(0, 'rgba(13,110,253,0.7)');   // Top
-    gradientBlue.addColorStop(1, 'rgba(13,110,253,0.1)');   // Bottom
+    gradientBlue.addColorStop(0, 'rgba(13,110,253,0.5)');
+    gradientBlue.addColorStop(1, 'rgba(13,110,253,0.05)');
 
+    // Green gradient
     const gradientGreen = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradientGreen.addColorStop(0, 'rgba(25,135,84,0.7)');
-    gradientGreen.addColorStop(1, 'rgba(25,135,84,0.1)');
+    gradientGreen.addColorStop(0, 'rgba(25,135,84,0.5)');
+    gradientGreen.addColorStop(1, 'rgba(25,135,84,0.05)');
 
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: labels,
+            labels,
             datasets: [
                 {
                     label: 'Tasks',
@@ -84,8 +86,9 @@ function makeLineChart(userData) {
                     backgroundColor: gradientBlue,
                     tension: 0.4,
                     fill: true,
-                    pointRadius: 3,
-                    pointHoverRadius: 6
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#0d6efd',
                 },
                 {
                     label: 'Finished Subtasks',
@@ -94,50 +97,86 @@ function makeLineChart(userData) {
                     backgroundColor: gradientGreen,
                     tension: 0.4,
                     fill: true,
-                    pointRadius: 3,
-                    pointHoverRadius: 6
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#198754',
                 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+                padding: 20
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
             plugins: {
                 title: {
                     display: true,
                     text: 'User Activities Over Time',
                     font: {
-                        size: 18
-                    }
+                        size: 20,
+                        family: 'Segoe UI, sans-serif',
+                        weight: 'bold'
+                    },
+                    color: '#333'
                 },
                 tooltip: {
+                    backgroundColor: '#fff',
+                    titleColor: '#333',
+                    bodyColor: '#000',
+                    borderColor: '#ccc',
+                    borderWidth: 1,
                     callbacks: {
                         label: context => `${context.dataset.label}: ${context.parsed.y}`
                     }
                 },
                 legend: {
-                    position: 'top',
+                    position: 'bottom',
                     labels: {
-                        usePointStyle: true
+                        usePointStyle: true,
+                        padding: 20,
+                        color: '#555',
+                        font: {
+                            size: 13
+                        }
                     }
                 }
-            },
-            interaction: {
-                mode: 'index',
-                intersect: false,
             },
             scales: {
                 x: {
                     title: {
                         display: true,
-                        text: 'User ID'
+                        text: 'User ID',
+                        font: {
+                            size: 14
+                        }
+                    },
+                    ticks: {
+                        color: '#555'
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
                     }
                 },
                 y: {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Count'
+                        text: 'Count',
+                        font: {
+                            size: 14
+                        }
+                    },
+                    ticks: {
+                        color: '#555'
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
                     }
                 }
             }
@@ -145,12 +184,14 @@ function makeLineChart(userData) {
     });
 }
 
+
 function makeCircularChart(userData){
     const circularCtx = document.getElementById('user_circularChart').getContext('2d');
     const finishedTotal = userData.data.finished_subtask_count + userData.data.finished_tasks_count;
     const totalAll = userData.data.total_subtask_count + userData.data.total_task_count;
     const completionPercent = ((finishedTotal / totalAll) * 100).toFixed(2);
     document.getElementById('percentage_nbr').textContent = completionPercent
+    animatePercentage(completionPercent)
 
     new Chart(circularCtx, {
         type: 'doughnut',
@@ -182,73 +223,99 @@ function makeCircularChart(userData){
 
 
 function makeBarChart(userData) {
-    const chartCtx = document.getElementById('usersChart').getContext('2d');
+    const canvas = document.getElementById('usersChart');
+    const ctx = canvas.getContext('2d');
 
     const labels = userData.data.active_users.map(user => user.user_id);
     const data = userData.data.active_users.map(user => user.finished_subtasks_count);
 
-    // Create gradient fill
-    const gradient = chartCtx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(25, 135, 84, 0.9)');  // top - green
-    gradient.addColorStop(0.5, 'rgba(255, 193, 7, 0.8)'); // middle - yellow
-    gradient.addColorStop(1, 'rgba(220, 53, 69, 0.8)');  // bottom - red
+    // Modern gradient (top -> bottom)
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, 'rgba(25, 135, 84, 0.85)');    // Green
+    gradient.addColorStop(0.5, 'rgba(255, 193, 7, 0.75)');  // Yellow
+    gradient.addColorStop(1, 'rgba(220, 53, 69, 0.75)');    // Red
 
-    new Chart(chartCtx, {
+    new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: labels,
+            labels,
             datasets: [{
-                label: 'Finished Subtasks Count',
-                data: data,
+                label: 'Finished Subtasks',
+                data,
                 backgroundColor: gradient,
-                borderColor: '#0d6efd',
-                borderWidth: 2,
-                borderRadius: 6,        // Rounded corners
+                borderColor: '#6c757d',
+                borderWidth: 1.5,
+                borderRadius: 8,
                 hoverBackgroundColor: '#198754',
-                hoverBorderColor: '#145c32'
+                hoverBorderColor: '#145c32',
+                barPercentage: 0.6,
+                categoryPercentage: 0.8
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    top: 20,
+                    bottom: 20,
+                    left: 10,
+                    right: 10
+                }
+            },
             animation: {
-                duration: 1000,
-                easing: 'easeOutBounce'
+                duration: 800,
+                easing: 'easeOutQuart'
             },
             plugins: {
-                legend: { display: false },
                 title: {
                     display: true,
-                    text: '📊 Finished Subtasks per User',
-                    color: '#343a40',
+                    text: 'Finished Subtasks per User',
                     font: {
-                        size: 18,
+                        size: 20,
                         weight: 'bold'
                     },
-                    padding: {
-                        top: 10,
-                        bottom: 10
-                    }
+                    color: '#333'
                 },
                 tooltip: {
-                    backgroundColor: '#212529',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    cornerRadius: 5,
-                    borderColor: '#0d6efd',
-                    borderWidth: 1
+                    backgroundColor: '#fff',
+                    titleColor: '#000',
+                    bodyColor: '#333',
+                    borderColor: '#dee2e6',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: context => ` ${context.dataset.label}: ${context.parsed.y}`
+                    }
+                },
+                legend: {
+                    display: false
                 }
             },
             scales: {
                 x: {
-                    ticks: {
-                        color: '#495057',
+                    title: {
+                        display: true,
+                        text: 'User ID',
                         font: {
-                            weight: 'bold'
+                            size: 14
                         }
+                    },
+                    ticks: {
+                        color: '#495057'
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
                     }
                 },
                 y: {
                     beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Finished Subtasks',
+                        font: {
+                            size: 14
+                        }
+                    },
                     ticks: {
                         stepSize: 1,
                         color: '#495057'
@@ -261,3 +328,38 @@ function makeBarChart(userData) {
         }
     });
 }
+
+async function populateActiveUsersList() {
+  try {
+    const response = await fetch('/api/user/mostActiveUser');
+    if (!response.ok) throw new Error('Failed to fetch active users');
+
+    const result = await response.json();
+    const users = result.data;
+
+    const listContainer = document.getElementById('activeUsersList');
+    listContainer.innerHTML = ''; // Clear existing list items
+
+    users.forEach((user, index) => {
+      // Use placeholder avatars or index-based fallback
+      const avatarPath = `/static/images/profile.png`;
+      const li = document.createElement('li');
+      li.className = 'd-flex justify-content-between align-items-center p-3 mb-2 rounded shadow-sm bg-light custom-hover';
+
+      li.innerHTML = `
+        <div class="d-flex align-items-center gap-3 flex-grow-1 overflow-hidden">
+            <img src="${avatarPath}" class="avatar-sm rounded-circle" alt="avatar" />
+            <span class="fw-medium text-truncate" style="max-width: 150px;">${user.email.split('@')[0]}</span>
+        </div>
+        <span class="badge bg-success-subtle text-success flex-shrink-0">${user.finished_subtasks_count} actions</span>
+    `;
+
+      listContainer.appendChild(li);
+    });
+  } catch (error) {
+    console.error('Error loading active users list:', error);
+  }
+}
+
+// Call the function when the page loads
+document.addEventListener('DOMContentLoaded', populateActiveUsersList);

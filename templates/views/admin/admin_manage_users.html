@@ -1,147 +1,153 @@
 {% extends "views/admin/base.html" %}
 {% block title %}
-    Admin manage users
+    Admin Manage Users
 {% endblock %}
+
 {% block usersManageActive %}
     border shadow
 {% endblock %}
+
 {% block head %}
 <style>
-    .dropdown-container {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-form {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      z-index: 1000;
-      width: 300px;
-      margin-top: 5px;
-      padding: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background: #f9f9f9;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+  #userForm {
+    transition: all 0.3s ease-in-out;
+  }
 </style>
 {% endblock %}
+
 {% block content %}
-    <div class="container-fluid">
-        <div class="container my-5">
-            <div class="row mb-4">
-              <div class="col-md-6 text-center">
-                <h2 class="fw-bold">
-                <i class="fas fa-users text-primary me-2"></i> All Users
-                </h2>
-                <h3 class="fw-bold">
-                  <i class="fas fa-check-circle text-success me-2"></i> Online : <span id="online_users_nbr">n/a</span>
-                </h3>
-                <p class="text-muted">List of all users in the system</p>
-                <div class="row justify-content-center g-3">
-                  <div class="col-auto">
-                    <h5 class="text-dark mb-0">Total Users:</h5>
-                    <span id="simple_users_nbr" class="badge bg-secondary">n/a</span>
-                  </div>
-                  <div class="col-auto">
-                    <h5 class="text-dark mb-0">Admins:</h5>
-                    <span id="admin_nbr" class="badge bg-warning text-dark">n/a</span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <form id="announcement_form">
-                  <label for="announcement_subject" class="form-label"><i class="fas fa-bullhorn text-danger me-2"></i> Announcement</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" id="announcement_subject" placeholder="Enter announcement subject" required>
-                  </div>
-                    <textarea name="announcement" id="announcement" class="form-control my-2" placeholder="Enter announcement content" required></textarea>
-                    <button type="submit" class="btn btn-danger"><i class="fas fa-bullhorn"></i> Send</button>
-                </form>
-              </div>
-            </div>
-          
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-              <!-- Add User Dropdown -->
-              <div class="dropdown position-relative">
-                <button id="toggleFormBtn" class="btn btn-success">
-                  <i class="fas fa-user-plus me-2"></i>Add New User
-                </button>
-          
-                <div id="userForm" class="card p-3 shadow mt-2 d-none" style="min-width: 280px; z-index: 1000;">
-                  <form id="adduser">
-                    <div class="mb-3">
-                      <label for="new_email" class="form-label">Email Address</label>
-                      <input type="email" class="form-control" id="new_email" placeholder="Enter email" required>
-                    </div>
-          
-                    <div class="mb-3">
-                      <label for="password" class="form-label">Password</label>
-                      <input type="password" class="form-control" id="password" placeholder="Enter password" required>
-                    </div>
-          
-                    <div class="mb-3">
-                      <label for="confirm_password" class="form-label">Confirm Password</label>
-                      <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password" required>
-                    </div>
-          
-                    <div class="form-check form-switch mb-3">
-                      <input class="form-check-input" type="checkbox" id="adminSwitch">
-                      <label class="form-check-label" for="adminSwitch">Admin Role</label>
-                    </div>
-          
-                    <div class="d-grid">
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-          
-              <!-- Export Buttons -->
-              <div class="d-flex flex-wrap gap-2">
-                <a class="btn btn-outline-danger" href="{{ url_for('export_pdf') }}">
-                  <i class="fas fa-file-pdf me-2"></i>Export to PDF
-                </a>
-                <a class="btn btn-outline-primary" href="{{ url_for('export_csv') }}">
-                  <i class="fas fa-file-csv me-2"></i>Export to CSV
-                </a>
-              </div>
-            </div>
+<div class="container-fluid py-4">
+  <div class="container">
+    <!-- Header Section -->
+    <div class="row g-4 mb-4">
+      <div class="col-lg-6 text-center text-lg-start">
+        <h2 class="fw-bold">
+          <i class="fas fa-users text-primary me-2"></i> All Users
+        </h2>
+        <h4 class="fw-semibold text-success">
+          <i class="fas fa-check-circle me-2"></i> Online: <span id="online_users_nbr">n/a</span>
+        </h4>
+        <p class="text-muted">List of all users in the system</p>
+        <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-4">
+          <div>
+            <h6 class="mb-1">Total Users:</h6>
+            <span id="simple_users_nbr" class="badge bg-secondary">n/a</span>
           </div>
+          <div>
+            <h6 class="mb-1">Admins:</h6>
+            <span id="admin_nbr" class="badge bg-warning text-dark">n/a</span>
+          </div>
+        </div>
+      </div>
 
-        <div style="max-width: 100%; overflow-x: auto;">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th><i class="fas fa-message text-danger"></i><br> Message</th>
-                        <th><i class="fas fa-envelope text-secondary"></i><br> Email</th>
-                        <th><i class="fas fa-tasks text-success"></i><br> Tasks</th>
-                        <th><i class="fas fa-check-circle text-success"></i><br> Finished Tasks</th>
-                        <th><i class="fas fa-stream"></i> Subtasks</th>
-                        <th><i class="fas fa-check-double text-success"></i><br> Finished Subtasks</th>
-                        <th><i class="fas fa-calendar-plus text-warning"></i><br> Created At</th>
-                        <th><i class="fas fa-calendar-check text-success"></i><br> Updated At</th>
-                        <th><i class="fas fa-bolt text-warning"></i> Activity</th>
-                        <th><i class="fas fa-toggle-on text-success"></i> Status</th>
-                        <th><i class="fas fa-gear text-secondary"></i> Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="userTableBody">
-                </tbody>
-            </table>
-        </div>  
+      <!-- Announcement Form -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <form id="announcement_form">
+              <label for="announcement_subject" class="form-label">
+                <i class="fas fa-bullhorn text-warning me-2"></i> Announcement
+              </label>
+              <input type="text" class="form-control mb-2" id="announcement_subject" placeholder="Enter announcement subject" required>
+              <textarea class="form-control mb-3" id="announcement" rows="3" placeholder="Enter announcement content" required></textarea>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-warning w-auto ms-auto">
+                  <i class="fas fa"></i> Send
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-{% endblock %}
-{% block script %}
-    <script src="{{ url_for('static', filename='js/admin/admin_manage_users.js') }}" ></script>
-    <script>
-         const btn = document.getElementById("toggleFormBtn");
-            const form = document.getElementById("userForm");
 
-            btn.addEventListener("click", () => {
-            form.style.display = form.style.display === "none" || form.style.display === "" ? "block" : "none";
-        });
-    </script>
+    <!-- Actions Section -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+      <!-- Add User Dropdown -->
+      <div>
+        <button id="toggleFormBtn" class="btn btn-success">
+          <i class="fas fa-user-plus me-2"></i>Add New User
+        </button>
+
+        <div id="userForm" class="card shadow-sm mt-3 p-3 d-none">
+          <form id="adduser">
+            <div class="mb-3">
+              <label for="new_email" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="new_email" placeholder="Enter email" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+            </div>
+            <div class="mb-3">
+              <label for="confirm_password" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password" required>
+            </div>
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="adminSwitch">
+              <label class="form-check-label" for="adminSwitch">Admin Role</label>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Export Buttons -->
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-danger" href="{{ url_for('export_pdf') }}">
+          <i class="fas fa-file-pdf me-2"></i>Export PDF
+        </a>
+        <a class="btn btn-outline-primary" href="{{ url_for('export_csv') }}">
+          <i class="fas fa-file-csv me-2"></i>Export CSV
+        </a>
+      </div>
+    </div>
+
+    <!-- User Table -->
+    <div class="table-responsive shadow-sm rounded">
+      <table class="table table-bordered table-striped align-middle">
+        <thead class="table-light text-center">
+          <tr>
+            <th><i class="fas fa-message text-danger"></i><br> Message</th>
+            <th><i class="fas fa-envelope text-secondary"></i><br> Email</th>
+            <th><i class="fas fa-tasks text-success"></i><br> Tasks</th>
+            <th><i class="fas fa-check-circle text-success"></i><br> Finished Tasks</th>
+            <th><i class="fas fa-stream"></i><br> Subtasks</th>
+            <th><i class="fas fa-check-double text-success"></i><br> Finished Subtasks</th>
+            <th><i class="fas fa-calendar-plus text-warning"></i><br> Created At</th>
+            <th><i class="fas fa-calendar-check text-success"></i><br> Updated At</th>
+            <th><i class="fas fa-bolt text-warning"></i><br> Activity</th>
+            <th><i class="fas fa-toggle-on text-success"></i><br> Status</th>
+            <th><i class="fas fa-gear text-secondary"></i><br> Actions</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='js/admin/admin_manage_users.js') }}"></script>
+<script>
+  const btn = document.getElementById("toggleFormBtn");
+  const form = document.getElementById("userForm");
+
+  btn.addEventListener("click", () => {
+    form.classList.toggle("d-none");
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById("toggleFormBtn");
+    const form = document.getElementById("userForm");
+
+    btn.addEventListener("click", () => {
+      form.classList.toggle("d-none");
+    });
+  });
+</script>
 {% endblock %}

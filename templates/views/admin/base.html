@@ -18,13 +18,13 @@
     {% endblock %}
 </head>
 <body>
-    <aside class="position-fixed bg-light shadow h-100 p-3 sidebar" id="sidebar">
+    <aside class="position-fixed shadow h-100 p-3 sidebar" id="sidebar">
         <h4 class="text-center">
             <i class="fas fa-user-shield me-2 text-success"></i>Task manager <br> 
         </h4>
         <div class="my-2">
-            <div class="d-flex justify-content-center align-items-center gap-2">
-                <span class="col-6 text-center text-dark fs-5">Admin space</span>
+            <div class="d-flex justify-content-between align-items-center gap-2">
+                <span class="col-8 text-center text-dark fs-5">Admin space</span>
                 <button class="btn hide-btn">
                     <i class="fas fa-angle-left"></i>
                 </button>
@@ -58,13 +58,13 @@
 
     </aside>
     <main class="position- ps-2 pt-1 p-3 main" id="main">
-        <nav class="nav w-100 bg-light shadow p-2 rounded-3 justify-content-between mb-3">
-            <h1 class="text-secondary mx-2">
+        <nav class="nav w-100 p-2 mt-2 rounded-3 justify-content-between mb-3">
+            <h3 class="text-secondary mx-2">
                 <button class="btn hide-btn hide-btn2" style="display: none;">
                     <i class="fas fa-angle-left"></i>
                 </button>
                 {{ title }}
-            </h1>
+            </h3>
             <div class="w-auto d-flex align-items-center justify-content-between border gap-2 mx-2 admin_profile_container">
                 <img id="loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
                 <span class="mx-3 text-secondary">
@@ -84,12 +84,13 @@
         <i id="notification-icon" class=""></i>
         <span id="notification-message"></span>
     </div>
-    {% block script %}
-    {% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" 
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" 
         crossorigin="anonymous">
     </script>
+    {% block script %}
+    {% endblock %}
+    
     <script>
         let hidden = false
         $('.hide-btn').on('click', () => {

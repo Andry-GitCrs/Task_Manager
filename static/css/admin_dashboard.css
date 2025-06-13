@@ -3,7 +3,7 @@ body{
 }
 
 aside{
-    width: 300px;
+    width: 250px;
     z-index: 10000;
     overflow-y: auto;
     overflow-x: auto;
@@ -28,8 +28,15 @@ aside ul a:hover, .admin_profile{
     transition: .5s ease-in-out;
 }
 
+#percentage {
+  font-family: 'Segoe UI', sans-serif;
+}
+.card-title i {
+  vertical-align: middle;
+}
+
 .admin_profile_container{
-    height: 50px;
+    height: 40px;
     border-radius: 25px;
 }
 
@@ -41,7 +48,6 @@ main{
     z-index: 1;
     overflow-y: auto;
     transition: .5s ease-in-out;
-    margin-left: 300px;
 }
 
 th {
@@ -61,6 +67,11 @@ thead tr th{
 }
 
 /* Toggler */
+
+.sidebar {
+    background-color: #fff;
+}
+
 .sidebar.hidden {
     width: 80px;
     padding: auto 0;
@@ -95,7 +106,7 @@ thead tr th{
 
 /* Main content */
 .main {
-    margin-left: 300px;
+    margin-left: 250px;
     padding: 1rem;
     transition: margin-left 0.5s ease-in-out;
 }
@@ -145,6 +156,7 @@ hr{
     border-width: 3px;
     border-style: solid;
     border-radius: 10px;
+    opacity: 1!important;
 }
 
 .card p{
@@ -155,17 +167,6 @@ hr{
 .card i {
     font-size: 2rem;
     color: #1c915a94;
-}
-
-#percentage{
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 45px;
-    top: calc(50%);
-    left: calc(50% - 25px);
 }
 
 #loading{
@@ -197,4 +198,13 @@ hr{
 
 .online {
     transform: scale(0.7);
+}
+
+.custom-hover {
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-hover:hover {
+  background-color: #f8f9fa; /* subtle light gray */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
