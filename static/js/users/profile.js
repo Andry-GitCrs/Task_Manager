@@ -319,7 +319,7 @@ fetchUserTasks();
 
 // Delete a task permantely
 async function deleteTask(task_id) {
-  if (confirm(`Are you sure you want this task ${task_id}?`)) {
+  if (await showFlexibleModal('Are you sure you want to permanently this task')) {
     $(".loading-dash").css("display", 'inline');
       try{
           const response = await fetch(`/api/user/deleteTaskPermanentely/${task_id}`,{
@@ -341,7 +341,7 @@ async function deleteTask(task_id) {
 
 // Restore task
 async function restoreTask(task_id) {
-  if (confirm(`Are you sure you want restore this task ?`)) {
+  if (await showFlexibleModal('Are you sure to restore this task ?')) {
     $(".loading-dash").css("display", 'inline');
       try{
           const response = await fetch(`/api/user/restoreTask/${task_id}`,{

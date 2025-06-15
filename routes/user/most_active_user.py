@@ -21,7 +21,7 @@ def most_active_user(app, database):
             )
             .join(Task, Task.user_id == User.user_id)
             .join(Subtask, Subtask.task_id == Task.task_id)
-            .filter(User.stat == True, Subtask.finished == True)
+            .filter(Subtask.finished == True)
             .group_by(User.user_id, User.email)
             .order_by(desc("finished_subtasks_count"))
             .limit(10)

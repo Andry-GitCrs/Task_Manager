@@ -25,7 +25,7 @@ def fetch_user(app, database):
                 User.created_at,
                 User.updated_at,
                 User.admin
-            ).order_by(User.updated_at.desc()).all()
+            ).order_by(User.user_id.asc()).all()
 
             if results:
                 for result in results:

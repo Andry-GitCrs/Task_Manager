@@ -22,10 +22,6 @@ const fetchUserData = async () => {
     document.getElementById("loading").style.display = 'none';
 }
 
-
-fetchUserData()
-
-
 //Notification displayer
 function showNotification(type, message) {
     const notification = document.getElementById('notification');
@@ -115,16 +111,6 @@ function makeLineChart(userData) {
                 intersect: false
             },
             plugins: {
-                title: {
-                    display: true,
-                    text: 'User Activities Over Time',
-                    font: {
-                        size: 20,
-                        family: 'Segoe UI, sans-serif',
-                        weight: 'bold'
-                    },
-                    color: '#333'
-                },
                 tooltip: {
                     backgroundColor: '#fff',
                     titleColor: '#333',
@@ -268,15 +254,6 @@ function makeBarChart(userData) {
                 easing: 'easeOutQuart'
             },
             plugins: {
-                title: {
-                    display: true,
-                    text: 'Finished Subtasks per User',
-                    font: {
-                        size: 20,
-                        weight: 'bold'
-                    },
-                    color: '#333'
-                },
                 tooltip: {
                     backgroundColor: '#fff',
                     titleColor: '#000',
@@ -337,6 +314,8 @@ async function populateActiveUsersList() {
     const result = await response.json();
     const users = result.data;
 
+    document.getElementById('top_user_nbr').textContent = users.length;
+
     const listContainer = document.getElementById('activeUsersList');
     listContainer.innerHTML = ''; // Clear existing list items
 
@@ -362,4 +341,91 @@ async function populateActiveUsersList() {
 }
 
 // Call the function when the page loads
-document.addEventListener('DOMContentLoaded', populateActiveUsersList);
+document.addEventListener("DOMContentLoaded", async () => {
+    fetchUserData()
+    populateActiveUsersList()
+    const tableBody = document.getElementById("activityBody");
+
+    try {
+        const res = await fetch("/api/admin/logs");
+        const json = await res.json();
+        const logs = json.data;
+
+        const icons = {
+            task: "fa-tasks",
+            subtask: "fa-check-circle text-success",
+            user: "fa-user"
+        };
+
+        const actionBadge = (text, color = "primary") => {
+        return `<span class="badge bg-${color} text-capitalize p-2">${text}</span>`;
+        };
+
+        const buildRow = (time, user, action, details, icon, badgeColor) => `
+        <tr>
+            <td>${time}</td>
+            <td class="text-start "><i class="fas ${icon} me-2 text-secondary fs-5"></i>${user}</td>
+            <td class=''>${actionBadge(action, badgeColor)}</td>
+            <td class="text-start">${details}</td>
+        </tr>
+        `;
+
+        const insertSection = (title) => `
+        <tr class="rounded-pill">
+            <td class="text-start" style='background-color:#b9c1c2' colspan="4">
+                <strong>${title}</strong>
+            </td>
+        </tr>
+        `;
+
+        const insertLogs = (type, groupedData) => {
+        for (const date in groupedData) {
+            tableBody.insertAdjacentHTML("beforeend", insertSection(date));
+            groupedData[date].forEach(item => {
+            let row = "";
+            if (type === "task") {
+                row = buildRow(
+                    item.updated_at || "--:--",
+                    item.owner?.email || "Unknown",
+                    "task created",
+                    item.task_title,
+                    icons.task,
+                    "primary"
+                );
+            } else if (type === "subtask") {
+                row = buildRow(
+                item.updated_at || "--:--",
+                item.parent_task?.owner?.email || "Unknown",
+                item.finished ? "marked complete" : "subtask updated",
+                item.subtask_title,
+                icons.subtask,
+                item.finished ? "success" : "warning"
+                );
+            } else if (type === "user") {
+                row = buildRow(
+                    item.updated_at || "--:--",
+                    item.email,
+                    "account updated",
+                    `User ID: ${item.user_id}`,
+                    icons.user,
+                    "secondary"
+                );
+            }
+            tableBody.insertAdjacentHTML("beforeend", row);
+            });
+        }
+        };
+
+        insertLogs("task", logs.task);
+        insertLogs("subtask", logs.subtask);
+        insertLogs("user", logs.user);
+
+    } catch (error) {
+        console.error("Error loading logs:", error);
+        tableBody.innerHTML = `
+        <tr>
+            <td colspan="4" class="text-center text-danger">Unable to load activity logs.</td>
+        </tr>
+        `;
+    }
+});

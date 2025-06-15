@@ -34,21 +34,21 @@
   </style>
 {% endblock %}
 
-{% block dashboardActive %}border bg-gradient-primary{% endblock %}
+{% block dashboardActive %}border bg-gradient-primary shadow{% endblock %}
 
 {% block content %}
 <!-- Stat cards ------------------------------------------------------------- -->
 <div class="container-fluid rounded-3 py-3">
   <div class="row g-3">
     {% set stats = [
-      {'id':'total_users','icon':'users','clr':'secondary','title':'Total Users'},
-      {'id':'users_tasks','icon':'tasks','clr':'warning','title':'Users Tasks'},
-      {'id':'users_subtasks','icon':'list','clr':'danger','title':'Subtasks'},
-      {'id':'finished_subtasks','icon':'check-double','clr':'success','title':'Finished Subtasks'}
+      {'id':'total_users','icon':'users','clr':'secondary','title':'Total Users', 'link': '/admin/manage_users'},
+      {'id':'users_tasks','icon':'tasks','clr':'warning','title':'Users Tasks', 'link': '/admin/manage_tasks'},
+      {'id':'users_subtasks','icon':'list','clr':'danger','title':'Subtasks', 'link': '/admin/manage_subtasks'},
+      {'id':'finished_subtasks','icon':'check-double','clr':'success','title':'Finished Subtasks', 'link': ''}
     ] %}
     {% for s in stats %}
     <div class="col-sm-6 col-lg-3">
-      <div class="card stat-card text-center p-3 h-100">
+      <div class="card stat-card text-center p-3 h-100" data-link='{{ s.link }}' onclick="location.href = this.dataset.link;" style="cursor: pointer;">
         <div class="card-icon-wrapper bg-{{s.clr}} "><i class="fas fa-{{s.icon}} text-light"></i></div>
         <h6 class="fw-semibold mb-0">{{s.title}}</h6>
         <p id="{{s.id}}" class="display-6 my-1">0</p>
@@ -77,7 +77,7 @@
         <div class="col-12">
           <div class="card dashboard-card border-0 h-100">
             <div class="card-body">
-              <h5 class="card-title text-center mb-3"><i class="fas fa-users text-secondary me-2"></i>Total Users Overview</h5>
+              <h5 class="card-title text-center mb-3"><i class="fas fa-tasks text-secondary me-2"></i>Finished Subtasks per User</h5>
               <canvas id="usersChart" style="height:300px; max-height: 300px;"></canvas>
             </div>
           </div>
@@ -90,18 +90,28 @@
       <!-- Top active users list -->
       <div class="card dashboard-card border-0 h-50">
         <div class="card-body">
-          <h6 class="fw-semibold mb-3"><i class="fas fa-fire text-danger me-2"></i>Top 10 Most Active Users</h6>
-          <ul class="list-group list-group-flush small" id="activeUsersList" style="max-height: 70%;overflow-y: scroll;"></ul>
+          <h6 class="fw-semibold mb-3 d-flex align-items-center">
+            <i class="fas fa-fire text-danger me-2"></i>
+            <span>
+              Top <span id="top_user_nbr">n/a</span> Most Active Users
+            </span>
+          </h6>
+          <ul class="list-group list-group-flush small" id="activeUsersList" style="max-height: 80%;overflow-y: scroll;"></ul>
         </div>
       </div>
       <!-- Completion circle -->
       <div class="card dashboard-card border-0 mb-4 mb-lg-3 text-center h-50">
-        <div class="card-body d-flex flex-column align-items-center justify-content-center">
-          <div id="percentage" class="mb-3">
-            <span id="percentage_nbr" data-from="0" data-value="" class="display-5 fw-bold text-success"></span>
+        <div class="card-body position-relative d-flex align-items-center justify-content-center">
+          
+          <!-- Texte centré au milieu du canvas -->
+          <div id="percentage" class="position-absolute text-center">
+            <span id="percentage_nbr" data-from="0" data-value="" class="display-5 fw-bold text-secondary">0</span>
             <span class="fs-5">%</span>
           </div>
-          <canvas id="user_circularChart" style="height:220px!important"></canvas>
+
+          <!-- Canvas en arrière-plan -->
+          <canvas id="user_circularChart" style="height:220px; width:220px;"></canvas>
+          
         </div>
       </div>
     </div>
@@ -112,16 +122,19 @@
 <div class="container-fluid mt-4">
   <div class="card dashboard-card border-0">
     <div class="card-body">
-      <h6 class="fw-semibold mb-3"><i class="fas fa-clock text-info me-2"></i>Recent Activity Log</h6>
-      <div class="table-responsive">
-        <table class="table table-sm align-middle mb-0" id="activityTable">
+      <h6 class="fw-semibold mb-3"><i class="fas fs-5 fa-clock text-primary me-2"></i>Recent Activity Log</h6>
+      <div class="table-responsive border rounded shadow-sm mt-4">
+        <table class="table table-hover table-sm align-middle mb-0">
           <thead class="table-light">
-            <tr><th>Time</th><th>User</th><th>Action</th><th class="text-end">Details</th></tr>
+            <tr>
+              <th class="text-start" scope="col">Time</th>
+              <th scope="col">User</th>
+              <th scope="col">Action</th>
+              <th class="text-start" scope="col" class="text-end">Details</th>
+            </tr>
           </thead>
-          <tbody>
-            <tr><td>08:32</td><td>Alice</td><td>Created Task</td><td class="text-end">Task #239</td></tr>
-            <tr><td>08:30</td><td>Bob</td><td>Updated Subtask</td><td class="text-end">Fix login bug</td></tr>
-            <tr><td>08:28</td><td>Charlie</td><td>Marked Complete</td><td class="text-end">Sprint Planning</td></tr>
+          <tbody id="activityBody">
+            <!-- Logs will be injected here -->
           </tbody>
         </table>
       </div>
