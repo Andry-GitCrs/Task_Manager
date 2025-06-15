@@ -42,14 +42,14 @@
   <div class="row g-3">
     {% set stats = [
       {'id':'total_users','icon':'users','clr':'secondary','title':'Total Users'},
-      {'id':'users_tasks','icon':'tasks','clr':'dark','title':'Users Tasks'},
-      {'id':'users_subtasks','icon':'list','clr':'warning','title':'Subtasks'},
+      {'id':'users_tasks','icon':'tasks','clr':'warning','title':'Users Tasks'},
+      {'id':'users_subtasks','icon':'list','clr':'danger','title':'Subtasks'},
       {'id':'finished_subtasks','icon':'check-double','clr':'success','title':'Finished Subtasks'}
     ] %}
     {% for s in stats %}
     <div class="col-sm-6 col-lg-3">
       <div class="card stat-card text-center p-3 h-100">
-        <div class="card-icon-wrapper bg-{{s.clr}}-subtle text-{{s.clr}}"><i class="fas fa-{{s.icon}}"></i></div>
+        <div class="card-icon-wrapper bg-{{s.clr}} "><i class="fas fa-{{s.icon}} text-light"></i></div>
         <h6 class="fw-semibold mb-0">{{s.title}}</h6>
         <p id="{{s.id}}" class="display-6 my-1">0</p>
       </div>

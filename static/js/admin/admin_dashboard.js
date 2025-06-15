@@ -344,7 +344,7 @@ async function populateActiveUsersList() {
       // Use placeholder avatars or index-based fallback
       const avatarPath = `/static/images/profile.png`;
       const li = document.createElement('li');
-      li.className = 'd-flex justify-content-between align-items-center p-3 mb-2 rounded shadow-sm bg-light custom-hover';
+      li.className = 'd-flex justify-content-between align-items-center p-3 mb-2 shadow-sm border rounded-4 custom-hover';
 
       li.innerHTML = `
         <div class="d-flex align-items-center gap-3 flex-grow-1 overflow-hidden">

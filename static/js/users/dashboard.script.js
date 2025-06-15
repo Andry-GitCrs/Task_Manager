@@ -1241,7 +1241,7 @@ function showFlexibleModal(message, type = 'confirm', defaultValue = '') {
         <div class="modal-backdrop fade show" style="z-index: 1999;"></div>
         <div class="modal-dialog modal-dialog-centered" role="document" style="z-index: 2001; pointer-events: all;">
           <div class="modal-content rounded-4 shadow bg-white">
-            <div class="modal-body p-4">
+            <div class="modal-body p-4 rounded-4">
               <p class="fs-5 mb-3">${message}</p>
               ${
                 type === 'input'
