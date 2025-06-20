@@ -13,7 +13,19 @@
             margin-bottom: 20px;
             text-align: center;
         }
-    </style>
+    </style>    <!-- ===== dependencies (head) ===== -->
+<link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#198754' // Bootstrap green for consistency
+            }
+          }
+        }
+      }
+    </script>
 {% endblock %}
 {% block aboutActive %}
   active-page
@@ -23,7 +35,7 @@
     <div class="d-flex align-items-center justify-content-center py-5 slide-container" style="height: 75vh;">
         <div class="d-flex justify-content-center align-items-center flex-column gap-3 z-1 w-auto">
             <h1 class="contact-title">About us</h1>
-            <p class="lead text-light text-center fw-bolder">Helping you stay productive and organized every day.</p>
+            <p class="lead text-light text-center fw-bolder funny-text">Helping you stay productive and organized every day.</p>
             <div class="justify-content-between gap-2 slide-btn-container" id="slide-btn-container"></div>
         </div>
     </div>
@@ -75,21 +87,149 @@
       </div>
     </section>
 
-    <section>
-      <h2 class="section-title"><i class="fas fa-terminal text-dark fw-bold"></i> Meet The Developer</h2>
-      <div class="row justify-content-center">
-        <div class="col-md-4 text-center ">
-          <div class="card team-card shadow border">
-            <img src="{{ url_for('static', filename='images/software-developer-6521720_1280.jpg') }}" class="card-img-top" alt="Developer Photo">
-            <div class="card-body">
-              <h5 class="card-title">Andry</h5>
-              <p class="card-text">Full-stack Dev passionate about building tools that empower users. Always learning, always coding <i class="fas fa-code"></i>.</p>
-              <a href="/contact" class="btn btn-outline-primary btn-sm">Contact</a>
+  <section class="py-5 bg-light" id="developer">
+    <div class="container">
+      <!-- Title -->
+      <h2 class="text-center fw-bold mb-5">
+        <i class="fas fa-terminal text-dark me-2"></i> Meet The Developer
+      </h2>
+
+      <div class="row justify-content-center mb-5">
+        <div class="col-md-6 col-lg-4">
+          <div class="card shadow rounded-4 border-0">
+            <img src="{{ url_for('static', filename='images/software-developer-6521720_1280.jpg') }}" class="card-img-top rounded-top-4" alt="Developer Photo">
+            <div class="card-body text-center">
+              <h5 class="card-title">Andrianaivo Noé <small class="text-muted">(Andry / AndroIntelo)</small></h5>
+              <p class="card-text">
+                Full-stack developer & 2<sup>nd</sup>-year IT student @ ISTA Madagascar.<br>
+                Passionate about clean code, open-source, and building useful apps.<br>
+                <i class="fas fa-code text-primary"></i> Always learning.
+              </p>
+              <div class="d-flex justify-content-center gap-2 mt-3">
+                <a href="mailto:andrianaivonoe403@gmail.com" class="btn btn-sm btn-success">
+                  <i class="fas fa-envelope me-1"></i> Email
+                </a>
+                <a href="tel:+261331456886" class="btn btn-sm btn-outline-success">
+                  <i class="fas fa-phone me-1"></i> Call
+                </a>
+                <a href="/contact" class="btn btn-sm btn-secondary">
+                  <i class="fas fa-paper-plane me-1"></i> Contact
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+
+      <!-- Languages & Frameworks -->
+      <div class="row mb-4">
+        <h4 class="fw-semibold text-center mb-3"><i class="fas fa-code me-2 text-success"></i>Languages & Frameworks</h4>
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card shadow-sm border-start border-4 border-success">
+            <div class="card-body">
+              <h6 class="card-title"><i class="fab fa-js me-2 text-warning"></i>JavaScript</h6>
+              <p class="card-text small mb-1">• Express.js (REST API)</p>
+              <p class="card-text small mb-1">• NestJS (modular backend)</p>
+              <p class="card-text small">• React (front-end SPA)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card shadow-sm border-start border-4 border-primary">
+            <div class="card-body">
+              <h6 class="card-title"><i class="fab fa-php me-2 text-primary"></i>PHP</h6>
+              <p class="card-text small mb-1">• School & animal shop projects</p>
+              <p class="card-text small">• ID card & file uploader tools</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card shadow-sm border-start border-4 border-danger">
+            <div class="card-body">
+              <h6 class="card-title"><i class="fab fa-python me-2 text-info"></i>Python</h6>
+              <p class="card-text small mb-1">• Flask apps</p>
+              <p class="card-text small mb-1">• CLI tools (e.g. file info editor)</p>
+              <p class="card-text small">• Learning Pygame & Matplotlib</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card shadow-sm border-start border-4 border-dark">
+            <div class="card-body">
+              <h6 class="card-title"><i class="fas fa-c me-2 text-secondary"></i>C / C++</h6>
+              <p class="card-text small mb-1">• Custom `Complex` class</p>
+              <p class="card-text small">• Matrix, limit & sequence exercises</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card shadow-sm border-start border-4 border-warning">
+            <div class="card-body">
+              <h6 class="card-title"><i class="fab fa-java me-2 text-danger"></i>Java</h6>
+              <p class="card-text small">• Starting Java for simple Android APKs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects Section -->
+      <div class="row">
+        <h4 class="fw-semibold text-center mb-3"><i class="fas fa-diagram-project me-2 text-info"></i>Personal Projects</h4>
+
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title text-success"><i class="fas fa-check-circle me-1"></i>Task Manager</h6>
+              <p class="small text-muted mb-0">Full-stack productivity app using Flask + JS + PostgreSQL. Hosted on Render & Railway.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title text-primary"><i class="fas fa-music me-1"></i>Spotify Clone</h6>
+              <p class="small text-muted mb-0">Frontend music app built with JavaScript only (no backend).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title text-warning"><i class="fas fa-gamepad me-1"></i>Snake Game</h6>
+              <p class="small text-muted mb-0">Built in JS with Bootstrap UI. Includes scoring and tail growth logic.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title text-dark"><i class="fas fa-graduation-cap me-1"></i>Student Manager</h6>
+              <p class="small text-muted mb-0">PHP + HTML/CSS based CRUD system for student and ID data entry.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title text-info"><i class="fas fa-cart-shopping me-1"></i>Animal Shop</h6>
+              <p class="small text-muted mb-0">A mini e-commerce website made with PHP + JS + MySQL.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
   </main>
 
   <footer class="bg-dark text-light pt-4 pb-1">

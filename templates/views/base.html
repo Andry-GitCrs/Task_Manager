@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" sizes="32x32">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/alvarotrigo/funnyText.js@master/jquery.funnyText.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     {%  block head %}
     {% endblock %}
@@ -58,6 +60,30 @@
         <i id="notification-icon" class=""></i>
         <span id="notification-message"></span>
     </div>
+    <script
+      src="https://cdn.jsdelivr.net/gh/alvarotrigo/funnyText.js@master/jquery.funnyText.min.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script>
+      $(document).ready(function() {
+        $('.funny-text').funnyText({
+          speed: 200,
+          activeColor: '#FF5733',
+          color: '#222',
+          fontSize: '2em'
+        });
+      });
+      var typed = new Typed("#typed-output", {
+        strings: [
+          `Welcome to <strong>Task Manager App</strong> – Your Ultimate Productivity Companion!<br>
+          Organize your day, track your progress, and stay productive with ease. Say goodbye to sticky notes and forgotten tasks. Everything is now in one place.<br>
+          Take control of your workflow and boost productivity.`
+        ],
+        typeSpeed: 30,
+        backSpeed: 0,
+        showCursor: true,
+      });
+  </script>
     {% block script %}
     {% endblock %}
 </body>

@@ -1,74 +1,228 @@
 {% extends "views/users/base.html" %}
 {% block title %}My profile{% endblock %}
-{% block profile %}
-    active-dash-link
-{% endblock %}
+{% block profile %}active-dash-link{% endblock %}
+
 {% block head %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@4.1.7/index.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@4.1.7/index.min.css">
+
+<style>
+  #coverContainer {
+    position: relative;
+    height: 300px;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+  }
+  #coverChangeBtn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+    cursor: pointer;
+    user-select: none;
+  }
+  #coverChangeBtn:hover {
+    background: rgba(0,0,0,0.7);
+  }
+
+  /* Profile picture container */
+  #profileContainer {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    transform: translateY(-50%);
+    margin: auto;
+    cursor: pointer;
+  }
+  #profileImg {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    display: block;
+  }
+  #profileChangeBtn {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    transition: background 0.3s;
+    cursor: pointer;
+    user-select: none;
+  }
+  #profileChangeBtn:hover {
+    background: rgba(0,0,0,0.7);
+  }
+</style>
 {% endblock %}
+
 {% block content %}
-<div class="container-fluid py-5">
-    <div class="row">
-        <div class="col-md-8 col-sm-12 mb-4">
-            <div class="card shadow-sm h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h5 class="card-title mb-0 ">Daily Finished Subtasks</h5>
-                  <button class="btn btn-sm btn-outline-primary rounded-pill" id="refreshChart">Refresh</button>
-                </div>
-                <div style="height: 300px;">
-                  <canvas id="subtaskLineChart"></canvas>
-                </div>
-                <div id="chartStatus" class="text-muted small mt-2">Loading chart...</div>
-              </div>
+    <div class="container-fluid py-4">
+        <!-- Cover section -->
+        <div class="bg-light border" id="coverContainer" style="background-image: url('{{ cover_url }}');"
+            data-bs-toggle="modal" data-bs-target="#imageModal" data-img-url="{{ cover_url }}">
+            <div id="coverChangeBtn" onclick="event.stopPropagation(); document.getElementById('coverInput').click();">
+            <i class="fas fa-camera"></i> Change
             </div>
         </div>
-        <form id="update-form" class="col-md-4 col-sm-12">
-            <h4>
-                <i class="text-success fas fa-user-pen"></i>
-                Edit credentials
-            </h4>
-            <div class="mb-3">
-                <label for="email" class="form-label">
-                    <i class="fas fa-envelope text-secondary" ></i> 
-                    Email
-                </label>
-                <input name="current-email" type="email" value="{{ email }}" class="form-control rounded-pill" id="email" placeholder="example@mail.com" autocomplete="email" disabled>
+        <input type="file" id="coverInput" accept="image/*" class="d-none" />
+
+        <!-- Profile section -->
+        <div class="bg-light rounded-circle border d-flex" id="profileContainer"
+            data-bs-toggle="modal" data-bs-target="#imageModal" data-img-url="{{ profile_url }}">
+            <img class="text-center" id="profileImg" src="{{ profile_url }}" alt="Profile Picture">
+            <div id="profileChangeBtn" onclick="event.stopPropagation(); document.getElementById('profileInput').click();">
+                <i class="fas fa-camera"></i> Change
             </div>
-        
-            <div class="mb-3">
-                <label for="current_password" class="form-label">
-                    <i class="fas fa-key text-success"></i> 
-                    Current password
-                </label>
-                <input name="current_password" type="password" class="form-control rounded-pill" id="current_password" autocomplete="current_password" required>
+        </div>
+        <input type="file" id="profileInput" accept="image/*" class="d-none" />
+
+        <!-- Username -->
+        <div class="text-center" style="transform: translateY(-100%);">
+            <h4 class="fw-bold">{{ email }}</h4>
+            <p class="text-muted small">Welcome to your profile</p>
+        </div>
+
+        <!-- Rest of your page content (chart + edit form) -->
+        <div class="row mt-5">
+            <div class="col-lg-8 col-sm-12 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0">📈 Daily Finished Subtasks</h5>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill" id="refreshChart">Refresh</button>
+                        </div>
+                        <div style="height: 300px;">
+                            <canvas id="subtaskLineChart"></canvas>
+                        </div>
+                        <div id="chartStatus" class="text-muted small mt-2">Loading chart...</div>
+                    </div>
+                </div>
             </div>
-        
-            <div class="mb-3">
-              <label for="new_password" class="form-label">
-                    <i class="fas fa-lock text-danger"></i>
-                    New Password
-                </label>
-              <input name="new_password" type="password" class="form-control rounded-pill" id="new_password" autocomplete="new_password" required>
-            </div>
-        
-            <div class="mb-3">
-                <label for="confirm_password" class="form-label">
-                    <i class="fas fa-lock text-danger"></i>
-                    Confirm Password
-                </label>
-                <input name="confirm_password" type="password" class="form-control rounded-pill" id="confirm_password" autocomplete="confirm_password" required>
-            </div>
-        
-            <div class="text-center">
-                <button type="submit" class="btn btn-success w-50 rounded-pill"><i class="fas fa-user-pen"></i> Update</button>
-            </div>
-        </form>
+
+            <form id="update-form" class="col-md-4 col-sm-12">
+                <h4>
+                    <i class="text-success fas fa-user-pen"></i>
+                    Edit credentials
+                </h4>
+                <div class="mb-3">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope text-secondary" ></i> 
+                        Email
+                    </label>
+                    <input name="current-email" type="email" value="{{ email }}" class="form-control rounded-pill" id="email" placeholder="example@mail.com" autocomplete="email" disabled>
+                </div>
+            
+                <div class="mb-3">
+                    <label for="current_password" class="form-label">
+                        <i class="fas fa-key text-success"></i> 
+                        Current password
+                    </label>
+                    <input name="current_password" type="password" class="form-control rounded-pill" id="current_password" autocomplete="current_password" required>
+                </div>
+            
+                <div class="mb-3">
+                    <label for="new_password" class="form-label">
+                        <i class="fas fa-lock text-danger"></i>
+                        New Password
+                    </label>
+                    <input name="new_password" type="password" class="form-control rounded-pill" id="new_password" autocomplete="new_password" required>
+                </div>
+            
+                <div class="mb-3">
+                    <label for="confirm_password" class="form-label">
+                        <i class="fas fa-lock text-danger"></i>
+                        Confirm Password
+                    </label>
+                    <input name="confirm_password" type="password" class="form-control rounded-pill" id="confirm_password" autocomplete="confirm_password" required>
+                </div>
+            
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success w-50 rounded-pill"><i class="fas fa-user-pen"></i> Update</button>
+                </div>
+            </form>
+        </div>
+        <div id="task-list" class="my-5"></div>
     </div>
-    <div id="task-list" class="my-5"></div>
-</div>
+
+    <!-- Modal to view large image -->
+    <div class="modal fade h-100" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-body p-0 text-center position-relative">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <img id="modalImage" src=""class="img-fluid rounded shadow" style="max-height: 80vh;">
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
+
 {% block script %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/users/profile.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/users/profile.js') }}"></script>
+
+<script>
+  // Image elements
+  const coverInput = document.getElementById('coverInput');
+  const profileInput = document.getElementById('profileInput');
+  const coverContainer = document.getElementById('coverContainer');
+  const profileImg = document.getElementById('profileImg');
+  const modalImage = document.getElementById('modalImage');
+  const imageModal = document.getElementById('imageModal');
+
+  // Cover image preview
+  coverInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      coverContainer.style.backgroundImage = `url(${reader.result})`;
+      coverContainer.setAttribute('data-img-url', reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Profile image preview
+  profileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      profileImg.src = reader.result;
+      profileImg.parentElement.setAttribute('data-img-url', reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Show modal image on click
+  document.querySelectorAll('[data-bs-toggle="modal"]').forEach(el => {
+    el.addEventListener('click', () => {
+      const imgUrl = el.getAttribute('data-img-url');
+      if (imgUrl) modalImage.src = imgUrl;
+    });
+  });
+
+  // Clean modal on close to prevent stuck overlays
+  imageModal.addEventListener('hidden.bs.modal', () => {
+    modalImage.src = '';
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+  });
+</script>
 {% endblock %}
