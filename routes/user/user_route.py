@@ -4,7 +4,9 @@ from . import(
   mark_notification,
   update_profile,
   user_task_activities,
-  most_active_user
+  most_active_user,
+  update_profile_pic,
+  update_cover_pic
 )
 
 from flask import render_template
@@ -23,7 +25,9 @@ def use_user_route(app, database, login_manager):
     fetch_user_daily_finished_subtask.fetch_user_daily_finished_subtask,
     get_notification.get_notification,
     mark_notification.mark_notification,
-    most_active_user.most_active_user
+    most_active_user.most_active_user,
+    update_profile_pic.update_profile_pic,
+    update_cover_pic.update_cover_pic
   ]
 
   for route in routes:
@@ -37,9 +41,9 @@ def use_user_route(app, database, login_manager):
       list_nbr = db.session.query(List).filter_by(user_id = current_user.user_id, stat = True).count()
 
       return {
-          "today_task": today_task_nbr,
-          "task_nbr": task_nbr,
-          "list_nbr": list_nbr
+            "today_task": today_task_nbr,
+            "task_nbr": task_nbr,
+            "list_nbr": list_nbr,
       }
 
   # Flask-Login User Loader
@@ -57,7 +61,7 @@ def use_user_route(app, database, login_manager):
                 email = current_user.email,
                 task_nbr = getTaskNbr()["task_nbr"],
                 today_task_nbr = getTaskNbr()["today_task"],
-                list_nbr = getTaskNbr()["list_nbr"]
+                list_nbr = getTaskNbr()["list_nbr"],
             )
 
   @app.route('/dashboard/help') # Help
@@ -103,6 +107,9 @@ def use_user_route(app, database, login_manager):
   def profile():
       return render_template('views/users/profile.html',
                 email = current_user.email,
+                profile_url = "uploads/profile/" + current_user.profile_pic,
+                cover_url = "uploads/profile/" + current_user.cover_pic,
+                bio = current_user.bio,
                 task_nbr = getTaskNbr()["task_nbr"],
                 today_task_nbr = getTaskNbr()["today_task"],
                 list_nbr = getTaskNbr()["list_nbr"]

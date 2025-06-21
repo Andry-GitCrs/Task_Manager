@@ -363,3 +363,82 @@ async function restoreTask(task_id) {
       $(".loading-dash").css("display", 'none');
   }
 }
+
+// Handle profile
+// Image elements
+const coverInput = document.getElementById('coverInput');
+const profileInput = document.getElementById('profileInput');
+const coverContainer = document.getElementById('coverContainer');
+const profileImg = document.getElementById('profileImg');
+const modalImage = document.getElementById('modalImage');
+const imageModal = document.getElementById('imageModal');
+
+// Cover image preview
+coverInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // ✅ Aperçu rapide (avant upload)
+  const reader = new FileReader();
+  reader.onload = () => {
+    console.log("Result : ", reader.result)
+    coverContainer.style.backgroundImage = `url(${reader.result})`;
+  };
+  reader.readAsDataURL(file);
+
+  // ✅ Crée un FormData et envoie le fichier vers Flask
+  const formData = new FormData();
+  formData.append('cover_pic', file);
+
+  fetch('/update_cover_pic', {
+    method: 'POST',
+    body: formData
+  })
+  .then(async response => {
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Upload failed');
+
+    // ✅ Met à jour l’image avec l’URL retournée par le backend
+    showNotification('success', data.message);
+    console.log("Response : ", data.cover_pic)
+    coverContainer.style.backgroundImage = `url(${data.cover_pic})`;
+  })
+  .catch(err => {
+    console.error("Error updating profile picture:", err);
+    showNotification("error", err.message || "Failed to update profile picture");
+  });
+});
+
+// Profile image preview
+profileInput.addEventListener('change', (e) => {
+
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // ✅ Aperçu rapide (avant upload)
+  const reader = new FileReader();
+  reader.onload = () => {
+    profileImg.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+
+  // ✅ Crée un FormData et envoie le fichier vers Flask
+  const formData = new FormData();
+  formData.append('profile_pic', file);
+
+  fetch('/update_profile_pic', {
+    method: 'POST',
+    body: formData
+  })
+  .then(async response => {
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Upload failed');
+
+    showNotification('success', data.message);
+    profileImg.src = data.profile_pic;
+  })
+  .catch(err => {
+    console.error("Error updating profile picture:", err);
+    showNotification("error", err.message || "Failed to update profile picture");
+  });
+});

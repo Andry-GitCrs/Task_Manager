@@ -17,6 +17,7 @@ def most_active_user(app, database):
             database['db'].session.query(
                 User.user_id.label("user_id"),
                 User.email,
+                User.profile_pic,
                 func.count(Subtask.subtask_id).label("finished_subtasks_count")
             )
             .join(Task, Task.user_id == User.user_id)
@@ -32,7 +33,8 @@ def most_active_user(app, database):
             {
                 "user_id": user.user_id,
                 "email": user.email,
-                "finished_subtasks_count": user.finished_subtasks_count
+                "finished_subtasks_count": user.finished_subtasks_count,
+                "profile_pic": user.profile_pic
             }
             for user in results
         ]

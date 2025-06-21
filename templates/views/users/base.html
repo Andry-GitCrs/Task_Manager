@@ -104,8 +104,8 @@
                 </li>
                 <li class="my-2 py-1 {% block profile %}{% endblock %}">
                     <div class="w-100 d-flex align-items-center">
-                        <a  class="text-dark text-decoration-none w-100" href="/dashboard/profile">
-                            <i class="fas fa-user-circle text-secondary"></i>
+                        <a  class="ps-1 text-dark text-decoration-none w-100 d-flex align-items-center justify-content-start" href="/dashboard/profile">
+                            <img src="{{ url_for('static', filename='uploads/profile/' + current_user.profile_pic) }}" class="me-2 avatar-sm rounded-circle" alt="avatar" style="width: 20px; height: 20px; object-fit: cover;" />
                             My profile
                         </a>
                     </div>

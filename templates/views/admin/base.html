@@ -71,7 +71,7 @@
                     {{ email }}
                 </span>
                 <div class="me-3 d-flex justify-content-center align-items-center">
-                    <i class="fas fa-user text-secondary fs-4"></i>
+                    <img src="{{ url_for('static', filename='uploads/profile/' + current_user.profile_pic) }}" class="me-2 avatar-sm rounded-circle" alt="avatar" style="width: 30px; height: 30px; object-fit: cover;" />
                 </div>
             </div>
         </nav>

@@ -219,6 +219,9 @@ textarea{
 
 #aside{
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     overflow-y: auto;
     z-index: 999;
     transition: .5s ease-in-out;
