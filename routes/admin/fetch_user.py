@@ -1,4 +1,4 @@
-from flask import jsonify, abort
+from flask import jsonify, abort, url_for
 from flask_login import login_required, current_user
 from flask_login import current_user
 
@@ -24,8 +24,9 @@ def fetch_user(app, database):
                 User.stat,
                 User.created_at,
                 User.updated_at,
-                User.admin
-            ).order_by(User.updated_at.desc()).all()
+                User.admin,
+                User.profile_pic
+            ).order_by(User.user_id.asc()).all()
 
             if results:
                 for result in results:
@@ -58,7 +59,8 @@ def fetch_user(app, database):
                         "user_inactive_tasks_count": user_inactive_tasks_count,
                         "finished_subtasks_count": user_finished_subtasks_count,
                         "user_subtasks_count": user_subtasks_count,
-                        "user_active_tasks_count": user_active_tasks_count
+                        "user_active_tasks_count": user_active_tasks_count,
+                        "profile_pic": url_for('static', filename='uploads/profile/' + result.profile_pic) if result.profile_pic else ""
                     }
 
                     all_users.append(user)

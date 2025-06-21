@@ -39,7 +39,7 @@ function user_row(user, activityColor, activityText){
     const row = document.createElement('tr');
     row.id = `row${user.user_id}`
     row.innerHTML = `
-        <td class='fw-bold'><i class='fas fa-message'></i></td>
+        <td class='fw-bold'><img src="${user.profile_pic}" class="avatar-sm rounded-circle" alt="avatar" style="width: 50px; height: 50px; object-fit: cover;" /></td>
         <td class='text-start'><span class="small text-muted">#${user.user_id}</span> ${user.email} <span id="user${user.user_id}"></span></td>
         <td>${user.tasks_count}</td>
         <td>${user.finished_tasks_count}</td>

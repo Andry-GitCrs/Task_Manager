@@ -208,18 +208,21 @@ textarea{
 /* Start Dashboard page */
 
 ::-webkit-scrollbar{
-    width: 5px;
+    width: 8px;
     background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb{
-    background-color: #484c49;
+    background-color: #484c4993;
     border-radius: 5px;
 }
 
 #aside{
     height: 100vh;
-    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
     z-index: 999;
     transition: .5s ease-in-out;
     background-color: white;
@@ -284,7 +287,7 @@ aside div ul li{
 
 /* Modal styles */
 
-.modal {
+.mod {
     /*display: none;*/
     position: fixed;
     width: 500px;
@@ -530,7 +533,6 @@ main .container li:hover{
 }
 
 #findTask{
-    width: 20px;
     transition: 2s all;
     border: none;
 }
@@ -916,4 +918,11 @@ li:hover .notification-hover-info {
 .security-update i {
   min-width: 1.2em;
   text-align: center;
+}
+
+#percentage {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none; /* Pour ne pas bloquer les clics sur le canvas */
 }

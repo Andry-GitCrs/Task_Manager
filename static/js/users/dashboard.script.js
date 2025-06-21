@@ -147,7 +147,7 @@ $(document).ready(function() {
 
 //Remove task
 async function  removeTask(id){
-    const confirmation = confirm('Do u want to really remove this task')
+    const confirmation = await showFlexibleModal('Do u want to really remove this task', 'confirm')
     task_id = id
     if(confirmation){
         task = {
@@ -190,7 +190,7 @@ async function  removeTask(id){
 
 // Remove subtask
 async function removeSubTask(id){
-    const confirmation = confirm('Do u want to realy remove this subtask')
+    const confirmation = await showFlexibleModal('Do u want to really remove this subtask', 'confirm')
     subtask_id = id
     if(confirmation){
         subtask = {
@@ -225,7 +225,7 @@ async function removeSubTask(id){
 
 // Add subtask
 async function addSubTask(id, title){
-    const newValue = prompt(`Add subtask to ${title}`).trim()
+    const newValue = await showFlexibleModal('What\'s your subtask title?', 'input')
     task_id = id
     if(newValue.trim()){
         newSubtask = {
@@ -304,7 +304,7 @@ async function editSubTask(id, subtask_id) {
     let subtask_title = document.getElementById(id).textContent.trim();
     let temp_subtask_title = subtask_title;
 
-    subtask_title = prompt('Edit subtask:', temp_subtask_title)?.trim() || "";
+    subtask_title = (await showFlexibleModal('What\'s your new subtask title?', 'input', subtask_title))?.trim() || "";
 
     if (subtask_title === "") {
         showNotification("error", `No modification applied`);
@@ -613,6 +613,8 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
                 </span>
             </div>
             <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
+                <i class='fas fa-list' style='color: ${bg_color}!important'></i>
+                ${subtasks.length} subtask${subtasks.length > 1 ? 's': ''}
                 <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
                 ${list_name}
             </span>
@@ -894,6 +896,8 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
                 </span>
             </div>
             <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
+                <i class='fas fa-list' style='color: ${bg_color}!important'></i>
+                ${subtasks.length} subtask${subtasks.length > 1 ? 's': ''}
                 <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
                 ${list_name}
             </span>
@@ -1224,4 +1228,50 @@ async function addNewList(event) {
     $(".loading").css("display", 'none')
 
     return false;
+}
+
+function showFlexibleModal(message, type = 'confirm', defaultValue = '') {
+  return new Promise((resolve) => {
+    const modalId = `flexModal_${Date.now()}`;
+    const container = document.getElementById("flex-modal-container");
+    container.innerHTML = ''; // Clear previous modal
+
+    const modalHtml = `
+      <div id="${modalId}" class="modal show d-block" tabindex="-1" role="dialog" style="z-index: 2000;">
+        <div class="modal-backdrop fade show" style="z-index: 1999;"></div>
+        <div class="modal-dialog modal-dialog-centered" role="document" style="z-index: 2001; pointer-events: all;">
+          <div class="modal-content rounded-4 shadow bg-white">
+            <div class="modal-body p-4 rounded-4">
+              <p class="fs-5 mb-3">${message}</p>
+              ${
+                type === 'input'
+                  ? `<input type="text" class="form-control mb-3 rounded-pill" id="flexModalInput" placeholder="Type here..." value="${defaultValue.replace(/"/g, '&quot;')}">`
+                  : ''
+              }
+              <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-light border" id="flexModalCancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="flexModalConfirm">${type === 'confirm' ? 'Confirm' : 'OK'}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = modalHtml;
+
+    // Handle actions
+    document.getElementById('flexModalCancel').onclick = () => {
+      container.innerHTML = '';
+      resolve(type === 'confirm' ? false : null);
+    };
+
+    document.getElementById('flexModalConfirm').onclick = () => {
+      const value = type === 'confirm'
+        ? true
+        : document.getElementById('flexModalInput').value;
+      container.innerHTML = '';
+      resolve(value);
+    };
+  });
 }

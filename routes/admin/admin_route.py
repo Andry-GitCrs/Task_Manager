@@ -7,6 +7,7 @@ from . import (
     detete_task_permanently,
     edit_user_role,
     users_statistics,
+    logs
 )
 
 from flask import abort, render_template
@@ -22,6 +23,7 @@ def use_admin_route(app, database):
         detete_task_permanently.delete_task_permanently,
         edit_user_role.edit_user_role,
         users_statistics.users_statistics,
+        logs.logs
     ]
 
     for route in routes:

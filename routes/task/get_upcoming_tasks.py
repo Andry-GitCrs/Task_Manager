@@ -24,14 +24,14 @@ def get_upcoming_task(app, database):
         elif condition == "after":
             tasks = Task.query.filter(
             Task.user_id == user_id,
-            func.date(Task.task_end_date) > day,
+            func.date(Task.task_start_date) > day,
             Task.stat == True
         ).all()
             
         elif condition == "on":
             tasks = Task.query.filter(
             Task.user_id == user_id,
-            func.date(Task.task_end_date) == day,
+            func.date(Task.task_start_date) == day,
             Task.stat == True
         ).all()
             

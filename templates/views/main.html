@@ -8,16 +8,14 @@
 {% block header %}
 <header class="container-fluid h-5 px-0 header-part" id="header-part" id="head" style="height: 75vh;">
     <div class="d-flex align-items-end justify-content-between py-5 slide-container"  style="height: 75vh;">
-      <div class="d-flex justify-content-center align-items-center flex-column z-1 w-auto">
+      <div class="d-flex justify-content-center align-items-center flex-column z-1 m-auto">
         
-        <div class="d-flex align-items-center flex-column gap-3 z-1 welcome-text">
-          <h2 class="fw-bold display-5 mb-4">Manage your tasks efficiently</h2>
+        <div class="d-flex align-items-center justify-content-center flex-column gap-3 z-1 welcome-text" id="welcome-text">
+          <h2 class="fw-bold display-5 mb-4 funny-text">Manage your tasks efficiently</h2>
           <p class="lead desc-text mb-2">
-            <span class="fs-3 text-primary">"</span>
-            Welcome to <strong>Task Manager App</strong> – Your Ultimate Productivity Companion!<br>
-            Organize your day, track your progress, and stay productive with ease. Say goodbye to sticky notes and forgotten tasks. Everything is now in one place.<br>
-            Take control of your workflow and boost productivity.
-            <span class="fs-3 text-primary">"</span>
+            <span class="fs-3 contact-title">"</span>
+            <span id="typed-output"></span>
+            <span class="fs-3 contact-title">"</span>
           </p>
           <a href="/auth" class="btn btn-primary shadow px-5 p-3 rounded-pill get-started-btn">
             GET STARTED
@@ -143,55 +141,57 @@
   </div>
 </div>
 
-<!-- Why Use Section -->
-  <div class="container py-5">
-    <div class="card border-0 shadow-sm rounded-4 bg-white px-4 py-5 text-center">
-      <h3 class="text-success mb-3">Why Use Our Task Manager?</h3>
-      <p class="lead text-secondary mb-4">
-        Task Manager is a full-featured productivity web app built for individuals and teams looking to manage time and priorities with precision.
-      </p>
-      <div class="text-start mx-auto" style="max-width: 700px;">
-        <ul class="list-unstyled text-secondary small">
-          <li class="d-flex align-items-start mb-2">
-            <span class="me-2 mt-1">
-              <svg width="16" height="16" fill="#198754" viewBox="0 0 16 16"><path d="M13.485 1.929a1 1 0 010 1.414L6.586 10.243a1 1 0 01-1.414 0L2.515 7.586a1 1 0 111.414-1.414L6 8.243l6.071-6.071a1 1 0 011.414 0z"/></svg>
-            </span>
-            <span>Add and manage tasks with subtasks (create, edit, delete)</span>
-          </li>
-          <li class="d-flex align-items-start mb-2">
-            <span class="me-2 mt-1">
-              <svg width="16" height="16" fill="#198754" viewBox="0 0 16 16"><path d="M13.485 1.929a1 1 0 010 1.414L6.586 10.243a1 1 0 01-1.414 0L2.515 7.586a1 1 0 111.414-1.414L6 8.243l6.071-6.071a1 1 0 011.414 0z"/></svg>
-            </span>
-            <span>Tag and color-label tasks for visual clarity</span>
-          </li>
-          <li class="d-flex align-items-start mb-2">
-            <span class="me-2 mt-1">
-              <svg width="16" height="16" fill="#198754" viewBox="0 0 16 16"><path d="M13.485 1.929a1 1 0 010 1.414L6.586 10.243a1 1 0 01-1.414 0L2.515 7.586a1 1 0 111.414-1.414L6 8.243l6.071-6.071a1 1 0 011.414 0z"/></svg>
-            </span>
-            <span>Use Sticky Wall board for dynamic task visualization</span>
-          </li>
-          <li class="d-flex align-items-start mb-2">
-            <span class="me-2 mt-1">
-              <svg width="16" height="16" fill="#198754" viewBox="0 0 16 16"><path d="M13.485 1.929a1 1 0 010 1.414L6.586 10.243a1 1 0 01-1.414 0L2.515 7.586a1 1 0 111.414-1.414L6 8.243l6.071-6.071a1 1 0 011.414 0z"/></svg>
-            </span>
-            <span>Navigate Today, Calendar, and Upcoming views easily</span>
-          </li>
-          <li class="d-flex align-items-start mb-2">
-            <span class="me-2 mt-1">
-              <svg width="16" height="16" fill="#198754" viewBox="0 0 16 16"><path d="M13.485 1.929a1 1 0 010 1.414L6.586 10.243a1 1 0 01-1.414 0L2.515 7.586a1 1 0 111.414-1.414L6 8.243l6.071-6.071a1 1 0 011.414 0z"/></svg>
-            </span>
-            <span>Customize your profile and preferences</span>
-          </li>
-          <li class="d-flex align-items-start">
-            <span class="me-2 mt-1">
-              <svg width="16" height="16" fill="#198754" viewBox="0 0 16 16"><path d="M13.485 1.929a1 1 0 010 1.414L6.586 10.243a1 1 0 01-1.414 0L2.515 7.586a1 1 0 111.414-1.414L6 8.243l6.071-6.071a1 1 0 011.414 0z"/></svg>
-            </span>
-            <span>Fully responsive, lightweight, and no installation required</span>
-          </li>
-        </ul>
-      </div>
+  <!-- Why Use Section -->
+<div class="container py-5">
+  <div class="card border-0 shadow rounded-4 bg-light px-4 py-5 text-center animate__animated animate__fadeIn">
+    <h3 class="text-success fw-semibold mb-3">Why Use Our Task Manager?</h3>
+    <p class="lead text-muted mb-4">
+      Task Manager is a full-featured productivity web app built for individuals and teams looking to manage time and priorities with precision.
+    </p>
+
+    <div class="text-start mx-auto" style="max-width: 700px;">
+      <ul class="list-unstyled text-secondary fs-6">
+        <li class="d-flex align-items-start mb-3">
+          <div class="bg-success bg-opacity-10 text-success p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+            <i class="fas fa-check"></i>
+          </div>
+          <span>Add and manage tasks with subtasks (create, edit, delete)</span>
+        </li>
+        <li class="d-flex align-items-start mb-3">
+          <div class="bg-success bg-opacity-10 text-success p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+            <i class="fas fa-check"></i>
+          </div>
+          <span>Tag and color-label tasks for visual clarity</span>
+        </li>
+        <li class="d-flex align-items-start mb-3">
+          <div class="bg-success bg-opacity-10 text-success p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+            <i class="fas fa-check"></i>
+          </div>
+          <span>Use Sticky Wall board for dynamic task visualization</span>
+        </li>
+        <li class="d-flex align-items-start mb-3">
+          <div class="bg-success bg-opacity-10 text-success p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+            <i class="fas fa-check"></i>
+          </div>
+          <span>Navigate Today, Calendar, and Upcoming views easily</span>
+        </li>
+        <li class="d-flex align-items-start mb-3">
+          <div class="bg-success bg-opacity-10 text-success p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+            <i class="fas fa-check"></i>
+          </div>
+          <span>Customize your profile and preferences</span>
+        </li>
+        <li class="d-flex align-items-start">
+          <div class="bg-success bg-opacity-10 text-success p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+            <i class="fas fa-check"></i>
+          </div>
+          <span>Fully responsive, lightweight, and no installation required</span>
+        </li>
+      </ul>
     </div>
   </div>
+</div>
+
 </div>
 <footer class="bg-dark text-light pt-4 pb-1">
     <div class="container">

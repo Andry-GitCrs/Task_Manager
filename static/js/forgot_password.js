@@ -95,19 +95,29 @@ $("#send-otp").on('click', () => {
         return
     }
     $("#send-otp").prop("disabled", true);
-    $(".loading").css("display", 'inline');
+    $("#send-otp").html('<i class="fas fa-spinner fa-spin text-success"></i>')
     $.post(`/api/user/sendOtp/${email}`)
     .done((data) => {
         showNotification("success", data.message);
+        let countdown = 60;
+        const btn = $("#send-otp");
+        btn.html(`<span class="text-secondary fw-bold">${countdown}s</span>`);
+        const interval = setInterval(() => {
+            countdown--;
+            btn.html(`<span class="text-secondary fw-bold">${countdown}s</span>`);
+            if (countdown <= 0) {
+                clearInterval(interval);
+                btn.html('<i class="fas fa-paper-plane text-success"></i> Send');
+                btn.prop("disabled", false);
+            }
+        }, 1000);
     })
     .fail((xhr) => {
         const error = xhr.responseJSON?.error || "An unexpected error occurred";
         console.error(error);
         showNotification("error", error);
-    })
-    .always(() => {
+        $("#send-otp").html('<i class="fas fa-paper-plane text-success"></i> Send');
         $("#send-otp").prop("disabled", false);
-        $(".loading").css("display", 'none');
     });
 })
 

@@ -5,7 +5,6 @@ let list = $("#menu-list")
 let listStat = false
 
 $(".menu-toggler").on("click", () => {
-    console.log("dfgbdfhb")
     if(!listStat){
         list.css("display", "flex")
         listStat = true
@@ -77,7 +76,7 @@ window.addEventListener("scroll", () => {
     let y = window.scrollY
     logs.push(y)
     if( y!= 0){
-        nav.style.backgroundColor = "rgba(0, 0, 0, 0.3)"
+        nav.style.backgroundColor = "transparent"
         nav.style.backdropFilter = "blur(5px)";
         
     }else{
@@ -100,4 +99,3 @@ function goTo(dir){
         nav.style.top = "0px"
     }
 }
-

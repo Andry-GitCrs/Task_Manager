@@ -15,7 +15,7 @@ email_form.addEventListener('submit', async function(e) {
         "message": message
     }
 
-    document.getElementById('submit_feedback').textContent = 'Loading ...'
+    document.getElementById('submit_feedback').innerHTML = '<i class="fas fa-spinner fa-spin text-light"></i> Sending...'
     document.getElementById('submit_feedback').disabled = true
     
     const res = verify_email(email)
@@ -31,22 +31,19 @@ email_form.addEventListener('submit', async function(e) {
     
             if (response.ok) {  //Response with status code 200
                 showNotification("success", responseData.message)
-                document.getElementById('submit_feedback').textContent = 'Submit'
 
             } else {
                 showNotification("error", responseData.error)
-                document.getElementById('submit_feedback').textContent = 'Submit'
             }
         } catch (error) {
             showNotification("error", res.error)
-            document.getElementById('submit_feedback').textContent = 'Submit'
         }
     }else{
         err = (await res).error
         showNotification('error', err)
-        document.getElementById('submit_feedback').textContent = 'Submit'
     }
     
+    document.getElementById('submit_feedback').innerHTML = '<i class="fas fa-paper-plane text-light"></i> Send'
     document.getElementById('submit_feedback').disabled = false
 })
 
