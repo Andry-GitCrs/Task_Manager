@@ -319,7 +319,7 @@ fetchUserTasks();
 
 // Delete a task permantely
 async function deleteTask(task_id) {
-  if (await showFlexibleModal('Are you sure you want to permanently this task')) {
+  if (await showFlexibleModal('Are you sure you want to permanently delete this task')) {
     $(".loading-dash").css("display", 'inline');
       try{
           const response = await fetch(`/api/user/deleteTaskPermanentely/${task_id}`,{
@@ -377,6 +377,7 @@ const imageModal = document.getElementById('imageModal');
 coverInput.addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) return;
+  $(".loading-dash").css("display", 'inline');
 
   // ✅ Aperçu rapide (avant upload)
   const reader = new FileReader();
@@ -400,13 +401,13 @@ coverInput.addEventListener('change', (e) => {
 
     // ✅ Met à jour l’image avec l’URL retournée par le backend
     showNotification('success', data.message);
-    console.log("Response : ", data.cover_pic)
     coverContainer.style.backgroundImage = `url(${data.cover_pic})`;
   })
   .catch(err => {
     console.error("Error updating profile picture:", err);
     showNotification("error", err.message || "Failed to update profile picture");
   });
+  $(".loading-dash").css("display", 'none');
 });
 
 // Profile image preview
@@ -414,7 +415,7 @@ profileInput.addEventListener('change', (e) => {
 
   const file = e.target.files[0];
   if (!file) return;
-
+  $(".loading-dash").css("display", 'inline');
   // ✅ Aperçu rapide (avant upload)
   const reader = new FileReader();
   reader.onload = () => {
@@ -441,4 +442,5 @@ profileInput.addEventListener('change', (e) => {
     console.error("Error updating profile picture:", err);
     showNotification("error", err.message || "Failed to update profile picture");
   });
+  $(".loading-dash").css("display", 'none');
 });

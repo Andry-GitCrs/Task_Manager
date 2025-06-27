@@ -18,15 +18,7 @@ def fetch_user(app, database):
         all_users = []
 
         if admin and current_user.stat:
-            results = db.session.query(
-                User.user_id,
-                User.email,
-                User.stat,
-                User.created_at,
-                User.updated_at,
-                User.admin,
-                User.profile_pic
-            ).order_by(User.user_id.asc()).all()
+            results = db.session.query(User).order_by(User.user_id.asc()).all()
 
             if results:
                 for result in results:
@@ -60,7 +52,9 @@ def fetch_user(app, database):
                         "finished_subtasks_count": user_finished_subtasks_count,
                         "user_subtasks_count": user_subtasks_count,
                         "user_active_tasks_count": user_active_tasks_count,
-                        "profile_pic": url_for('static', filename='uploads/profile/' + result.profile_pic) if result.profile_pic else ""
+                        "profile_pic": url_for('static', filename='uploads/profile/' + result.profile_pic) if result.profile_pic else "",
+                        "cover_pic": url_for('static', filename='uploads/profile/' + result.cover_pic) if result.cover_pic else "",
+                        "bio": result.bio if result.bio else "",
                     }
 
                     all_users.append(user)

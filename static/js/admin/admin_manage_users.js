@@ -9,20 +9,21 @@ const fetchUserData = async () => {
             userData = data
             CURRENT_USER_ID = userData.user_id
             showNotification("success", data.message)
-            const tableBody = document.getElementById('userTableBody');
+            const cardsWrapper = document.getElementById('userCardsWrapper');
+            cardsWrapper.innerHTML = ''; // clear previous
+
             userData.data.all_users.forEach(user => {
                 const total = user.tasks_count + user.user_subtasks_count;
                 const finished = user.finished_tasks_count + user.finished_subtasks_count;
                 const percent = total > 0 ? Math.round((finished / total) * 100) : 0;
-                const activityColor = percent >= 20 ? 'success' : percent >= 50 ? 'warning' : 'danger';
+                const activityColor = percent >= 50 ? 'success' : percent >= 20 ? 'warning' : 'danger';
                 const activityText = `${percent}%`;
-                document.getElementById('simple_users_nbr').textContent = userData.data.total_users
-                document.getElementById('admin_nbr').textContent = userData.data.total_admin
 
-                const row = user_row(user, activityColor, activityText)
-                            
-                tableBody.appendChild(row);
+                document.getElementById('simple_users_nbr').textContent = userData.data.total_users;
+                document.getElementById('admin_nbr').textContent = userData.data.total_admin;
 
+                const card = user_card(user, activityColor, activityText);
+                cardsWrapper.appendChild(card);
             });
         }else{
             CURRENT_USER_ID = userData.user_id
@@ -35,57 +36,121 @@ const fetchUserData = async () => {
     document.getElementById("loading").style.display = 'none'
 }
 
-function user_row(user, activityColor, activityText){
-    const row = document.createElement('tr');
-    row.id = `row${user.user_id}`
-    row.innerHTML = `
-        <td class='fw-bold'><img src="${user.profile_pic}" class="avatar-sm rounded-circle" alt="avatar" style="width: 50px; height: 50px; object-fit: cover;" /></td>
-        <td class='text-start'><span class="small text-muted">#${user.user_id}</span> ${user.email} <span id="user${user.user_id}"></span></td>
-        <td>${user.tasks_count}</td>
-        <td>${user.finished_tasks_count}</td>
-        <td>${user.user_subtasks_count}</td>
-        <td>${user.finished_subtasks_count}</td>
-        <td class='date'>
-            ${formatDate(user.created_at).date}
-            <span class="btn text-success time rounded-pill border border-success">${formatDate(user.created_at).time}</span>
-        </td>
-        <td class='date'>
-            ${formatDate(user.updated_at).date}
-            <span class="btn text-success time rounded-pill border border-success">${formatDate(user.updated_at).time}</span>
-        </td>
-        <td><span class="badge bg-${activityColor}">${activityText}</span></td>
-        <td>
-            <div class="form-check form-switch d-flex justify-content-center">
-                <input class="form-check-input" type="checkbox" ${user.stat ? 'checked' : ''} onchange="toggleStatus(${user.user_id}, this.checked)">
+function user_card(user, activityColor, activityText) {
+    const col = document.createElement("div");
+    col.className = "col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center mb-4";
+
+    col.innerHTML = `
+        <div class="card user-ui-card border rounded-top-4" id="row${user.user_id}" style="z-index: 1">
+            <div class="card__img rounded-top-4">
+                <img src="${user.cover_pic}" alt="" width="100%" height="100%" class="rounded-top-4" style="object-fit: cover;"/>
             </div>
-        </td>
-        <td class=''>
-            <div class="dropdown">
-                <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-pen text-success"></i>
-                </button>
-                <ul class="dropdown-menu">
-                    <li class="text-center d-flex justify-content-between align-items-center gap-2 px-2">
-                        <i class="fas fa-user-shield ${user.admin ? 'text-success' : 'text-danger'}"></i>
-                        <h6 class="m-0">Admin</h6>
-                        <div class="form-check form-switch d-flex justify-content-center">
-                            <input class="form-check-input" type="checkbox" ${user.admin ? 'checked' : ''} onchange="toggleAdmin(${user.user_id}, this.checked)">
+
+            <div class="card__avatar position-relative" style="top: -50px; margin: 0 auto">
+                <span class="position-absolute bottom-0 end-0" id="user${user.user_id}"></span>
+                <img src="${user.profile_pic}" alt="avatar" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+            </div>
+
+            <div class="card__title text-center" style="transform: translateY(-50%)">
+                <span class="small"><span class="text-muted">#${user.user_id}</span> ${user.username ? user.username : user.email.split('@')[0]}</span>
+                <p class="card__subtitle my-2">
+                    ${user.bio}
+                </p>
+                <span class="small">
+                    <i class="fas fa-calendar-plus fs-6 text-success"></i> ${formatDate(user.created_at).date}
+                    <span class="btn text-success time rounded-pill border border-success">${formatDate(user.created_at).time}</span>
+                </span>
+            </div>
+            <div class="d-flex flex-column gap-2 px-3 text-center mt-2 w-100" style="transform: translateY(-25%)">
+                <!-- Tasks -->
+                <div class="doughnut-container text-center my-3">
+                    <div class="small mt-2 text-muted w-50 text-start text-truncate">
+                        <span class="fw-bold"><i class="fas fa-user-shield text-secondary fs-6"></i> • </span> <strong class="badge bg-${user.admin ? 'success' : 'danger'}"> ${user.admin ? 'Admin' : 'User'}</strong> <br />
+                        <span class="fw-bold"><i class="fas fa-flag text-${user.stat ? 'success' : 'danger'} fs-6"></i> • </span><span class="fw-bold"> ${user.stat ? 'Active' : 'Suspended'}</span> <br />
+                        <strong class=""><i class="fas fa-tasks text-secondary fs-6"></i> • <strong>${user.finished_tasks_count}</strong> / ${user.tasks_count}</strong>  <br>
+                        <strong class=""><i class="fas fa-stream text-primary fs-6"></i> • <strong>${user.finished_subtasks_count}</strong> / ${user.user_subtasks_count}</strong> <br>
+                        <strong class="" style="max-width: 100px; overflow: hidden;"><i class="fas fa-envelope text-secondary fs-6"></i> • <span class="small" >${user.email}</span> </strong> 
+                    </div>
+
+                    <div>
+                        <h5 class="small"><i class="fas fa-bolt text-${activityColor} fs-5"></i> Activitie</h5>
+                        <div class="doughnut" id="progress${user.user_id}">
+                            <span class="doughnut-label text-${activityColor}" id="label${user.user_id}">${activityText}</span>
                         </div>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#" onclick="editProfile(${user.user_id})">
-                            <i class="fas fa-id-badge me-2"></i> Edit Profile
-                        </a>
-                    </li>
-                </ul>
+                    </div>
+                </div>
+
+                <!-- Actions Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-light border shadow-sm rounded-pill px-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-gear text-open text-secondary fs-6"></i> Action
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end text-start shadow-sm rounded-3 p-2" style="min-width: 200px">
+                        <!-- Admin toggle -->
+                        <li class="d-flex justify-content-between align-items-center mb-2 px-2">
+                            <div>
+                                <i class="fas fa-user-shield fs-6 me-2 ${user.admin ? 'text-success' : 'text-danger'}"></i>
+                                <small>Admin</small>
+                            </div>
+                            <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" ${user.admin ? 'checked' : ''} onchange="toggleAdmin(${user.user_id}, this.checked)">
+                            </div>
+                        </li>
+
+                        <!-- Status toggle -->
+                        <li class="d-flex justify-content-between align-items-center mb-2 px-2">
+                            <div>
+                                <i class="fas fa-flag fs-6 me-2 text-success"></i>
+                                <small>Status</small>
+                            </div>
+                            <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" ${user.stat ? 'checked' : ''} onchange="toggleStatus(${user.user_id}, this.checked)">
+                            </div>
+                        </li>
+
+                        <!-- Edit Profile -->
+                        <li class="px-2">
+                            <button class="dropdown-item d-flex align-items-center gap-2" onclick="editProfile(${user.user_id})">
+                                <i class="fas fa-id-badge fs-6 text-primary"></i> <span>Edit Profile</span>
+                            </button>
+                        </li>
+
+                        <!-- Delete User -->
+                        <li class="px-2">
+                            <button class="dropdown-item d-flex align-items-center gap-2 text-danger" onclick="deleteUser(${user.user_id})">
+                                <i class="fas fa-trash-alt fs-6"></i> <span>Delete User</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <span class="small">
+                    <i class="fas fa-calendar-check fs-6 text-warning"></i> ${formatDate(user.updated_at).date}
+                    <span class="btn text-success time rounded-pill border border-success"> ${formatDate(user.updated_at).time}</span>
+                </span>
             </div>
-            <button class="btn btn-sm" onclick="deleteUser(${user.user_id})">
-                <i class="fas fa-trash-alt text-danger"></i>
-            </button>
-        </td>
+
+
+        </div>
     `;
-    return row
+    const total = user.tasks_count + user.user_subtasks_count;
+    const done = user.finished_tasks_count + user.finished_subtasks_count;
+    const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+
+    const progressCircle = col.querySelector(`#progress${user.user_id}`);
+    const label = col.querySelector(`#label${user.user_id}`);
+
+    if (progressCircle && label) {
+        progressCircle.style.background = `conic-gradient(var(--bs-${activityColor}) ${percent}%, #dee2e6 ${percent}%)`;
+        label.textContent = `${percent}%`;
+    }
+
+    console.log(progressCircle, label);
+
+  return col;
 }
+
+
+
 
 fetchUserData()
 function formatDate(dateStr) {

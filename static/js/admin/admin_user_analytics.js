@@ -37,7 +37,7 @@ const fetchStat = async () => {
             gradient.addColorStop(1, 'rgba(13, 110, 253, 0)');
 
             userStatisticsChart = new Chart(document.getElementById('userStatisticsChart'), {
-                type: 'bar',
+                type: 'line',
                 data: {
                 labels: filteredLabels,
                 datasets: [{

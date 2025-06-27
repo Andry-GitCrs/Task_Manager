@@ -208,7 +208,7 @@ textarea{
 /* Start Dashboard page */
 
 ::-webkit-scrollbar{
-    width: 8px;
+    width: 5px;
     background-color: transparent;
 }
 
@@ -796,7 +796,7 @@ nav li a{
 }
 
 .list-container{
-    max-height: 120px;
+    max-height: 100px;
     overflow-y: auto;
     /* box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) inset; */
 }

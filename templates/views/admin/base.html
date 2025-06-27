@@ -9,6 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
     <title>
         {% block title %}
             Base title
@@ -18,7 +19,7 @@
     {% endblock %}
 </head>
 <body>
-    <aside class="position-fixed shadow h-100 p-3 sidebar" id="sidebar">
+    <aside class="position-fixed shadow h-100 p-3 sidebar d-flex flex-column justify-content-center" id="sidebar">
         <h4 class="text-center">
             <i class="fas fa-user-shield me-2 text-success"></i>Task manager <br> 
         </h4>
