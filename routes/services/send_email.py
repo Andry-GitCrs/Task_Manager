@@ -1,3 +1,4 @@
+from flask_login import current_user
 from flask_mail import Mail, Message
 from flask import jsonify, render_template, request
 from dotenv import load_dotenv
@@ -18,7 +19,7 @@ def sendEmail(app):
     def send_email():
         try:
             data = request.get_json()
-            user_email = data['email']
+            user_email = data['email'] or current_user.email
             user_first_name = data['first_name']
             user_last_name = data['last_name']
             user_phone = data['phone']

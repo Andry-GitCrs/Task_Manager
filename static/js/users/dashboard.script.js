@@ -32,7 +32,12 @@ $(document).ready(function() {
     $(".add").on("click", (e) => {
         e.preventDefault();
         let content = $("#content").val().trim();
+        const contentRegex = /^[\w\s]{3,}$/; 
         $("#content").val("");
+        if (!contentRegex.test(content)) {
+            showNotification("error", "Task content must be at least 3 characters and contain only letters, numbers, and spaces.");
+            return;
+        }
         if (content !== "") {
             if (!subTaskList.includes(content)) {
                 if (subTaskNbr == 1) {
@@ -56,6 +61,39 @@ $(document).ready(function() {
         let bgColor = $("#bg-color-picker").val();
         let description = $("#description").val().trim();
         let list_id = $("#list_id").val();
+
+        // Regex patterns
+        const titleRegex = /^[\w\s]{3,}$/;                  // letters, numbers, underscores, spaces
+        const descriptionRegex = /^.{5,}$/;                 // at least 5 characters if present
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;            // YYYY-MM-DD
+        const colorRegex = /^#([0-9A-Fa-f]{6})$/;           // valid hex color
+        const idRegex = /^\d+$/;                            // only digits
+
+        // Validation
+        if (!titleRegex.test(title)) {
+            showNotification('error', "Title must be at least 3 characters and contain only letters, numbers, and spaces.");
+            return
+        }
+
+        if (description && !descriptionRegex.test(description)) {
+            showNotification('error', "Description must be at least 5 characters.");
+            return
+        }
+
+        if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
+            showNotification('error', "Dates must be in the format YYYY-MM-DD.");
+            return
+        }
+
+        if (!colorRegex.test(bgColor)) {
+            showNotification('error', "Background color must be a valid hex code (e.g., #ffcc00).");
+            return
+        }
+
+        if (!idRegex.test(list_id)) {
+            showNotification('error', "List ID must be a valid number.");
+            return
+        }
 
         if (title.trim() !== "" && startDate !== "" && endDate !== "") {
             const task = {
@@ -433,11 +471,13 @@ const fetchList = async () => {
                                 id="listCheck${list.list_id}" 
                                 ${list.task_nbr > 0 ? 'checked' : ''}
                             >
-                            <label class="form-check-label mb-0" for="listCheck${list.list_id}">
+                            <label class="form-check-label mb-0 text-truncate"  style="max-width: 130px; overflow: hidden;" for="listCheck${list.list_id}">
                                 <a class="text-dark text-decoration-none">${list.list_name}</a>
                             </label>
                         </div>
-                        <span>${list.task_nbr}</span>
+                        <div class='d-flex justify-content-between align-items-center gap-2'>
+                            <span>${list.task_nbr}</span>
+                        </div>
                     </div>
                 `;
                 listContainer.appendChild(listEl);
@@ -459,6 +499,8 @@ const fetchList = async () => {
     }
     $(".loading").css("display", 'none');
 };
+
+// Delete list
 
 function attachCheckboxListeners() {
     const checkboxes = document.querySelectorAll('.list-checkbox');

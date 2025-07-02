@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from flask_login import login_required
 import sqlalchemy
+import re
 
 def add_subtask(app, database):
     db = database["db"]
@@ -12,6 +13,12 @@ def add_subtask(app, database):
         data = request.get_json()
         task_id = data['task_id']
         subtask_title = data['subtask_title']
+
+        titleRegex = re.compile(r"^[a-zA-Z0-9 ]+$")
+        if not titleRegex.match(subtask_title):
+            return jsonify({
+                "error": "Subtask title contains invalid characters"
+            }), 400
 
         newSubTask = Subtask.query.filter_by(subtask_title = subtask_title, task_id = task_id).first()
 

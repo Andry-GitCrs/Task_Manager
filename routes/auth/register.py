@@ -72,7 +72,7 @@ def register(app, database):
                     db.session.add(notification_1)
 
                 db.session.add(notification)
-                db.session.add( List(list_name = "Personal", user_id = newUser.user_id) )
+                db.session.add( List(list_name = "Personal", user_id = newUser.user_id, strict = True) )
                 db.session.commit()
                 emailHtml = render_template(
                     '/views/services/email/welcome_email.html',

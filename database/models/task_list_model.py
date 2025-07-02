@@ -13,6 +13,7 @@ def listModel(db, User):
         updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
         stat = Column(Boolean, default=True)
         finished = Column(Boolean, default=False)
+        strict = Column(Boolean, default=False)
         user_id = Column(Integer, ForeignKey('users.user_id', ondelete='CASCADE'), nullable=False)
 
         # Relationship with User

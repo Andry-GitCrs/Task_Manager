@@ -118,7 +118,7 @@ function user_card(user, activityColor, activityText) {
                         <!-- Delete User -->
                         <li class="px-2">
                             <button class="dropdown-item d-flex align-items-center gap-2 text-danger" onclick="deleteUser(${user.user_id})">
-                                <i class="fas fa-trash-alt fs-6"></i> <span>Delete User</span>
+                                <i class="fas fa-trash-alt fs-6 text-danger"></i> <span>Delete User</span>
                             </button>
                         </li>
                     </ul>
@@ -143,8 +143,6 @@ function user_card(user, activityColor, activityText) {
         progressCircle.style.background = `conic-gradient(var(--bs-${activityColor}) ${percent}%, #dee2e6 ${percent}%)`;
         label.textContent = `${percent}%`;
     }
-
-    console.log(progressCircle, label);
 
   return col;
 }

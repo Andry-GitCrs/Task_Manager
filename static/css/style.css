@@ -926,3 +926,7 @@ li:hover .notification-hover-info {
   transform: translate(-50%, -50%);
   pointer-events: none; /* Pour ne pas bloquer les clics sur le canvas */
 }
+
+.modal-backdrop{
+    transition: .5s all;
+}
