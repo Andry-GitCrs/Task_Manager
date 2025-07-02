@@ -58,10 +58,12 @@ def verify_admin(app, database):
         if admin:
             return jsonify({
                 "message": "User have admin privilege",
-                "privilege": admin
+                "privilege": admin,
+                "stat": current_user.stat
             }), 200
             
         return jsonify({
             "error": f"User is not an admin member",
-            "privilege": admin
+            "privilege": admin,
+            "stat": current_user.stat
         }), 401

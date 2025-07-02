@@ -1,3 +1,18 @@
+// Password toggle functionality
+const toggleBtn = document.getElementById('toggle-register-passwords');
+toggleBtn.addEventListener('click', () => {
+    const pwd1 = document.getElementById('new_password');
+    const pwd2 = document.getElementById('new_confirmation_password');
+
+    const isHidden = pwd1.type === 'password';
+
+    pwd1.type = isHidden ? 'text' : 'password';
+    pwd2.type = isHidden ? 'text' : 'password';
+
+    toggleBtn.classList.toggle('fa-eye');
+    toggleBtn.classList.toggle('fa-eye-slash');
+});
+
 $('#forgot-password-form').on('submit', async function(e) {
     e.preventDefault();
     

@@ -199,7 +199,7 @@ async function deleteUser(userId) {
                 showNotification("success", data.message)
                 document.getElementById(`row${userId}`).remove()
             }else{
-                showNotification("error", data.message)
+                showNotification("error", data.error)
             }
         } catch (error) {
             showNotification("error", error)

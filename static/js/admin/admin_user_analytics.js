@@ -37,21 +37,79 @@ const fetchStat = async () => {
             gradient.addColorStop(1, 'rgba(13, 110, 253, 0)');
 
             userStatisticsChart = new Chart(document.getElementById('userStatisticsChart'), {
-                type: 'line',
-                data: {
+            type: 'line',
+            data: {
                 labels: filteredLabels,
                 datasets: [{
-                    label: 'Registrations',
-                    data: filteredCounts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    borderRadius: 8
+                label: 'Registrations',
+                data: filteredCounts,
+                fill: true,
+                tension: 0.4, // Smooth curve
+                backgroundColor: 'rgba(54, 162, 235, 0.2)', // soft fill
+                borderColor: 'rgba(54, 162, 235, 1)',
+                pointBackgroundColor: '#fff',
+                pointBorderColor: 'rgba(54, 162, 235, 1)',
+                pointHoverBackgroundColor: 'rgba(54, 162, 235, 1)',
+                pointHoverBorderColor: '#fff',
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
                 }]
-                },
-                options: {
+            },
+            options: {
                 responsive: true,
-                plugins: { legend: { display: false } }
+                maintainAspectRatio: false,
+                plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                    color: '#444',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#fff',
+                    titleColor: '#111',
+                    bodyColor: '#333',
+                    borderColor: 'rgba(0,0,0,0.1)',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    padding: 10
+                },
+                },
+                scales: {
+                x: {
+                    grid: {
+                    display: false
+                    },
+                    ticks: {
+                    color: '#666',
+                    font: {
+                        size: 12
+                    }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                    color: 'rgba(200, 200, 200, 0.2)',
+                    borderDash: [5, 5]
+                    },
+                    ticks: {
+                    color: '#666',
+                    font: {
+                        size: 12
+                    }
+                    }
                 }
+                }
+            }
             });
+
         } else {
             showNotification("error", data.message);
         }

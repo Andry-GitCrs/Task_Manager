@@ -32,6 +32,31 @@ document.getElementById('menu-btn').addEventListener('click', function () {
 
 /* End menu */
 
+// Password toggle functionality
+const toggleBtn = document.getElementById('toggle-register-passwords');
+toggleBtn.addEventListener('click', () => {
+    const pwd1 = document.getElementById('new_password');
+    const pwd2 = document.getElementById('new_confirmation_password');
+
+    const isHidden = pwd1.type === 'password';
+
+    pwd1.type = isHidden ? 'text' : 'password';
+    pwd2.type = isHidden ? 'text' : 'password';
+
+    toggleBtn.classList.toggle('fa-eye');
+    toggleBtn.classList.toggle('fa-eye-slash');
+});
+
+const toggleLoginBtn = document.getElementById('toggle-login-password');
+toggleLoginBtn.addEventListener('click', () => {
+    const pwd = document.getElementById('password');
+    const isHidden = pwd.type === 'password';
+
+    pwd.type = isHidden ? 'text' : 'password';
+    toggleLoginBtn.classList.toggle('fa-eye');
+    toggleLoginBtn.classList.toggle('fa-eye-slash');
+});
+
 registerBtn.addEventListener("click", (e) => {
     e.preventDefault()
     registerForm.classList.remove("d-none")

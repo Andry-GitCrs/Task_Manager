@@ -12,9 +12,10 @@ def update_subtask(app, database):
         data = request.get_json()
         subtask_title = data.get('subtask_title')
         subtask = db.session.query(Subtask).filter_by(subtask_id = subtask_id).first()
-        existing_subtask = db.session.query(Subtask).filter(Subtask.subtask_id != subtask_id, Subtask.subtask_title == subtask_title, Subtask.stat == True).first()
         if not subtask:
             return jsonify({"error": "Subtask not found"}), 404
+        
+        existing_subtask = db.session.query(Subtask).filter(Subtask.subtask_id != subtask_id, Subtask.subtask_title == subtask_title, Subtask.stat == True, Subtask.task_id == subtask.task_id).first()
     
         if not subtask_title:
             return jsonify({"error": "Subtask title cannot be empty"}), 401

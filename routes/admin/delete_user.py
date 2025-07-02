@@ -13,6 +13,9 @@ def delete_user(app, database):
 
         user = User.query.filter_by(user_id = user_id).first()
 
+        if user.admin:
+            return jsonify({"error": "You cannot delete an admin user"}), 401
+
         if admin and stat:
             if user:
                 db.session.delete(user)

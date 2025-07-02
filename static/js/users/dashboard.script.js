@@ -835,18 +835,33 @@ var verify = async () => {
         const response = await fetch(`/api/verify_user`, {
             method: "GET",
         });
+
+        const data = await response.json();
     
         if (response.ok) {
-            $('._user_action').append(`
-                <li class="my-2 py-1">
-                    <div class="w-100 d-flex align-items-center">
-                        <a  class="text-dark text-decoration-none w-100" href="/auth/admin/login">
-                            <i class="text-success fas fa-key"></i>
-                            Login as admin
-                        </a>
-                    </div>
-                </li>
-            `)
+            if (!data.stat) {
+                $('._user_action').append(`
+                    <li class="my-2 py-1">
+                        <div class="w-100 d-flex align-items-center">
+                            <a  class="text-dark text-decoration-none w-100" href="/auth/admin/login">
+                                <i class="text-success fas fa-key"></i>
+                                Login as admin
+                            </a>
+                        </div>
+                    </li>
+                `)
+            }else {
+                $('._user_action').append(`
+                    <li class="my-2 py-1">
+                        <div class="w-100 d-flex align-items-center">
+                            <a  class="text-dark text-decoration-none w-100" href="/admin/dashboard">
+                                <i class="text-success fas fa-exchange-alt"></i>
+                                Admin space
+                            </a>
+                        </div>
+                    </li>
+                `)
+            }
         }
     } catch (error) {
        console.error(error.message)
