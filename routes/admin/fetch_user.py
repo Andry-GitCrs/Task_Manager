@@ -55,6 +55,7 @@ def fetch_user(app, database):
                         "profile_pic": url_for('static', filename='uploads/profile/' + result.profile_pic) if result.profile_pic else "",
                         "cover_pic": url_for('static', filename='uploads/profile/' + result.cover_pic) if result.cover_pic else "",
                         "bio": result.bio if result.bio else "",
+                        "username": result.username,
                     }
 
                     all_users.append(user)

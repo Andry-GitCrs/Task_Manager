@@ -16,7 +16,9 @@ def get_user_list(app, database):
         data.append({
           "list_id": list.list_id,
           "list_name": list.list_name,
-          "task_nbr": task_nbr
+          "task_nbr": task_nbr,
+          "description": list.description,
+          "strict": list.strict or False,
         })
 
       return jsonify({

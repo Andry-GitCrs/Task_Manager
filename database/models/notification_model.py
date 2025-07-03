@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, Text
+from sqlalchemy import Column, Integer, Boolean, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
 
 def notificationModel(db, User):

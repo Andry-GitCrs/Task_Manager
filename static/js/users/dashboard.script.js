@@ -11,6 +11,62 @@ $(document).ready(function() {
     let taskNbr = 0;
     let subTaskNbr = 1;
     /* Task number */
+    // Open list modal
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.list-options-btn')) {
+            const btn = e.target.closest('.list-options-btn');
+            const listId = btn.getAttribute('data-id');
+            const listName = btn.getAttribute('data-name');
+            const description = btn.getAttribute('data-description');
+            const important = btn.getAttribute('data-important') === 'true';
+            const checkbox = document.getElementById('importantCheckbox');
+            const starIcon = document.getElementById('importantIcon');
+
+            checkbox.dataset.important = btn.getAttribute('data-important') === 'true';
+            checkbox.checked = checkbox.dataset.important === 'true';
+
+            isImportant(checkbox, starIcon);
+            
+            
+            document.getElementById('renameListInput').value = listName;
+            document.getElementById('descriptionListInput').value = description;
+            document.getElementById('listOptionsModal').dataset.activeId = listId;
+            document.getElementById('importantCheckbox').checked = important;
+            document.getElementById('importantCheckbox').dataset.important = important ? 'true' : 'false';
+
+            document.getElementById('listOptionsModal').style.display = 'flex';
+        }
+    });
+
+    // Close modal
+    document.getElementById('closeListModal').addEventListener('click', () => {
+        document.getElementById('listOptionsModal').style.display = 'none';
+    });
+
+    // Also close on click outside modal
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('listOptionsModal');
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Actions
+    document.getElementById('importantCheckbox').addEventListener('click', () => {
+        const id = document.getElementById('listOptionsModal').dataset.activeId;
+        showNotification('success', 'List marked as important');
+    });
+
+    document.getElementById('deleteListBtn').addEventListener('click', () => {
+        const id = document.getElementById('listOptionsModal').dataset.activeId;
+        showNotification('success', 'List deleted');
+    });
+
+    document.getElementById('renameListInput').addEventListener('change', (e) => {
+        const newName = e.target.value;
+        const id = document.getElementById('listOptionsModal').dataset.activeId;
+        showNotification('success', 'List renamed to ' + newName);
+    });
 
     // Open modal and store clicked element
     $(".open-modal").on("click", function() {
@@ -183,6 +239,30 @@ $(document).ready(function() {
     });
 });
 
+//
+function isImportant(checkbox, starIcon) {
+    // Toggle icon class
+    if (checkbox.checked) {
+        starIcon.classList.remove('far', 'text-muted'); // empty star
+        starIcon.classList.add('fas', 'text-warning');  // filled star
+    } else {
+        starIcon.classList.remove('fas', 'text-warning');
+        starIcon.classList.add('far', 'text-muted');
+    }
+    checkbox.addEventListener('change', () => {
+        const isChecked = checkbox.checked;
+        checkbox.dataset.important = isChecked ? 'true' : 'false';
+        // Toggle icon class
+        if (isChecked) {
+            starIcon.classList.remove('far', 'text-muted'); // empty star
+            starIcon.classList.add('fas', 'text-warning');  // filled star
+        } else {
+            starIcon.classList.remove('fas', 'text-warning');
+            starIcon.classList.add('far', 'text-muted');
+        }
+    });
+}
+
 //Remove task
 async function  removeTask(id){
     const confirmation = await showFlexibleModal('Do u want to really remove this task', 'confirm')
@@ -265,7 +345,7 @@ async function removeSubTask(id){
 async function addSubTask(id, title){
     const newValue = await showFlexibleModal('What\'s your subtask title?', 'input')
     task_id = id
-    if(newValue.trim()){
+    if(newValue?.trim()){
         newSubtask = {
             "task_id": task_id,
             "subtask_title": newValue
@@ -461,10 +541,10 @@ const fetchList = async () => {
                 opt.textContent = list.list_name;
                 selectListContainer.append(opt);
 
-                listEl.classList = 'my-2 p-1 px-3';
+                listEl.classList = 'my-2 p-1 px-1';
                 listEl.innerHTML = `
                     <div class="form-check d-flex align-items-center justify-content-between gap-2">
-                        <div class="d-flex align-items-center gap-2">
+                        <div class="d-flex align-items-center gap-2" title="${list.list_name}">
                             <input 
                                 type="checkbox" 
                                 class="form-check-input mt-0 list-checkbox" 
@@ -476,7 +556,11 @@ const fetchList = async () => {
                             </label>
                         </div>
                         <div class='d-flex justify-content-between align-items-center gap-2'>
+                            ${list.strict ? '<i class="fas fa-star text-warning"></i>' : ''}
                             <span>${list.task_nbr}</span>
+                            <span class="list-options-btn bg-transparent" data-id="${list.list_id}" data-name="${list.list_name}" data-description="${list.description}" data-important="${list.strict}">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </span>
                         </div>
                     </div>
                 `;
@@ -499,8 +583,6 @@ const fetchList = async () => {
     }
     $(".loading").css("display", 'none');
 };
-
-// Delete list
 
 function attachCheckboxListeners() {
     const checkboxes = document.querySelectorAll('.list-checkbox');
@@ -611,7 +693,7 @@ const formatDate = (date) => {
 // Create display card
 function addNewTask(list_id, id, title, start_date, end_date, description, bg_color,  subtasks){
     let list_name  = null
-
+    const finished_subtask_nbr = subtasks.filter(subtask => subtask.finished).length
     if (ALL_TASKS.length > 0 || ALL_TODAYS_TASKS > 0) {
         $("#no_task").fadeOut()
     }
@@ -655,8 +737,7 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
                 </span>
             </div>
             <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
-                <i class='fas fa-list' style='color: ${bg_color}!important'></i>
-                ${subtasks.length} subtask${subtasks.length > 1 ? 's': ''}
+                ${Math.ceil((finished_subtask_nbr / subtasks.length ) * 100)} %
                 <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
                 ${list_name}
             </span>
@@ -875,7 +956,7 @@ async function findTaskk(){
     let title = $('#findTask').val().trim()
     let searchResult = $('#searchResultsContainer')
     searchResult.css('display', 'block')
-    searchResult.html("")
+    searchResult.html("<span class='text-center text-small mx-auto d-block' id='searchMessage'></span>")
     if(title){
         
         $(".loading").css("display", 'inline');
@@ -890,25 +971,66 @@ async function findTaskk(){
                     end_date,
                     description,
                     bg_color,
-                    subtasks
+                    subtasks,
+                    list_id
                 } = task;
 
+                $('#searchMessage').text(responseData.message)
+
+                const subtaskItems = subtasks.length
+                    ? subtasks.map(st => `<li class="px-3 py-1 small text-dark border-bottom">${st.title}</li>`).join('')
+                    : `<li class="px-3 py-2 text-muted small">No subtasks</li>`;
+
                 searchResult.append(`
-                    <li class='my-2 p-2 rounded justify-content-between align-items-center subTask task${id}' id='${id}' style='background-color: ${bg_color}'>
-                        ${title}
-                        <span style='font-size: 12px'>${formatDate(start_date)} to ${formatDate(end_date)}</span>
-                        <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                            <i class="fas fa-trash-alt text-danger" onclick="removeTask('${id}')"></i>
-                            <i class="fas fa-check-circle text-warning " style='display: none'  id='check_task_icon${id}'></i>
+                    <li 
+                        class="my-2 p-3 rounded-4 d-flex flex-column gap-2 subTask task${id}" 
+                        id="${id}" 
+                        style="
+                            transition: all 0.3s ease;
+                        "
+                    >
+                        <!-- Task header -->
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <div>
+                                <div class="text-dark fw-semibold flex-grow-1 pe-3">${title}</div>
+                                <!-- Task date -->
+                                <div class="d-flex justify-content-between text-muted small px-1">
+                                    <span style="font-size: 12px;">${formatDate(start_date)} → ${formatDate(end_date)}</span>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-3">
+                                <i class="fas fa-pen text-success task-icon" 
+                                    onclick="update_task(${list_id}, '${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i>
+                                <i class="fas fa-plus-circle text-primary task-icon" onclick="addSubTask('${id}', '${title}')"></i>
+                                <i class="fas fa-trash-alt text-danger task-icon" onclick="removeTask('${id}')"></i>
+                                <i class="fas fa-chevron-down text-dark task-icon toggle-subtask" 
+                                    style="cursor: pointer;" data-target="subtaskDropdown${id}"></i>
+                            </div>
                         </div>
-                    </li> 
-                `)
-            })
-            
+
+                        <!-- Subtask Dropdown -->
+                        <ul class="subtask-dropdown list-unstyled mt-2 bg-white rounded shadow-sm border collapse" 
+                            id="subtaskDropdown${id}" style="overflow: hidden;">
+                            ${subtaskItems}
+                        </ul>
+                    </li>
+                `);
+            });
+            // Delegated click handler for dropdown toggle
+            document.addEventListener("click", function (e) {
+                if (e.target.classList.contains("toggle-subtask")) {
+                    const targetId = e.target.getAttribute("data-target");
+                    const dropdown = document.getElementById(targetId);
+                    dropdown.classList.toggle("show");
+                    e.target.classList.toggle("fa-chevron-down");
+                    e.target.classList.toggle("fa-chevron-up");
+                }
+            });
+
             $(".loading").css("display", 'none');
             
         }else{
-            showNotification('error', "Task not found")
+            $('#searchMessage').text(responseData.message)
             $(".loading").css("display", 'none');
         }
     }else{
@@ -938,6 +1060,7 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
             list_name = list.list_name
         }   
     })
+    const finished_subtask_nbr = subtasks.filter(subtask => subtask.finished).length
     const card = `   
         <div 
             class=" h-100 p-2 rounded-4 d-flex flex-column justify-content-start position-relative"
@@ -953,8 +1076,7 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
                 </span>
             </div>
             <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
-                <i class='fas fa-list' style='color: ${bg_color}!important'></i>
-                ${subtasks.length} subtask${subtasks.length > 1 ? 's': ''}
+                ${Math.ceil((finished_subtask_nbr / subtasks.length ) * 100)} %
                 <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
                 ${list_name}
             </span>
@@ -1298,18 +1420,29 @@ function showFlexibleModal(message, type = 'confirm', defaultValue = '') {
         <div class="modal-backdrop fade show" style="z-index: 1999;"></div>
         <div class="modal-dialog modal-dialog-centered" role="document" style="z-index: 2001; pointer-events: all;">
           <div class="modal-content rounded-4 shadow bg-white">
-            <div class="modal-body p-4 rounded-4">
-              <p class="fs-5 mb-3">${message}</p>
+            <form class="p-4 d-flex flex-column justify-content-between gap-3">
+              <div class="form-floating">
+                <p class="fs-5 text-dark m-0">${message}</p>
+              </div>
+
               ${
                 type === 'input'
-                  ? `<input type="text" class="form-control mb-3 rounded-pill" id="flexModalInput" placeholder="Type here..." value="${defaultValue.replace(/"/g, '&quot;')}">`
+                  ? `
+                  <div class="form-floating">
+                    <input type="text" class="form-control rounded-4 ps-4" id="flexModalInput" placeholder="Your input..." value="${defaultValue.replace(/"/g, '&quot;')}">
+                    <label for="flexModalInput"><i class="fas fa-keyboard me-2 text-primary"></i> Enter a title</label>
+                  </div>
+                `
                   : ''
               }
-              <div class="d-flex justify-content-end gap-2">
-                <button type="button" class="btn btn-light border" id="flexModalCancel">Cancel</button>
-                <button type="button" class="btn btn-primary" id="flexModalConfirm">${type === 'confirm' ? 'Confirm' : 'OK'}</button>
+
+              <div class="d-flex justify-content-end gap-2 pt-2">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" id="flexModalCancel">Cancel</button>
+                <button type="button" class="btn btn-primary rounded-pill px-4" id="flexModalConfirm">
+                  ${type === 'confirm' ? 'Confirm' : 'OK'}
+                </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -1317,7 +1450,7 @@ function showFlexibleModal(message, type = 'confirm', defaultValue = '') {
 
     container.innerHTML = modalHtml;
 
-    // Handle actions
+    // Event Listeners
     document.getElementById('flexModalCancel').onclick = () => {
       container.innerHTML = '';
       resolve(type === 'confirm' ? false : null);
@@ -1332,3 +1465,4 @@ function showFlexibleModal(message, type = 'confirm', defaultValue = '') {
     };
   });
 }
+

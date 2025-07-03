@@ -38,10 +38,17 @@ def find_task(app, database):
                     "end_date": task.task_end_date.isoformat(),
                     "description": task.description,
                     "bg_color": task.task_background_color,
-                    "subtasks": subtasks
+                    "subtasks": subtasks,
+                    "list_id": task.list_id
                 }
                 task_list.append(task_data)
+            s = 's'
+            if not len(task_list) > 1:
+                s = ''
             
-            return jsonify({"data": task_list, "message": f"{len(task_list)} Tasks found"}), 200
+            return jsonify({"data": task_list, "message": f"{len(task_list)} result{s}"}), 200
 
-        return jsonify({"data": []}), 404
+        return jsonify({
+            "data": [],
+            "message": f"No task found named '{task_title}'",
+        }), 404

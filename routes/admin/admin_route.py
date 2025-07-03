@@ -75,5 +75,5 @@ def use_admin_route(app, database):
     @login_required
     def admin_user_statistics():
         if not current_user.admin or not current_user.stat:
-            abort(403)
+            abort(404)
         return render_template('views/admin/admin_user_statistics.html', email = current_user.email, title = "Users statistics")

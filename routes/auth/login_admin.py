@@ -48,8 +48,6 @@ def login_admin(app, database):
 
 from flask_login import login_required, current_user
 def verify_admin(app, database):
-    User = database["tables"]["User"]
-    db = database["db"]
     @app.route('/api/verify_user')
     @login_required
     def verify_admin():
