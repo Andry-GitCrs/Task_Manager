@@ -25,7 +25,7 @@ def remove_list(app, database):
       
       if list.strict and list.stat:
         return jsonify({
-          'error': f'List "{list.list_name}" cannot be deleted'
+          'error': f'"{list.list_name}" is an important list and cannot be deleted',
         }), 401
       
       if list.stat:

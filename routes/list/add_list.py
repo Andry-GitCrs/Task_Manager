@@ -25,7 +25,7 @@ def add_list(app, database):
         return jsonify({
           "error": "User not found"
         }), 404
-      existing_list = List.query.filter_by(user_id = user_id, list_name = list_name).first()
+      existing_list = List.query.filter_by(user_id = user_id, list_name = list_name, stat = True).first()
 
       if existing_list:
         return jsonify({
@@ -40,7 +40,9 @@ def add_list(app, database):
         "list_id": list.list_id,
         "list_name": list.list_name,
         "task_nbr": 0,
-        "description": list.description
+        "description": list.description,
+        "strict": False,
+        "task_nbr": 0
       }
 
       return jsonify({

@@ -27,7 +27,7 @@ $(document).ready(function() {
 
             isImportant(checkbox, starIcon);
             
-            
+            document.getElementById('updateListForm').dataset.id = listId;
             document.getElementById('renameListInput').value = listName;
             document.getElementById('descriptionListInput').value = description;
             document.getElementById('listOptionsModal').dataset.activeId = listId;
@@ -51,21 +51,39 @@ $(document).ready(function() {
         }
     });
 
-    // Actions
-    document.getElementById('importantCheckbox').addEventListener('click', () => {
+    // Delete list
+    document.getElementById('deleteListBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
         const id = document.getElementById('listOptionsModal').dataset.activeId;
-        showNotification('success', 'List marked as important');
-    });
+        const confirmation = await showFlexibleModal('Do u want to really remove this list', 'confirm')
+        if(!confirmation) return
+        try {
+            const response = await fetch(`/api/user/lists/remove?list_id=${id}`, {
+                method: 'DELETE',
+            })
 
-    document.getElementById('deleteListBtn').addEventListener('click', () => {
-        const id = document.getElementById('listOptionsModal').dataset.activeId;
-        showNotification('success', 'List deleted');
-    });
+            const data = await response.json();
+            if (response.ok) {
+                showNotification("success", data.message);
+                $(`#list${id}`).css("display", 'none');
+                $(`#list${id}`).remove();
+                document.getElementById('listOptionsModal').style.display = 'none';
+                ALL_LIST = ALL_LIST.filter(list => list.list_id !== id);
+                $(`#listNbr`).text(ALL_LIST.length);
+                const select = document.getElementById('list_id');
+                const valueToRemove = id;
+                const opt = select.querySelector(`option[value="${valueToRemove}"]`);
+                if(opt) {
+                    opt.remove();
+                }
+            }else {
+                showNotification("error", data.error);
+            }
 
-    document.getElementById('renameListInput').addEventListener('change', (e) => {
-        const newName = e.target.value;
-        const id = document.getElementById('listOptionsModal').dataset.activeId;
-        showNotification('success', 'List renamed to ' + newName);
+        }catch (error) {
+            showNotification("error", "An error occurred while deleting the list.");
+            console.error(error);
+        }
     });
 
     // Open modal and store clicked element
@@ -79,7 +97,6 @@ $(document).ready(function() {
         e.preventDefault();
         $(".overlay, .modal").fadeOut();
         $("#update_task_form").off("submit");
-        //$('.task-form').trigger("reset");
         $('.task-form').attr('id', 'add_task_form');
         $("#add_task_form").on("submit");
     });
@@ -106,6 +123,63 @@ $(document).ready(function() {
             }
         }
         subTaskNbr += 1;
+    });
+
+    // Update list form
+    $("#updateListForm").on("submit", async function(e) {
+        e.preventDefault();
+        let name = $("#renameListInput").val().trim();
+        let list_id = e.target.dataset.id;
+        let description = $("#descriptionListInput").val().trim();
+        let important = $("#importantCheckbox").is(":checked");
+
+        try {
+            const response = await fetch(`/api/user/list/update?list_id=${list_id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    "name": name,
+                    "description": description,
+                    "important": important
+                }),
+            })
+            const responseData = await response.json();
+            if(response.ok){
+                document.getElementById('listOptionsModal').style.display = 'none';
+                const list = responseData.data
+                const message = responseData.message
+                showNotification("success", message);
+                $(`#list${list.list_id}`).html(`
+                    <div class="form-check d-flex align-items-center justify-content-between gap-2">
+                        <div class="d-flex align-items-center gap-2" title="${list.list_name}">
+                            <input 
+                                type="checkbox" 
+                                class="form-check-input mt-0 list-checkbox" 
+                                id="listCheck${list.list_id}" 
+                                ${list.task_nbr > 0 ? 'checked' : ''}
+                            >
+                            <label class="form-check-label mb-0 text-truncate"  style="max-width: 130px; overflow: hidden;" for="listCheck${list.list_id}">
+                                <a class="text-dark text-decoration-none">${list.list_name}</a>
+                            </label>
+                        </div>
+                        <div class='d-flex justify-content-between align-items-center gap-2'>
+                            ${list.strict ? '<i class="fas fa-star text-warning"></i>' : ''}
+                            <span>${list.task_nbr}</span>
+                            <span class="list-options-btn bg-transparent" data-id="${list.list_id}" data-name="${list.list_name}" data-description="${list.description}" data-important="${list.strict}">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </span>
+                        </div>
+                    </div>
+                `);
+            }else{
+                showNotification("error", responseData.error);
+            }
+
+        } catch (error) {
+            showNotification("error", "An error occurred while updating the list");
+            console.error(error);
+        }
+
     });
 
     // Handle form submission
@@ -239,7 +313,7 @@ $(document).ready(function() {
     });
 });
 
-//
+// Check if task is important
 function isImportant(checkbox, starIcon) {
     // Toggle icon class
     if (checkbox.checked) {
@@ -541,6 +615,7 @@ const fetchList = async () => {
                 opt.textContent = list.list_name;
                 selectListContainer.append(opt);
 
+                listEl.id = `list${list.list_id}`
                 listEl.classList = 'my-2 p-1 px-1';
                 listEl.innerHTML = `
                     <div class="form-check d-flex align-items-center justify-content-between gap-2">
@@ -736,11 +811,20 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
                     ${end_date}
                 </span>
             </div>
-            <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
-                ${Math.ceil((finished_subtask_nbr / subtasks.length ) * 100)} %
-                <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
+            <span 
+                class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow d-flex align-items-center gap-2"
+                style="border: 2px solid ${bg_color};"
+            >
+                <div class="progress-circle" 
+                    style="--value: ${Math.ceil((finished_subtask_nbr / subtasks.length) * 100)}; --color: ${bg_color}">
+                    <span class="progress-label">${subtasks.length}</span>
+                </div>
+
+                <i class="fa-solid fa-bookmark text-secondary" style="color: ${bg_color}!important;"></i>
                 ${list_name}
             </span>
+
+
             <h3 class="text-dark task-title">
                 ${title}
                 <div class='d-flex justify-content-center align-items-center gap-3 bg-transparent'>
@@ -794,46 +878,96 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
 }
 
 //Notification displayer
-function showNotification(type, message) {
-    const notification = document.getElementById('notification');
-    const messageBox = document.getElementById('notification-message');
-    const icon = document.getElementById('notification-icon');
+function showNotification(type, message, duration = 5000) {
+    const containerId = 'notification-container';
 
-    // Reset classes
-    notification.className = 'position-fixed bottom-0 end-0 mb-3 me-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2';
-    icon.className = '';
-
-    if (type === 'error') {
-        notification.classList.add('bg-danger');
-        icon.classList.add('fas', 'fa-circle-exclamation');
-    } else if (type === 'success') {
-        notification.classList.add('bg-success');
-        icon.classList.add('fas', 'fa-check-circle');
+    // Create the container once
+    let container = document.getElementById(containerId);
+    if (!container) {
+        container = document.createElement('div');
+        container.id = containerId;
+        container.className = 'position-fixed bottom-0 end-0 p-3 d-flex flex-column align-items-end gap-2 z-9999';
+        document.body.appendChild(container);
     }
 
-    messageBox.textContent = message;
-
-    // Show with animation
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'toast-notification px-4 py-3 shadow rounded text-white d-flex align-items-center justify-content-between gap-3';
+    notification.style.minWidth = '280px';
     notification.style.opacity = 0;
     notification.style.transform = 'translateY(20px)';
-    notification.classList.remove('d-none');
+    notification.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
 
+    // Icon
+    const icon = document.createElement('i');
+    icon.classList.add('fas');
+
+    // Set icon and background based on type
+    switch (type) {
+        case 'success':
+            notification.classList.add('bg-success');
+            icon.classList.add('fa-check-circle');
+            break;
+        case 'error':
+            notification.classList.add('bg-danger');
+            icon.classList.add('fa-circle-exclamation');
+            break;
+        case 'info':
+            notification.classList.add('bg-info');
+            icon.classList.add('fa-info-circle');
+            break;
+        case 'warning':
+            notification.classList.add('bg-warning', 'text-dark');
+            icon.classList.add('fa-exclamation-triangle');
+            break;
+        default:
+            notification.classList.add('bg-secondary');
+            icon.classList.add('fa-bell');
+    }
+
+    // Message
+    const messageBox = document.createElement('span');
+    messageBox.textContent = message;
+
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = `<i className="fas fa-times"></i>`;
+    closeBtn.className = 'btn-close btn-close-white ms-auto';
+    closeBtn.style.filter = 'brightness(0) invert(1)';
+    closeBtn.style.fontSize = '1rem';
+    closeBtn.style.opacity = '0.8';
+    closeBtn.addEventListener('click', () => {
+        notification.style.opacity = 0;
+        notification.style.transform = 'translateY(20px)';
+        setTimeout(() => notification.remove(), 500);
+    });
+
+    // Assemble notification
+    const contentWrap = document.createElement('div');
+    contentWrap.className = 'd-flex align-items-center gap-2';
+    contentWrap.appendChild(icon);
+    contentWrap.appendChild(messageBox);
+
+    notification.appendChild(contentWrap);
+    notification.appendChild(closeBtn);
+    container.appendChild(notification);
+
+    // Show animation
     setTimeout(() => {
-        notification.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         notification.style.opacity = 1;
         notification.style.transform = 'translateY(0)';
-    }, 10); // Small delay to trigger transition
+    }, 10);
 
-    // Hide after 5 seconds
+    // Auto-hide
     setTimeout(() => {
         notification.style.opacity = 0;
         notification.style.transform = 'translateY(20px)';
-        
-        // After animation ends, hide the element
         setTimeout(() => {
-            notification.classList.add('d-none');
-        }, 500); // Match transition duration
-    }, 5000);
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 500);
+    }, duration);
 }
 
 // Check Subtask
@@ -1075,9 +1209,16 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
                     ${end_date}
                 </span>
             </div>
-            <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
-                ${Math.ceil((finished_subtask_nbr / subtasks.length ) * 100)} %
-                <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
+            <span 
+                class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow d-flex align-items-center gap-2"
+                style="border: 2px solid ${bg_color};"
+            >
+                <div class="progress-circle" 
+                    style="--value: ${Math.ceil((finished_subtask_nbr / subtasks.length) * 100)}; --color: ${bg_color}">
+                    <span class="progress-label">${subtasks.length}</span>
+                </div>
+
+                <i class="fa-solid fa-bookmark text-secondary" style="color: ${bg_color}!important;"></i>
                 ${list_name}
             </span>
             <h3 class="text-dark task-title">
@@ -1371,21 +1512,28 @@ async function addNewList(event) {
             showNotification("success", data.message)
             const listContainer = document.getElementById('list-container');
             const listEl = document.createElement('li');
-            listEl.classList = 'my-2 p-1 px-3';
+            listEl.id = `list${list.list_id}`
+            listEl.classList = 'my-2 p-1 px-1';
             listEl.innerHTML = `
                 <div class="form-check d-flex align-items-center justify-content-between gap-2">
-                    <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center gap-2" title="${list.list_name}">
                         <input 
                             type="checkbox" 
                             class="form-check-input mt-0 list-checkbox" 
                             id="listCheck${list.list_id}" 
-                            ${list.list_name == 'Personal' ? 'checked' : ''}
+                            ${list.task_nbr > 0 ? 'checked' : ''}
                         >
-                        <label class="form-check-label mb-0" for="listCheck${list.list_id}">
+                        <label class="form-check-label mb-0 text-truncate"  style="max-width: 130px; overflow: hidden;" for="listCheck${list.list_id}">
                             <a class="text-dark text-decoration-none">${list.list_name}</a>
                         </label>
                     </div>
-                    <span>${list.task_nbr}</span>
+                    <div class='d-flex justify-content-between align-items-center gap-2'>
+                        ${list.strict ? '<i class="fas fa-star text-warning"></i>' : ''}
+                        <span>${list.task_nbr}</span>
+                        <span class="list-options-btn bg-transparent" data-id="${list.list_id}" data-name="${list.list_name}" data-description="${list.description}" data-important="${list.strict}">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </span>
+                    </div>
                 </div>
             `;
             listContainer.appendChild(listEl);
@@ -1396,7 +1544,7 @@ async function addNewList(event) {
             selectListContainer.append(opt);
 
             attachCheckboxListeners();
-
+            $(`#listNbr`).text(ALL_LIST.length)
             event.target.reset();
         }else{
             showNotification("error", data.error)
@@ -1465,4 +1613,3 @@ function showFlexibleModal(message, type = 'confirm', defaultValue = '') {
     };
   });
 }
-

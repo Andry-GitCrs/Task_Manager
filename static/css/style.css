@@ -1051,3 +1051,36 @@ li:hover .notification-hover-info {
   max-height: 300px;
   padding: 8px 0;
 }
+.progress-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background:
+    conic-gradient(var(--color) calc(var(--value) * 1%), #dee2e6 0%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.progress-circle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.progress-label {
+  position: relative;
+  z-index: 1;
+  font-size: 9px;
+  line-height: 1;
+}

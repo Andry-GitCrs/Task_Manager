@@ -61,46 +61,96 @@ $('#forgot-password-form').on('submit', async function(e) {
 });
 
 //Notification displayer
-function showNotification(type, message) {
-    const notification = document.getElementById('notification');
-    const messageBox = document.getElementById('notification-message');
-    const icon = document.getElementById('notification-icon');
+function showNotification(type, message, duration = 5000) {
+    const containerId = 'notification-container';
 
-    // Reset classes
-    notification.className = 'position-fixed bottom-0 end-0 mb-3 me-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2';
-    icon.className = '';
-
-    if (type === 'error') {
-        notification.classList.add('bg-danger');
-        icon.classList.add('fas', 'fa-circle-exclamation');
-    } else if (type === 'success') {
-        notification.classList.add('bg-success');
-        icon.classList.add('fas', 'fa-check-circle');
+    // Create the container once
+    let container = document.getElementById(containerId);
+    if (!container) {
+        container = document.createElement('div');
+        container.id = containerId;
+        container.className = 'position-fixed bottom-0 end-0 p-3 d-flex flex-column align-items-end gap-2 z-9999';
+        document.body.appendChild(container);
     }
 
-    messageBox.textContent = message;
-
-    // Show with animation
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'toast-notification px-4 py-3 shadow rounded text-white d-flex align-items-center justify-content-between gap-3';
+    notification.style.minWidth = '280px';
     notification.style.opacity = 0;
     notification.style.transform = 'translateY(20px)';
-    notification.classList.remove('d-none');
+    notification.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
 
+    // Icon
+    const icon = document.createElement('i');
+    icon.classList.add('fas');
+
+    // Set icon and background based on type
+    switch (type) {
+        case 'success':
+            notification.classList.add('bg-success');
+            icon.classList.add('fa-check-circle');
+            break;
+        case 'error':
+            notification.classList.add('bg-danger');
+            icon.classList.add('fa-circle-exclamation');
+            break;
+        case 'info':
+            notification.classList.add('bg-info');
+            icon.classList.add('fa-info-circle');
+            break;
+        case 'warning':
+            notification.classList.add('bg-warning', 'text-dark');
+            icon.classList.add('fa-exclamation-triangle');
+            break;
+        default:
+            notification.classList.add('bg-secondary');
+            icon.classList.add('fa-bell');
+    }
+
+    // Message
+    const messageBox = document.createElement('span');
+    messageBox.textContent = message;
+
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = `<i className="fas fa-times"></i>`;
+    closeBtn.className = 'btn-close btn-close-white ms-auto';
+    closeBtn.style.filter = 'brightness(0) invert(1)';
+    closeBtn.style.fontSize = '1rem';
+    closeBtn.style.opacity = '0.8';
+    closeBtn.addEventListener('click', () => {
+        notification.style.opacity = 0;
+        notification.style.transform = 'translateY(20px)';
+        setTimeout(() => notification.remove(), 500);
+    });
+
+    // Assemble notification
+    const contentWrap = document.createElement('div');
+    contentWrap.className = 'd-flex align-items-center gap-2';
+    contentWrap.appendChild(icon);
+    contentWrap.appendChild(messageBox);
+
+    notification.appendChild(contentWrap);
+    notification.appendChild(closeBtn);
+    container.appendChild(notification);
+
+    // Show animation
     setTimeout(() => {
-        notification.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         notification.style.opacity = 1;
         notification.style.transform = 'translateY(0)';
-    }, 10); // Small delay to trigger transition
+    }, 10);
 
-    // Hide after 5 seconds
+    // Auto-hide
     setTimeout(() => {
         notification.style.opacity = 0;
         notification.style.transform = 'translateY(20px)';
-        
-        // After animation ends, hide the element
         setTimeout(() => {
-            notification.classList.add('d-none');
-        }, 500); // Match transition duration
-    }, 5000);
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 500);
+    }, duration);
 }
 
 $("#send-otp").on('click', () => {
