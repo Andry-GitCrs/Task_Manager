@@ -1,4 +1,4 @@
-from flask import jsonify, render_template
+from flask import render_template
 from . import(
   export_csv,
   export_pdf,

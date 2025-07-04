@@ -11,6 +11,80 @@ $(document).ready(function() {
     let taskNbr = 0;
     let subTaskNbr = 1;
     /* Task number */
+    // Open list modal
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.list-options-btn')) {
+            const btn = e.target.closest('.list-options-btn');
+            const listId = btn.getAttribute('data-id');
+            const listName = btn.getAttribute('data-name');
+            const description = btn.getAttribute('data-description');
+            const important = btn.getAttribute('data-important') === 'true';
+            const checkbox = document.getElementById('importantCheckbox');
+            const starIcon = document.getElementById('importantIcon');
+
+            checkbox.dataset.important = btn.getAttribute('data-important') === 'true';
+            checkbox.checked = checkbox.dataset.important === 'true';
+
+            isImportant(checkbox, starIcon);
+            
+            document.getElementById('updateListForm').dataset.id = listId;
+            document.getElementById('renameListInput').value = listName;
+            document.getElementById('descriptionListInput').value = description;
+            document.getElementById('listOptionsModal').dataset.activeId = listId;
+            document.getElementById('importantCheckbox').checked = important;
+            document.getElementById('importantCheckbox').dataset.important = important ? 'true' : 'false';
+
+            document.getElementById('listOptionsModal').style.display = 'flex';
+        }
+    });
+
+    // Close modal
+    document.getElementById('closeListModal').addEventListener('click', () => {
+        document.getElementById('listOptionsModal').style.display = 'none';
+    });
+
+    // Also close on click outside modal
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('listOptionsModal');
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Delete list
+    document.getElementById('deleteListBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('listOptionsModal').dataset.activeId;
+        const confirmation = await showFlexibleModal('Do u want to really remove this list', 'confirm')
+        if(!confirmation) return
+        try {
+            const response = await fetch(`/api/user/lists/remove?list_id=${id}`, {
+                method: 'DELETE',
+            })
+
+            const data = await response.json();
+            if (response.ok) {
+                showNotification("success", data.message);
+                $(`#list${id}`).css("display", 'none');
+                $(`#list${id}`).remove();
+                document.getElementById('listOptionsModal').style.display = 'none';
+                ALL_LIST = ALL_LIST.filter(list => list.list_id !== id);
+                $(`#listNbr`).text(ALL_LIST.length);
+                const select = document.getElementById('list_id');
+                const valueToRemove = id;
+                const opt = select.querySelector(`option[value="${valueToRemove}"]`);
+                if(opt) {
+                    opt.remove();
+                }
+            }else {
+                showNotification("error", data.error);
+            }
+
+        }catch (error) {
+            showNotification("error", "An error occurred while deleting the list.");
+            console.error(error);
+        }
+    });
 
     // Open modal and store clicked element
     $(".open-modal").on("click", function() {
@@ -23,7 +97,6 @@ $(document).ready(function() {
         e.preventDefault();
         $(".overlay, .modal").fadeOut();
         $("#update_task_form").off("submit");
-        //$('.task-form').trigger("reset");
         $('.task-form').attr('id', 'add_task_form');
         $("#add_task_form").on("submit");
     });
@@ -32,7 +105,12 @@ $(document).ready(function() {
     $(".add").on("click", (e) => {
         e.preventDefault();
         let content = $("#content").val().trim();
+        const contentRegex = /^[\w\s]{3,}$/; 
         $("#content").val("");
+        if (!contentRegex.test(content)) {
+            showNotification("error", "Task content must be at least 3 characters and contain only letters, numbers, and spaces.");
+            return;
+        }
         if (content !== "") {
             if (!subTaskList.includes(content)) {
                 if (subTaskNbr == 1) {
@@ -47,6 +125,63 @@ $(document).ready(function() {
         subTaskNbr += 1;
     });
 
+    // Update list form
+    $("#updateListForm").on("submit", async function(e) {
+        e.preventDefault();
+        let name = $("#renameListInput").val().trim();
+        let list_id = e.target.dataset.id;
+        let description = $("#descriptionListInput").val().trim();
+        let important = $("#importantCheckbox").is(":checked");
+
+        try {
+            const response = await fetch(`/api/user/list/update?list_id=${list_id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    "name": name,
+                    "description": description,
+                    "important": important
+                }),
+            })
+            const responseData = await response.json();
+            if(response.ok){
+                document.getElementById('listOptionsModal').style.display = 'none';
+                const list = responseData.data
+                const message = responseData.message
+                showNotification("success", message);
+                $(`#list${list.list_id}`).html(`
+                    <div class="form-check d-flex align-items-center justify-content-between gap-2">
+                        <div class="d-flex align-items-center gap-2" title="${list.list_name}">
+                            <input 
+                                type="checkbox" 
+                                class="form-check-input mt-0 list-checkbox" 
+                                id="listCheck${list.list_id}" 
+                                ${list.task_nbr > 0 ? 'checked' : ''}
+                            >
+                            <label class="form-check-label mb-0 text-truncate"  style="max-width: 130px; overflow: hidden;" for="listCheck${list.list_id}">
+                                <a class="text-dark text-decoration-none">${list.list_name}</a>
+                            </label>
+                        </div>
+                        <div class='d-flex justify-content-between align-items-center gap-2'>
+                            ${list.strict ? '<i class="fas fa-star text-warning"></i>' : ''}
+                            <span>${list.task_nbr}</span>
+                            <span class="list-options-btn bg-transparent" data-id="${list.list_id}" data-name="${list.list_name}" data-description="${list.description}" data-important="${list.strict}">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </span>
+                        </div>
+                    </div>
+                `);
+            }else{
+                showNotification("error", responseData.error);
+            }
+
+        } catch (error) {
+            showNotification("error", "An error occurred while updating the list");
+            console.error(error);
+        }
+
+    });
+
     // Handle form submission
     $("#add_task_form").on("submit", async function(e) {
         e.preventDefault();
@@ -56,6 +191,39 @@ $(document).ready(function() {
         let bgColor = $("#bg-color-picker").val();
         let description = $("#description").val().trim();
         let list_id = $("#list_id").val();
+
+        // Regex patterns
+        const titleRegex = /^[\w\s]{3,}$/;                  // letters, numbers, underscores, spaces
+        const descriptionRegex = /^.{5,}$/;                 // at least 5 characters if present
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;            // YYYY-MM-DD
+        const colorRegex = /^#([0-9A-Fa-f]{6})$/;           // valid hex color
+        const idRegex = /^\d+$/;                            // only digits
+
+        // Validation
+        if (!titleRegex.test(title)) {
+            showNotification('error', "Title must be at least 3 characters and contain only letters, numbers, and spaces.");
+            return
+        }
+
+        if (description && !descriptionRegex.test(description)) {
+            showNotification('error', "Description must be at least 5 characters.");
+            return
+        }
+
+        if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
+            showNotification('error', "Dates must be in the format YYYY-MM-DD.");
+            return
+        }
+
+        if (!colorRegex.test(bgColor)) {
+            showNotification('error', "Background color must be a valid hex code (e.g., #ffcc00).");
+            return
+        }
+
+        if (!idRegex.test(list_id)) {
+            showNotification('error', "List ID must be a valid number.");
+            return
+        }
 
         if (title.trim() !== "" && startDate !== "" && endDate !== "") {
             const task = {
@@ -145,6 +313,30 @@ $(document).ready(function() {
     });
 });
 
+// Check if task is important
+function isImportant(checkbox, starIcon) {
+    // Toggle icon class
+    if (checkbox.checked) {
+        starIcon.classList.remove('far', 'text-muted'); // empty star
+        starIcon.classList.add('fas', 'text-warning');  // filled star
+    } else {
+        starIcon.classList.remove('fas', 'text-warning');
+        starIcon.classList.add('far', 'text-muted');
+    }
+    checkbox.addEventListener('change', () => {
+        const isChecked = checkbox.checked;
+        checkbox.dataset.important = isChecked ? 'true' : 'false';
+        // Toggle icon class
+        if (isChecked) {
+            starIcon.classList.remove('far', 'text-muted'); // empty star
+            starIcon.classList.add('fas', 'text-warning');  // filled star
+        } else {
+            starIcon.classList.remove('fas', 'text-warning');
+            starIcon.classList.add('far', 'text-muted');
+        }
+    });
+}
+
 //Remove task
 async function  removeTask(id){
     const confirmation = await showFlexibleModal('Do u want to really remove this task', 'confirm')
@@ -227,7 +419,7 @@ async function removeSubTask(id){
 async function addSubTask(id, title){
     const newValue = await showFlexibleModal('What\'s your subtask title?', 'input')
     task_id = id
-    if(newValue.trim()){
+    if(newValue?.trim()){
         newSubtask = {
             "task_id": task_id,
             "subtask_title": newValue
@@ -423,21 +615,28 @@ const fetchList = async () => {
                 opt.textContent = list.list_name;
                 selectListContainer.append(opt);
 
-                listEl.classList = 'my-2 p-1 px-3';
+                listEl.id = `list${list.list_id}`
+                listEl.classList = 'my-2 p-1 px-1';
                 listEl.innerHTML = `
                     <div class="form-check d-flex align-items-center justify-content-between gap-2">
-                        <div class="d-flex align-items-center gap-2">
+                        <div class="d-flex align-items-center gap-2" title="${list.list_name}">
                             <input 
                                 type="checkbox" 
                                 class="form-check-input mt-0 list-checkbox" 
                                 id="listCheck${list.list_id}" 
                                 ${list.task_nbr > 0 ? 'checked' : ''}
                             >
-                            <label class="form-check-label mb-0" for="listCheck${list.list_id}">
+                            <label class="form-check-label mb-0 text-truncate"  style="max-width: 130px; overflow: hidden;" for="listCheck${list.list_id}">
                                 <a class="text-dark text-decoration-none">${list.list_name}</a>
                             </label>
                         </div>
-                        <span>${list.task_nbr}</span>
+                        <div class='d-flex justify-content-between align-items-center gap-2'>
+                            ${list.strict ? '<i class="fas fa-star text-warning"></i>' : ''}
+                            <span>${list.task_nbr}</span>
+                            <span class="list-options-btn bg-transparent" data-id="${list.list_id}" data-name="${list.list_name}" data-description="${list.description}" data-important="${list.strict}">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </span>
+                        </div>
                     </div>
                 `;
                 listContainer.appendChild(listEl);
@@ -569,7 +768,7 @@ const formatDate = (date) => {
 // Create display card
 function addNewTask(list_id, id, title, start_date, end_date, description, bg_color,  subtasks){
     let list_name  = null
-
+    const finished_subtask_nbr = subtasks.filter(subtask => subtask.finished).length
     if (ALL_TASKS.length > 0 || ALL_TODAYS_TASKS > 0) {
         $("#no_task").fadeOut()
     }
@@ -612,12 +811,20 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
                     ${end_date}
                 </span>
             </div>
-            <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
-                <i class='fas fa-list' style='color: ${bg_color}!important'></i>
-                ${subtasks.length} subtask${subtasks.length > 1 ? 's': ''}
-                <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
+            <span 
+                class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow d-flex align-items-center gap-2"
+                style="border: 2px solid ${bg_color};"
+            >
+                <div class="progress-circle" 
+                    style="--value: ${Math.ceil((finished_subtask_nbr / subtasks.length) * 100)}; --color: ${bg_color}">
+                    <span class="progress-label">${subtasks.length}</span>
+                </div>
+
+                <i class="fa-solid fa-bookmark text-secondary" style="color: ${bg_color}!important;"></i>
                 ${list_name}
             </span>
+
+
             <h3 class="text-dark task-title">
                 ${title}
                 <div class='d-flex justify-content-center align-items-center gap-3 bg-transparent'>
@@ -671,46 +878,96 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
 }
 
 //Notification displayer
-function showNotification(type, message) {
-    const notification = document.getElementById('notification');
-    const messageBox = document.getElementById('notification-message');
-    const icon = document.getElementById('notification-icon');
+function showNotification(type, message, duration = 5000) {
+    const containerId = 'notification-container';
 
-    // Reset classes
-    notification.className = 'position-fixed bottom-0 end-0 mb-3 me-3 px-4 py-3 shadow rounded text-white d-flex align-items-center gap-2';
-    icon.className = '';
-
-    if (type === 'error') {
-        notification.classList.add('bg-danger');
-        icon.classList.add('fas', 'fa-circle-exclamation');
-    } else if (type === 'success') {
-        notification.classList.add('bg-success');
-        icon.classList.add('fas', 'fa-check-circle');
+    // Create the container once
+    let container = document.getElementById(containerId);
+    if (!container) {
+        container = document.createElement('div');
+        container.id = containerId;
+        container.className = 'position-fixed bottom-0 end-0 p-3 d-flex flex-column align-items-end gap-2 z-9999';
+        document.body.appendChild(container);
     }
 
-    messageBox.textContent = message;
-
-    // Show with animation
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'toast-notification px-4 py-3 shadow rounded text-white d-flex align-items-center justify-content-between gap-3';
+    notification.style.minWidth = '280px';
     notification.style.opacity = 0;
     notification.style.transform = 'translateY(20px)';
-    notification.classList.remove('d-none');
+    notification.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
 
+    // Icon
+    const icon = document.createElement('i');
+    icon.classList.add('fas');
+
+    // Set icon and background based on type
+    switch (type) {
+        case 'success':
+            notification.classList.add('bg-success');
+            icon.classList.add('fa-check-circle');
+            break;
+        case 'error':
+            notification.classList.add('bg-danger');
+            icon.classList.add('fa-circle-exclamation');
+            break;
+        case 'info':
+            notification.classList.add('bg-info');
+            icon.classList.add('fa-info-circle');
+            break;
+        case 'warning':
+            notification.classList.add('bg-warning', 'text-dark');
+            icon.classList.add('fa-exclamation-triangle');
+            break;
+        default:
+            notification.classList.add('bg-secondary');
+            icon.classList.add('fa-bell');
+    }
+
+    // Message
+    const messageBox = document.createElement('span');
+    messageBox.textContent = message;
+
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = `<i className="fas fa-times"></i>`;
+    closeBtn.className = 'btn-close btn-close-white ms-auto';
+    closeBtn.style.filter = 'brightness(0) invert(1)';
+    closeBtn.style.fontSize = '1rem';
+    closeBtn.style.opacity = '0.8';
+    closeBtn.addEventListener('click', () => {
+        notification.style.opacity = 0;
+        notification.style.transform = 'translateY(20px)';
+        setTimeout(() => notification.remove(), 500);
+    });
+
+    // Assemble notification
+    const contentWrap = document.createElement('div');
+    contentWrap.className = 'd-flex align-items-center gap-2';
+    contentWrap.appendChild(icon);
+    contentWrap.appendChild(messageBox);
+
+    notification.appendChild(contentWrap);
+    notification.appendChild(closeBtn);
+    container.appendChild(notification);
+
+    // Show animation
     setTimeout(() => {
-        notification.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         notification.style.opacity = 1;
         notification.style.transform = 'translateY(0)';
-    }, 10); // Small delay to trigger transition
+    }, 10);
 
-    // Hide after 5 seconds
+    // Auto-hide
     setTimeout(() => {
         notification.style.opacity = 0;
         notification.style.transform = 'translateY(20px)';
-        
-        // After animation ends, hide the element
         setTimeout(() => {
-            notification.classList.add('d-none');
-        }, 500); // Match transition duration
-    }, 5000);
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 500);
+    }, duration);
 }
 
 // Check Subtask
@@ -793,18 +1050,33 @@ var verify = async () => {
         const response = await fetch(`/api/verify_user`, {
             method: "GET",
         });
+
+        const data = await response.json();
     
         if (response.ok) {
-            $('._user_action').append(`
-                <li class="my-2 py-1">
-                    <div class="w-100 d-flex align-items-center">
-                        <a  class="text-dark text-decoration-none w-100" href="/auth/admin/login">
-                            <i class="text-success fas fa-key"></i>
-                            Login as admin
-                        </a>
-                    </div>
-                </li>
-            `)
+            if (!data.stat) {
+                $('._user_action').append(`
+                    <li class="my-2 py-1">
+                        <div class="w-100 d-flex align-items-center">
+                            <a  class="text-dark text-decoration-none w-100" href="/auth/admin/login">
+                                <i class="text-success fas fa-key"></i>
+                                Login as admin
+                            </a>
+                        </div>
+                    </li>
+                `)
+            }else {
+                $('._user_action').append(`
+                    <li class="my-2 py-1">
+                        <div class="w-100 d-flex align-items-center">
+                            <a  class="text-dark text-decoration-none w-100" href="/admin/dashboard">
+                                <i class="text-success fas fa-exchange-alt"></i>
+                                Admin space
+                            </a>
+                        </div>
+                    </li>
+                `)
+            }
         }
     } catch (error) {
        console.error(error.message)
@@ -818,7 +1090,7 @@ async function findTaskk(){
     let title = $('#findTask').val().trim()
     let searchResult = $('#searchResultsContainer')
     searchResult.css('display', 'block')
-    searchResult.html("")
+    searchResult.html("<span class='text-center text-small mx-auto d-block' id='searchMessage'></span>")
     if(title){
         
         $(".loading").css("display", 'inline');
@@ -833,25 +1105,66 @@ async function findTaskk(){
                     end_date,
                     description,
                     bg_color,
-                    subtasks
+                    subtasks,
+                    list_id
                 } = task;
 
+                $('#searchMessage').text(responseData.message)
+
+                const subtaskItems = subtasks.length
+                    ? subtasks.map(st => `<li class="px-3 py-1 small text-dark border-bottom">${st.title}</li>`).join('')
+                    : `<li class="px-3 py-2 text-muted small">No subtasks</li>`;
+
                 searchResult.append(`
-                    <li class='my-2 p-2 rounded justify-content-between align-items-center subTask task${id}' id='${id}' style='background-color: ${bg_color}'>
-                        ${title}
-                        <span style='font-size: 12px'>${formatDate(start_date)} to ${formatDate(end_date)}</span>
-                        <div class="w-auto d-flex justify-content-center gap-3 bg-transparent">
-                            <i class="fas fa-trash-alt text-danger" onclick="removeTask('${id}')"></i>
-                            <i class="fas fa-check-circle text-warning " style='display: none'  id='check_task_icon${id}'></i>
+                    <li 
+                        class="my-2 p-3 rounded-4 d-flex flex-column gap-2 subTask task${id}" 
+                        id="${id}" 
+                        style="
+                            transition: all 0.3s ease;
+                        "
+                    >
+                        <!-- Task header -->
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <div>
+                                <div class="text-dark fw-semibold flex-grow-1 pe-3">${title}</div>
+                                <!-- Task date -->
+                                <div class="d-flex justify-content-between text-muted small px-1">
+                                    <span style="font-size: 12px;">${formatDate(start_date)} → ${formatDate(end_date)}</span>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-3">
+                                <i class="fas fa-pen text-success task-icon" 
+                                    onclick="update_task(${list_id}, '${id}', '${title}', '${start_date}', '${end_date}', '${bg_color}', '${description}')"></i>
+                                <i class="fas fa-plus-circle text-primary task-icon" onclick="addSubTask('${id}', '${title}')"></i>
+                                <i class="fas fa-trash-alt text-danger task-icon" onclick="removeTask('${id}')"></i>
+                                <i class="fas fa-chevron-down text-dark task-icon toggle-subtask" 
+                                    style="cursor: pointer;" data-target="subtaskDropdown${id}"></i>
+                            </div>
                         </div>
-                    </li> 
-                `)
-            })
-            
+
+                        <!-- Subtask Dropdown -->
+                        <ul class="subtask-dropdown list-unstyled mt-2 bg-white rounded shadow-sm border collapse" 
+                            id="subtaskDropdown${id}" style="overflow: hidden;">
+                            ${subtaskItems}
+                        </ul>
+                    </li>
+                `);
+            });
+            // Delegated click handler for dropdown toggle
+            document.addEventListener("click", function (e) {
+                if (e.target.classList.contains("toggle-subtask")) {
+                    const targetId = e.target.getAttribute("data-target");
+                    const dropdown = document.getElementById(targetId);
+                    dropdown.classList.toggle("show");
+                    e.target.classList.toggle("fa-chevron-down");
+                    e.target.classList.toggle("fa-chevron-up");
+                }
+            });
+
             $(".loading").css("display", 'none');
             
         }else{
-            showNotification('error', "Task not found")
+            $('#searchMessage').text(responseData.message)
             $(".loading").css("display", 'none');
         }
     }else{
@@ -881,6 +1194,7 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
             list_name = list.list_name
         }   
     })
+    const finished_subtask_nbr = subtasks.filter(subtask => subtask.finished).length
     const card = `   
         <div 
             class=" h-100 p-2 rounded-4 d-flex flex-column justify-content-start position-relative"
@@ -895,10 +1209,16 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
                     ${end_date}
                 </span>
             </div>
-            <span style='border: 2px solid ${bg_color}' class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow">
-                <i class='fas fa-list' style='color: ${bg_color}!important'></i>
-                ${subtasks.length} subtask${subtasks.length > 1 ? 's': ''}
-                <i class="fa-solid fa-bookmark text-secondary"  style='color: ${bg_color}!important'></i>
+            <span 
+                class="position-absolute list-name small rounded-pill py-1 px-3 bg-light text-dark me-1 mt-1 shadow d-flex align-items-center gap-2"
+                style="border: 2px solid ${bg_color};"
+            >
+                <div class="progress-circle" 
+                    style="--value: ${Math.ceil((finished_subtask_nbr / subtasks.length) * 100)}; --color: ${bg_color}">
+                    <span class="progress-label">${subtasks.length}</span>
+                </div>
+
+                <i class="fa-solid fa-bookmark text-secondary" style="color: ${bg_color}!important;"></i>
                 ${list_name}
             </span>
             <h3 class="text-dark task-title">
@@ -1063,11 +1383,11 @@ socket.on('new_notification', (data) => {
             <li id="notification${data.notification_id}" class="list-group-item border-0 px-3 py-2 rounded-3 mb-2 shadow-sm">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex flex-column">
-                    <span class="text-body">${data.message}</span>
-                    <small class="text-muted mt-1">${data.created_at}</small>
+                        span class="text-body">${data.message}</span>
+                        <small class="text-muted mt-1">${data.created_at}</small>
                     </div>
-                    <button type="button" class="btn btn-sm btn-light text-danger ms-3 border-0" onclick="deleteNotification(${data.notification_id})" aria-label="Delete">
-                    <i class="fas fa-times"></i>
+                    <button type="button" class="btn btn-sm btn-light text-success ms-3 border-0" onclick="deleteNotification(${data.notification_id})" aria-label="Delete">
+                        <i class="fas fa-check"></i>
                     </button>
                 </div>
             </li>
@@ -1106,11 +1426,11 @@ const fetchNotifications = async () => {
                     <li id="notification${notification.id}" class="list-group-item border-0 px-3 py-2 rounded-3 mb-2 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex flex-column">
-                            <span class="text-body">${notification.message}</span>
-                            <small class="text-muted mt-1">${notification.created_at}</small>
+                                <span class="text-body">${notification.message}</span>
+                                <small class="text-muted mt-1">${notification.created_at}</small>
                             </div>
-                            <button type="button" class="btn btn-sm btn-light text-danger ms-3 border-0" onclick="deleteNotification(${notification.id})" aria-label="Delete">
-                            <i class="fas fa-times"></i>
+                            <button type="button" class="btn btn-sm btn-light text-success ms-3 border-0" onclick="deleteNotification(${notification.id})" aria-label="Delete">
+                                <i class="fas fa-check"></i>
                             </button>
                         </div>
                     </li>      
@@ -1192,21 +1512,28 @@ async function addNewList(event) {
             showNotification("success", data.message)
             const listContainer = document.getElementById('list-container');
             const listEl = document.createElement('li');
-            listEl.classList = 'my-2 p-1 px-3';
+            listEl.id = `list${list.list_id}`
+            listEl.classList = 'my-2 p-1 px-1';
             listEl.innerHTML = `
                 <div class="form-check d-flex align-items-center justify-content-between gap-2">
-                    <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center gap-2" title="${list.list_name}">
                         <input 
                             type="checkbox" 
                             class="form-check-input mt-0 list-checkbox" 
                             id="listCheck${list.list_id}" 
-                            ${list.list_name == 'Personal' ? 'checked' : ''}
+                            ${list.task_nbr > 0 ? 'checked' : ''}
                         >
-                        <label class="form-check-label mb-0" for="listCheck${list.list_id}">
+                        <label class="form-check-label mb-0 text-truncate"  style="max-width: 130px; overflow: hidden;" for="listCheck${list.list_id}">
                             <a class="text-dark text-decoration-none">${list.list_name}</a>
                         </label>
                     </div>
-                    <span>${list.task_nbr}</span>
+                    <div class='d-flex justify-content-between align-items-center gap-2'>
+                        ${list.strict ? '<i class="fas fa-star text-warning"></i>' : ''}
+                        <span>${list.task_nbr}</span>
+                        <span class="list-options-btn bg-transparent" data-id="${list.list_id}" data-name="${list.list_name}" data-description="${list.description}" data-important="${list.strict}">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </span>
+                    </div>
                 </div>
             `;
             listContainer.appendChild(listEl);
@@ -1217,7 +1544,7 @@ async function addNewList(event) {
             selectListContainer.append(opt);
 
             attachCheckboxListeners();
-
+            $(`#listNbr`).text(ALL_LIST.length)
             event.target.reset();
         }else{
             showNotification("error", data.error)
@@ -1241,18 +1568,29 @@ function showFlexibleModal(message, type = 'confirm', defaultValue = '') {
         <div class="modal-backdrop fade show" style="z-index: 1999;"></div>
         <div class="modal-dialog modal-dialog-centered" role="document" style="z-index: 2001; pointer-events: all;">
           <div class="modal-content rounded-4 shadow bg-white">
-            <div class="modal-body p-4 rounded-4">
-              <p class="fs-5 mb-3">${message}</p>
+            <form class="p-4 d-flex flex-column justify-content-between gap-3">
+              <div class="form-floating">
+                <p class="fs-5 text-dark m-0">${message}</p>
+              </div>
+
               ${
                 type === 'input'
-                  ? `<input type="text" class="form-control mb-3 rounded-pill" id="flexModalInput" placeholder="Type here..." value="${defaultValue.replace(/"/g, '&quot;')}">`
+                  ? `
+                  <div class="form-floating">
+                    <input type="text" class="form-control rounded-4 ps-4" id="flexModalInput" placeholder="Your input..." value="${defaultValue.replace(/"/g, '&quot;')}">
+                    <label for="flexModalInput"><i class="fas fa-keyboard me-2 text-primary"></i> Enter a title</label>
+                  </div>
+                `
                   : ''
               }
-              <div class="d-flex justify-content-end gap-2">
-                <button type="button" class="btn btn-light border" id="flexModalCancel">Cancel</button>
-                <button type="button" class="btn btn-primary" id="flexModalConfirm">${type === 'confirm' ? 'Confirm' : 'OK'}</button>
+
+              <div class="d-flex justify-content-end gap-2 pt-2">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" id="flexModalCancel">Cancel</button>
+                <button type="button" class="btn btn-primary rounded-pill px-4" id="flexModalConfirm">
+                  ${type === 'confirm' ? 'Confirm' : 'OK'}
+                </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -1260,7 +1598,7 @@ function showFlexibleModal(message, type = 'confirm', defaultValue = '') {
 
     container.innerHTML = modalHtml;
 
-    // Handle actions
+    // Event Listeners
     document.getElementById('flexModalCancel').onclick = () => {
       container.innerHTML = '';
       resolve(type === 'confirm' ? false : null);

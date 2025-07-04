@@ -74,25 +74,36 @@
                 </button>            
             </h4>
             <div class="position-relative mt-2" id="addListDropdown">
-                <div class="p-3" id="addListForm" style="display: none;">
-                    <form name="listForm" id="listForm" onsubmit="return addNewList(event)">
-                        <div class="mb-2">
-                            <input type="text" class="form-control rounded-pill" id="listName"  placeholder="Enter list name">
+                <div class="p-0" id="addListForm" style="display: none;">
+                    <form name="listForm" id="listForm" onsubmit="return addNewList(event)" class="p-0 mb-2">
+                        <!-- List Name -->
+                        <div class="form-floating mb-2">
+                            <input type="text" class="form-control form-control-sm rounded-pill ps-4" id="listName" placeholder="Enter list name">
+                            <label for="listName" class="small"><i class="fas fa-heading text-primary me-2 fs-6"></i> List name</label>
                         </div>
-                        <div class="mb-2">
-                            <input type="text" class="form-control rounded-pill" id="listDescription"  placeholder="Enter list description (optional)">
+
+                        <div class="form-floating mb-2">
+                            <input type="text" class="form-control form-control-sm rounded-pill ps-4" id="listDescription" placeholder="Enter list description">
+                            <label for="listDescription" class="small"><i class="fas fa-align-left text-secondary me-2 fs-6"></i> Description</label>
                         </div>
-                        <button type="submit" class="btn btn-success w-100 rounded-pill">Create</button>
+
+                        <button type="submit" class="btn btn-success btn-sm w-100 rounded-pill d-flex align-items-center justify-content-center gap-1 py-2">
+                            <i class="fas fa-plus-circle fs-6"></i> <span class="small">Create</span>
+                        </button>
                     </form>
                 </div>
             </div>
-            <ul class="p-2 list-container rounded-3 border" id="list-container"></ul>
+            <ul class="p-2 mb-0 list-container rounded-3 border" id="list-container"></ul>
         </div>
         <div class="my-2">
             <ul class="p-0 _user_action m-0">
                 <li class="my-2 py-1">
-                    <i class="text-danger fas fa-bug"></i>
-                    <a class="text-dark text-decoration-none" href="mailto:andrianaivonoe403@gmail.com">Bug report</a>
+                    <div class="w-100 d-flex align-items-center">
+                        <a  class="text-dark text-decoration-none w-100" href="/dashboard/help#contact-us">
+                            <i class="text-danger fas fa-bug"></i>
+                            Bug report
+                        </a>
+                    </div>
                 </li>
                 <li class="my-2 py-1 {% block userGuide %}{% endblock %}">
                     <div class="w-100 d-flex align-items-center">
@@ -129,7 +140,7 @@
             <form class="d-flex justify-content-start align-items-center border px-3 mx-3 rounded-pill" action="">
                 <i class="text-primary fa fa-search"></i>
                 <input name="search_bar" class="px-3 py-2 text-dark bg-transparent" type="search" id="findTask" onkeyup="findTaskk()" placeholder="Find task">
-                <div id="searchResultsContainer" class="mt-3 p-2"></div>
+                <div id="searchResultsContainer" class="mt-3 p-2 rounded-3 p-2 bg-light border"> </div>
             </form>
             <button class="btn open-modal" style="background-color: transparent!important">
                 <i class="fas fa-add text-success"></i>
@@ -140,8 +151,7 @@
                 <button class="btn dropdown-toggle position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false"  data-bs-auto-close="outside">
                     <i class="fas fa-bell text-secondary me-2"></i> Notification
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
-                    0
-                    <span class="visually-hidden">unread messages</span>
+                        0 <span class="visually-hidden">unread messages</span>
                     </span>
                 </button>
                 <ul class="dropdown-menu nofitication-container px-2 shadow" data-bs-auto-close="outside">
@@ -158,60 +168,138 @@
         {% endblock %}
         <!-- Modal -->
         <div class="overlay"></div>
-        <div class="modal rounded-4 mod">
-            <form class="d-flex flex-column justify-content-between h-100 task-form" id="add_task_form">
-                <div>
-                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="list" class="text-dark" name="tastlist" ><i class="fas fa-square text-primary"></i> Add to list</label>
-                        <select name="task_list" class="form-control w-75 rounded-pill custom-select-light" type="text" id="list_id" placeholder="Task list"></select>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="title" class="text-dark" name="tastTitle" ><i class="fas fa-heading text-primary"></i> Task title</label>
-                        <input name="task_title" class="form-control w-75  rounded-pill" type="text" id="title" placeholder="Task title">
-                    </div>
-                    <!--Start date-->
-                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="startDate" class="text-dark" name="startDate" ><i class="fas fa-calendar-alt text-success"></i> Start date</label>
-                        <input name="start_date" class="form-control w-75  rounded-pill" type="date" id="startDate" placeholder="Start date">
-                    </div>
-                    <!--End date-->
-                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="endDate" class="text-dark" name="endDate" ><i class="fas fa-calendar-check text-danger"></i> End date</label>
-                        <input name="end_date" class="form-control w-75  rounded-pill" type="date" id="endDate" placeholder="End date">
-                    </div>
-                    <!--Description-->
-                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="description" class="text-dark" name="endDate" ><i class="fas fa-align-left text-secondary"></i> Description</label>
-                        <input name="task_description" class="form-control w-75  rounded-pill" type="text" id="description" placeholder="A short description (optional)">
-                    </div>
-                    <!--Backgound colour select-->
-                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <label for="bg-color-piker" class="text-dark" name="endDate" > <i class="fas fa-fill-drip text-warning"></i> Select task background-color <span>(default color    <div class="default-color rounded-pill"></div>  </span>)</label>
-                        <input 
-                            name="task_background"
-                            class="rounded-pill form-control form-control-color p-0"
-                            type="color"
-                            id="bg-color-picker"
-                            value="#95ce83"
-                        />
-                    </div>
-                    <!--Task content-->
-                    <div class="d-flex justify-content-between align-items-center px-2 gap-2 my-2">
-                        <i class="fas fa-add text-dark"></i>
-                        <input name="add_btn" class="form-control rounded-pill" type="text" id="content" placeholder="Add subtask (Optional)">
-                        <button name="add_btn" class="add btn btn-primary rounded-pill"> Add</button>
-                    </div>
-                    <ul class="text-dark task-list-container text-center ps-0">
-                        <span id="subTaskIndicator">No subtask added </br> all subtask will appear here</span>
-                    </ul>
-                </div>                        
-                <div class="btn-container">
-                    <button class="shadow submit text-light rounded-pill bg-success" id="submit">Submit <img class="loading-dash loading" src="{{ url_for('static', filename='images/loading.gif') }}" alt=""></button>
-                    <button class="shadow bg-danger text-light rounded-pill" id="closeModal">Close</button>
+        <div class="modal rounded-4 mod" style="max-height: 85vh; overflow: hidden;">
+            <form class="d-flex flex-column justify-content-between h-100 task-form p-0" id="add_task_form">
+                <div class="custom-modal-header d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                    <h5 class="modal-title d-flex align-items-center gap-2">
+                        <i class="fas fa-add text-success"></i> Add new task
+                    </h5>
+                    <button id="closeModal" class="custom-close-btn">
+                        <i class="fas fa-times text-danger"></i>
+                    </button>
                 </div>
-            </from>
+                <!-- Scrollable area -->
+                <div style="overflow-y: auto; max-height: calc(85vh - 130px); padding-right: 5px;">
+                    <!-- Add to list -->
+                    <div class="form-floating mb-3">
+                        <select name="task_list" id="list_id" class="form-control ps-4">
+                            <!-- options -->
+                        </select>
+                        <label for="list_id"><i class="fas fa-square text-primary me-2"></i> Add to list</label>
+                    </div>
+
+                    <!-- Task Title -->
+                    <div class="form-floating mb-3">
+                        <input name="task_title" type="text" id="title" class="form-control ps-4" placeholder="Task title">
+                        <label for="title"><i class="fas fa-heading text-primary me-2"></i> Task title</label>
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="form-floating mb-3">
+                        <input name="start_date" type="date" id="startDate" class="form-control ps-4" placeholder="Start date">
+                        <label for="startDate"><i class="fas fa-calendar-alt text-success me-2"></i> Start date</label>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="form-floating mb-3">
+                        <input name="end_date" type="date" id="endDate" class="form-control ps-4" placeholder="End date">
+                        <label for="endDate"><i class="fas fa-calendar-check text-danger me-2"></i> End date</label>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-floating mb-3">
+                        <input name="task_description" type="text" id="description" class="form-control ps-4" placeholder="Description">
+                        <label for="description"><i class="fas fa-align-left text-secondary me-2"></i> Description (optional)</label>
+                    </div>
+
+                    <!-- Color Picker -->
+                    <div class="d-flex align-items-center justify-content-between px-2 my-3">
+                        <label for="bg-color-picker" class="text-dark m-0">
+                            <i class="fas fa-fill-drip text-warning"></i> Background color
+                        </label>
+                        <input name="task_background" type="color" id="bg-color-picker" class="form-control form-control-color p-0" value="#95ce83">
+                    </div>
+
+                    <!-- Subtask Add -->
+                    <div class="d-flex align-items-center gap-2 px-2 my-3">
+                        <i class="fas fa-plus text-dark"></i>
+                        <input name="add_btn" type="text" id="content" class="form-control" placeholder="Add subtask (optional)">
+                        <button name="add_btn" class="btn btn-primary add rounded-pill">Add</button>
+                    </div>
+
+                    <!-- Subtask list -->
+                    <ul class="text-dark task-list-container text-center ps-0">
+                        <span id="subTaskIndicator">No subtask added<br>All subtasks will appear here</span>
+                    </ul>
+                </div>
+
+                <!-- Footer -->
+                <div class="btn-container d-flex gap-2 px-2 mt-3">
+                    <button class="shadow submit text-light rounded-pill bg-success w-100" id="submit">
+                        <i class="fas fa-check"></i>
+                        Save task
+                        <img class="loading-dash loading ms-2" src="{{ url_for('static', filename='images/loading.gif') }}" alt="">
+                    </button>
+                </div>
+            </form>
         </div>
+
         <!--End Modal-->
+
+        <!-- Custom List Modal -->
+        <div id="listOptionsModal" class="custom-modal-overlay">
+            <div class="custom-modal">
+                <!-- Modal Header -->
+                <div class="custom-modal-header d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                    <h5 class="modal-title d-flex align-items-center gap-2">
+                        <i class="fas fa-cogs text-primary"></i> Manage List
+                    </h5>
+                    <button id="closeListModal" class="custom-close-btn">
+                        <i class="fas fa-times text-danger"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <form class="custom-modal-body" id="updateListForm">
+
+                    <!-- List Name -->
+                    <div class="form-floating mb-3">
+                        <input type="text" id="renameListInput" class="form-control" placeholder="Rename list..." required>
+                        <label for="renameListInput"><i class="fas fa-header"></i>List Name</label>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-floating mb-3">
+                        <textarea id="descriptionListInput" class="form-control" placeholder="Add a description..." style="height: 100px;"></textarea>
+                        <label for="descriptionListInput"><i class="fas fa-align-left"></i>Description</label>
+                    </div>
+
+                    <!-- Star + Delete -->
+                    <div class="d-flex justify-content-between gap-2 mb-3">
+                        <div class="d-flex align-items-center justify-content-start">
+                            <!-- Hidden checkbox -->
+                            <input type="checkbox" id="importantCheckbox" class="d-none" data-important="false" />
+
+                            <!-- Star icon toggle -->
+                            <label for="importantCheckbox" class="m-0" style="cursor: pointer;">
+                                <i id="importantIcon" class="far fa-star text-muted"></i>
+                                <span class="ms-2">Mark Important</span>
+                            </label>
+                        </div>
+
+                        <button class="btn btn-outline-danger text-danger w-50 d-flex align-items-center justify-content-center gap-2"
+                            id="deleteListBtn" data-bs-toggle="tooltip" title="This will permanently delete the list">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </div>
+
+                    <!-- Save Button -->
+                    <button class="rounded-pill btn btn-success w-100 d-flex align-items-center justify-content-center gap-2" id="saveListChangesBtn">
+                        <i class="fas fa-save"></i> <span>Save Changes</span>
+                    </button>
+                </form>
+            </div>
+        </div>
         
     </main>
     <!-- popup container -->

@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from .models import notification_model, subtask_model, task_list_model, task_model, user_model
+from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 
@@ -18,33 +19,37 @@ def config(app, databaseConfig):
 
 ## Connection
 def connect(app):
-    load_dotenv()
-    user = os.getenv('DATABASE_USER')
-    password = os.getenv('DATABASE_PWD')
-    host = os.getenv('DATABASE_HOST')
-    database_name = os.getenv('DATABASE_NAME')
+    try:
+        load_dotenv()
+        user = os.getenv('DATABASE_USER')
+        password = os.getenv('DATABASE_PWD')
+        host = os.getenv('DATABASE_HOST')
+        database_name = os.getenv('DATABASE_NAME')
 
-    databaseConfig = Database(user, password, host, database_name) # Database configuration
-    app = config(app, databaseConfig)
-    db = SQLAlchemy(app)
+        databaseConfig = Database(user, password, host, database_name) # Database configuration
+        app = config(app, databaseConfig)
+        db = SQLAlchemy(app)
+        migrate = Migrate(app, db)
 
-    ## Tables
-    with app.app_context():
-        User = user_model.userModel(db)
-        List = task_list_model.listModel(db, User)
-        Task = task_model.taskModel(db, User, List)
-        Subtask = subtask_model.subtaskModel(db, Task)
-        Notification = notification_model.notificationModel(db, User)
-        db.create_all()
-    
-    return {
-        "message": "Database connected",
-        "db": db,
-        "tables": {
-            "User": User,
-            "Task": Task,
-            "Subtask": Subtask,
-            "Notification": Notification,
-            "List": List
+        ## Tables
+        with app.app_context():
+            User = user_model.userModel(db)
+            List = task_list_model.listModel(db, User)
+            Task = task_model.taskModel(db, User, List)
+            Subtask = subtask_model.subtaskModel(db, Task)
+            Notification = notification_model.notificationModel(db, User)
+        
+        return {
+            "message": "Database connected",
+            "db": db,
+            "tables": {
+                "User": User,
+                "Task": Task,
+                "Subtask": Subtask,
+                "Notification": Notification,
+                "List": List
+            }
         }
-    }
+    except Exception as e:
+        print(str(e))
+        return None

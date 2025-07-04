@@ -49,12 +49,12 @@
 
   <div class="row">
     <div class="col-lg-6">
-      <div class="analytics-card">
+      <div class="analytics-card text-center" style="max-height: 400px;">
         <h6 class="card-title"><i class="fas fa-chart-bar text-primary"></i>User Registrations per Month</h6>
         <canvas id="userStatisticsChart"></canvas>
       </div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-6 d-none">
       <div class="analytics-card">
         <h6 class="card-title"><i class="fas fa-wave-square text-warning"></i>Daily User Activity</h6>
         <canvas id="userDailyActivityChart"></canvas>
@@ -63,7 +63,7 @@
     <div class="col-lg-6 m-auto">
       <div class="analytics-card">
         <h6 class="card-title text-center mb-3"><i class="fas fa-user-tag text-success"></i>User Types</h6>
-        <canvas id="userTypePieChart"></canvas>
+        <canvas id="userTypePieChart" style="max-height: 300px"></canvas>
       </div>
     </div>
   </div>
@@ -71,7 +71,38 @@
 {% endblock %}
 {% block script %}
 <script>
-  
+
+  async function fetchUserTypeData() {
+    try {
+      const response = await fetch('/api/admin/user_type');
+      if (!response.ok) {
+        showNotification('error', 'Failed to fetch user type data');
+      }
+      const data = await response.json();
+
+      new Chart(document.getElementById('userTypePieChart'), {
+        type: 'pie',
+        data: {
+          labels: ['Admin', 'Simple user'],
+          datasets: [{
+            data: [data.user_type.admin, data.user_type.simple_user],
+            backgroundColor: ['#28a745', '#ffc107']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+
+    } catch (error) {
+      showNotification('error', 'An error occurred while fetching user type data');
+    }
+  }
 
   // Chart 2: Daily activity
   new Chart(document.getElementById('userDailyActivityChart'), {
@@ -93,25 +124,7 @@
     }
   });
 
-  // Chart 3: User types
-  new Chart(document.getElementById('userTypePieChart'), {
-    type: 'pie',
-    data: {
-      labels: ['Admin', 'Editor', 'Viewer'],
-      datasets: [{
-        data: [4, 10, 22],
-        backgroundColor: ['#28a745', '#ffc107', '#6c757d']
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'bottom'
-        }
-      }
-    }
-  });
+  fetchUserTypeData();
 </script>
 
 <script src="{{ url_for('static', filename='js/admin/admin_user_analytics.js') }}" ></script>

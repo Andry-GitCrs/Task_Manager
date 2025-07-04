@@ -18,7 +18,7 @@ def login(app, database):
             suspended = User.query.filter_by(email=email, stat = False).first()
 
             if not user:
-                return jsonify({"error": "Invalid email or password"}), 401
+                return jsonify({"error": "User not registered"}), 401
 
             if not bcrypt.check_password_hash(user.password, password):
                 return jsonify({"error": "Incorrect password"}), 400

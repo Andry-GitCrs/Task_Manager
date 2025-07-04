@@ -1,3 +1,30 @@
+:root {
+  --bs-blue: #0d6efd;
+  --bs-indigo: #6610f2;
+  --bs-purple: #6f42c1;
+  --bs-pink: #d63384;
+  --bs-red: #dc3545;
+  --bs-orange: #fd7e14;
+  --bs-yellow: #ffc107;
+  --bs-green: #198754;
+  --bs-teal: #20c997;
+  --bs-cyan: #0dcaf0;
+  --bs-white: #fff;
+  --bs-gray: #6c757d;
+  --bs-gray-dark: #343a40;
+  --bs-primary: #0d6efd;
+  --bs-secondary: #6c757d;
+  --bs-success: #198754;
+  --bs-info: #0dcaf0;
+  --bs-warning: #ffc107;
+  --bs-danger: #dc3545;
+  --bs-light:  #f8f9fa;
+  --bs-dark: #212529;
+  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+}
+
 body{
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -208,3 +235,110 @@ hr{
   background-color: #f8f9fa; /* subtle light gray */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
+
+.user-ui-card {
+  --main-color: #000;
+  --submain-color: #78858F;
+  --bg-color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+  width: 350px;
+  height: auto;
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+  background: var(--bg-color);
+  padding-bottom: 20px;
+}
+
+.user-ui-card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+  transition: all 0.3s ease-in-out;
+}
+
+.user-ui-card .card__img {
+  height: 192px;
+  width: 100%;
+}
+
+.user-ui-card .card__avatar {
+  position: absolute;
+  width: 114px;
+  height: 114px;
+  background: var(--bg-color);
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: calc(192px - 57px);
+}
+
+.user-ui-card .card__title {
+  font-size: 17px;
+  color: var(--main-color);
+}
+
+.user-ui-card .card__subtitle {
+  font-size: 14px;
+  margin-bottom: 0;
+  color: var(--submain-color);
+}
+
+.user-ui-card .card__wrapper {
+  /* margin-top: 20px; */
+}
+
+.dropdown-menu {
+  font-size: 0.875rem;
+}
+.dropdown-item {
+  transition: all 0.2s ease;
+}
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.doughnut-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.doughnut {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  /* background: conic-gradient(#28a745 0%, #dee2e6 0%); */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+.doughnut-label {
+  position: absolute;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #343a40;
+  z-index: 999;
+}
+
+
+.doughnut::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 70%;
+  background: white;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+

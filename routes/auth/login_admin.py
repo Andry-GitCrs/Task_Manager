@@ -48,8 +48,6 @@ def login_admin(app, database):
 
 from flask_login import login_required, current_user
 def verify_admin(app, database):
-    User = database["tables"]["User"]
-    db = database["db"]
     @app.route('/api/verify_user')
     @login_required
     def verify_admin():
@@ -58,10 +56,12 @@ def verify_admin(app, database):
         if admin:
             return jsonify({
                 "message": "User have admin privilege",
-                "privilege": admin
+                "privilege": admin,
+                "stat": current_user.stat
             }), 200
             
         return jsonify({
             "error": f"User is not an admin member",
-            "privilege": admin
+            "privilege": admin,
+            "stat": current_user.stat
         }), 401

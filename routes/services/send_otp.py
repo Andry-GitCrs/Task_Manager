@@ -1,5 +1,4 @@
 import os
-import random
 from flask import jsonify, render_template, request
 import string
 import secrets
@@ -33,7 +32,7 @@ def send_otp(app, database):
             user = User.query.filter_by(email=email).first()
 
             if not user and forgot_password:
-                return jsonify({"error": "User does not exist"}), 404
+                return jsonify({"error": "User not registered"}), 404
 
             if user:
                 if user.verified and not forgot_password:
