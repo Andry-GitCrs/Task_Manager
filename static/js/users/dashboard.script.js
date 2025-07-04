@@ -1383,11 +1383,11 @@ socket.on('new_notification', (data) => {
             <li id="notification${data.notification_id}" class="list-group-item border-0 px-3 py-2 rounded-3 mb-2 shadow-sm">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex flex-column">
-                    <span class="text-body">${data.message}</span>
-                    <small class="text-muted mt-1">${data.created_at}</small>
+                        span class="text-body">${data.message}</span>
+                        <small class="text-muted mt-1">${data.created_at}</small>
                     </div>
-                    <button type="button" class="btn btn-sm btn-light text-danger ms-3 border-0" onclick="deleteNotification(${data.notification_id})" aria-label="Delete">
-                    <i class="fas fa-times"></i>
+                    <button type="button" class="btn btn-sm btn-light text-success ms-3 border-0" onclick="deleteNotification(${data.notification_id})" aria-label="Delete">
+                        <i class="fas fa-check"></i>
                     </button>
                 </div>
             </li>
@@ -1426,11 +1426,11 @@ const fetchNotifications = async () => {
                     <li id="notification${notification.id}" class="list-group-item border-0 px-3 py-2 rounded-3 mb-2 shadow-sm">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex flex-column">
-                            <span class="text-body">${notification.message}</span>
-                            <small class="text-muted mt-1">${notification.created_at}</small>
+                                <span class="text-body">${notification.message}</span>
+                                <small class="text-muted mt-1">${notification.created_at}</small>
                             </div>
-                            <button type="button" class="btn btn-sm btn-light text-danger ms-3 border-0" onclick="deleteNotification(${notification.id})" aria-label="Delete">
-                            <i class="fas fa-times"></i>
+                            <button type="button" class="btn btn-sm btn-light text-success ms-3 border-0" onclick="deleteNotification(${notification.id})" aria-label="Delete">
+                                <i class="fas fa-check"></i>
                             </button>
                         </div>
                     </li>      
