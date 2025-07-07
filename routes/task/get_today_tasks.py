@@ -13,7 +13,7 @@ def get_today_task(app, database):
 
         tasks = Task.query.filter(
             Task.user_id == user_id,
-            func.date(Task.task_end_date) == today,
+            func.date(Task.task_end_date) == today or func.date(Task.task_start_date) == today ,
             Task.stat == True
         ).all()
 

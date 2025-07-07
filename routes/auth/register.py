@@ -51,11 +51,11 @@ def register(app, database):
                 newUser.exp_date = None
                 newUser.password = password
                 newUser.email = email
-                greeting = "<span class='fw-bold btn bg-light border m-0'>💁‍♀️Tips</span> Hi, welcome to <b>Task Manager</b>, you're on the right APP to manage your Task. Please visit the <a class='text-primary' href='/dashboard/help'>guide</a> page before starting using the app. Don't hesitate to <a class='text-primary' href='/dashboard/help#contact-us'>contact us</a> if needed"
+                greeting = "<span class='fw-bold btn bg-light border m-0'>💁‍♀️Tips</span> Hi, welcome to <b>Stack Task</b>, you're on the right APP to manage your Task. Please visit the <a class='text-primary' href='/dashboard/help'>guide</a> page before starting using the app. Don't hesitate to <a class='text-primary' href='/dashboard/help#contact-us'>contact us</a> if needed"
                 adminMessage = """
                                 <span class='fw-bold btn bg-light border m-0'>
                                     <i class="fas fa-trophy text-warning me-1"></i> Congratulation
-                                </span> You are the first person on the <b>Task Manager</b>, so you have been promoted <b>Admin role</b>.""".strip()
+                                </span> You are the first person on the <b>Stack Task</b>, so you have been promoted <b>Admin role</b>.""".strip()
                 if adminInApp :
                     if not adminInApp:
                         newUser.admin = True
@@ -80,7 +80,7 @@ def register(app, database):
                 )
 
                 msg = Message(
-                    subject="Welcome to Task Manager!",
+                    subject="Welcome to Stack Task!",
                     sender=app.config['MAIL_USERNAME'],
                     recipients=[email],
                     html=emailHtml

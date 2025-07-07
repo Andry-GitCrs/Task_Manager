@@ -44,6 +44,7 @@ def announcement(app, database, socketio):
             socketio.emit('new_notification', {
                 'message': formatted_announcement_message,
                 'user_id': user_id,
+                'email': user.email,
                 "created_at": new_notification.created_at.strftime('%Y-%m-%d %H:%M'),
                 "notification_id": new_notification.id
             }, to=f'user_{user_id}')

@@ -46,14 +46,14 @@ def sendEmail(app):
                 return jsonify({'error': "All fields are required"}), 400
             
             msg1 = Message(
-                subject = f'Task Manager APP notification',
+                subject = f'Stack Task APP notification',
                 sender = app.config['MAIL_USERNAME'],
                 recipients = [app.config['MAIL_USERNAME']],
                 html = adminHtml
             )
 
             msg2 = Message(
-                subject = f'Task Manager App demand confirmation',
+                subject = f'Stack Task App demand confirmation',
                 sender = app.config['MAIL_USERNAME'],
                 recipients = [user_email],
                 html = senderHtml

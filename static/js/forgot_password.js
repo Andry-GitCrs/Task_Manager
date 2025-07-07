@@ -18,9 +18,11 @@ $('#forgot-password-form').on('submit', async function(e) {
     
     const email = document.getElementById('email').value.trim('');
     const new_password = document.getElementById('new_password').value.trim('');
-    const confirm_password = document.getElementById('confirm_password').value.trim('');
+    const confirm_password = document.getElementById('new_confirmation_password').value.trim('');
     const otp = document.getElementById('otp').value.trim('');
     let submitBtn = document.getElementById('submit');
+
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin text-success"></i> Loading...'
 
     user = {
         "email": email,
@@ -28,7 +30,6 @@ $('#forgot-password-form').on('submit', async function(e) {
         "confirmation_password": confirm_password,
         "otp": otp
     }
-    $(".loading-dash").css("display", 'inline');
     submitBtn.disabled = true;
     try {
         const response = await fetch("/api/user/forgot_password", {
@@ -56,7 +57,7 @@ $('#forgot-password-form').on('submit', async function(e) {
         showNotification("error", error)
         
     }
-    $(".loading-dash").css("display", 'none');
+    submitBtn.innerHTML = 'Update password'
     submitBtn.disabled = false;
 });
 

@@ -31,7 +31,7 @@ def get_upcoming_task(app, database):
         elif condition == "on":
             tasks = Task.query.filter(
             Task.user_id == user_id,
-            func.date(Task.task_start_date) == day,
+            func.date(Task.task_start_date) == day or func.date(Task.task_end_date) == day,
             Task.stat == True
         ).all()
             

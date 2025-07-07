@@ -36,7 +36,7 @@ def use_user_route(app, database, login_manager):
   ## Helper
   def getTaskNbr():
       today = date.today()
-      today_task_nbr = Task.query.filter(Task.user_id == current_user.user_id, func.date(Task.task_end_date) == today, Task.stat == True).count()
+      today_task_nbr = Task.query.filter(Task.user_id == current_user.user_id, func.date(Task.task_start_date or Task.task_end_date) == today, Task.stat == True).count()
       task_nbr = db.session.query(Task).filter_by(user_id = current_user.user_id, stat = True).count()
       list_nbr = db.session.query(List).filter_by(user_id = current_user.user_id, stat = True).count()
 

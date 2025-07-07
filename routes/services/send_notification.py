@@ -40,6 +40,7 @@ def send_notification(app, database, socketio):
         # Emit the notification to the specific user via SocketIO
         socketio.emit('new_notification', {
             'message': message,
+            'email': user.email,
             'user_id': user_id,
             "created_at": new_notification.created_at.strftime('%Y-%m-%d %H:%M'),
             "notification_id": new_notification.id

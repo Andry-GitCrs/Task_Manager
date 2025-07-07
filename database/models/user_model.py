@@ -13,7 +13,7 @@ def userModel(db):
         stat = Column(Boolean, default=True)
         otp = Column(String(6), nullable=True)
         username = Column(String(50), nullable=True, unique=True)
-        profile_pic = Column(String(200), nullable=True, default='default_profile.jpg')
+        profile_pic = Column(String(200), nullable=True, default='default_profile.png')
         cover_pic = Column(String(200), nullable=True, default='default_cover_pic.png')
         bio = Column(String(500), nullable=True, default='This is my bio.')
         verified = Column(Boolean, default=False)
