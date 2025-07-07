@@ -1,45 +1,163 @@
 Gestion_des_taches_flask
-│   
 │   database
 │   ├── models
-│   │   ├── table_name_model.py
-│   │   └── ...
+│   │   ├── notification_model.py
+│   │   ├── subtask_model.py
+│   │   ├── task_list_model.py
+│   │   ├── task_model.py
+│   │   └── user_model.py
 │   └── pg_connexion.py
 │   main
+│   ├── migrations
+│   │   ├── versions
+│   │   ├── alembic.ini
+│   │   ├── env.py
+│   │   ├── README
+│   │   └── script.py.mako
 │   └── main.py
 │   routes
-│   ├── route_name
+│   ├── admin
 │   │   ├── __init__.py
-│   │   ├── route_name_route.py // Endpoint entry
-│   │   ├── feature_name.py
-│   │   └── ...
-│   ├── ...
+│   │   ├── admin_route.py
+│   │   ├── create_user.py
+│   │   ├── delete_user.py
+│   │   ├── detete_task_permanently.py
+│   │   ├── edit_user_role.py
+│   │   ├── fetch_task.py
+│   │   ├── fetch_user.py
+│   │   ├── logs.py
+│   │   ├── suspend_user.py
+│   │   ├── user_type.py
+│   │   └── users_statistics.py
+│   ├── auth
+│   │   ├── __init__.py
+│   │   ├── auth_route.py
+│   │   ├── auth.py
+│   │   ├── forgot_password.py
+│   │   ├── login_admin.py
+│   │   ├── login.py
+│   │   └── register.py
+│   ├── list
+│   │   ├── __init__.py
+│   │   ├── add_list.py
+│   │   ├── get_user_list.py
+│   │   ├── list_route.py
+│   │   ├── remove_list.py
+│   │   └── update_list.py
+│   ├── public
+│   │   ├── __init__.py
+│   │   └── public_route.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   ├── announcement.py
+│   │   ├── export_csv.py
+│   │   ├── export_pdf.py
+│   │   ├── send_email.py
+│   │   ├── send_notification.py
+│   │   ├── send_otp.py
+│   │   └── services_route.py
+│   ├── subtask
+│   │   ├── __init__.py
+│   │   ├── add_subtask.py
+│   │   ├── check_subtask.py
+│   │   ├── delete_subtask.py
+│   │   ├── subask_route.py
+│   │   └── update_subtask.py
+│   ├── task
+│   │   ├── __init__.py
+│   │   ├── add_task.py
+│   │   ├── delete_task.py
+│   │   ├── find_task.py
+│   │   ├── get_task_by_date.py
+│   │   ├── get_tasks.py
+│   │   ├── get_today_tasks.py
+│   │   ├── get_upcoming_tasks.py
+│   │   ├── task_restore.py
+│   │   ├── task_route.py
+│   │   ├── update_date.py
+│   │   └── update_task.py
+│   ├── user
+│   │   ├── __init__.py
+│   │   ├── fetch_user_daily_finished_subtask.py
+│   │   ├── get_notification.py
+│   │   ├── mark_notification.py
+│   │   ├── most_active_user.py
+│   │   ├── update_cover_pic.py
+│   │   ├── update_profile_pic.py
+│   │   ├── update_profile.py
+│   │   ├── user_route.py
+│   │   └── user_task_activities.py
 │   ├── __init__.py
-│   └── app_route.py // All endpoint index
+│   └── app_route.py
 │   static
 │   ├── css
+│   │   ├── admin_dashboard.css
+│   │   ├── admin_login.css
+│   │   ├── responsive.style.css
 │   │   └── style.css
 │   ├── images
-│   │   └── img.jpg
-│   └── js
-│       ├── admin
-│       │   └── admin_script.js
-│       ├── users
-│       │   └── user_script.js
-│       └── script.js
+│   ├── js
+│   │   ├── admin
+│   │   │   ├── admin_dashboard.js
+│   │   │   ├── admin_login.js
+│   │   │   ├── admin_manage_subtasks.js
+│   │   │   ├── admin_manage_tasks.js
+│   │   │   ├── admin_manage_users.js
+│   │   │   └── admin_user_analytics.js
+│   │   ├── users
+│   │   │   ├── calendar.script.js
+│   │   │   ├── dashboard.script.js
+│   │   │   ├── help.js
+│   │   │   ├── profile.js
+│   │   │   ├── todayTask.script.js
+│   │   │   └── upComingTask.script.js
+│   │   ├── auth.script.js
+│   │   ├── contact.script.js
+│   │   ├── forgot_password.js
+│   │   ├── login.js
+│   │   └── script.js
+│   └── uploads
+│       └── profile
+│           ├── default_cover_pic.png
+│           ├── default_profile.png
 │   templates
-│   ├── fragments
 │   └── views
 │       ├── admin
-│       │   ├── admin_page_name.html
+│       │   ├── admin_dashboard.html
+│       │   ├── admin_login.html
+│       │   ├── admin_manage_subtask.html
+│       │   ├── admin_manage_task.html
+│       │   ├── admin_manage_users.html
+│       │   ├── admin_user_statistics.html
 │       │   └── base.html
+│       ├── services
+│       │   └── email
+│       │       ├── confirmation_message.html
+│       │       ├── email_verification.html
+│       │       ├── received_message.html
+│       │       └── welcome_email.html
 │       ├── users
-│       │   ├── users_page_name.html
-│       │   └── base.html
-│       ├── public_page_name.html
-│       ├── ...
+│       │   ├── base.html
+│       │   ├── calendar.html
+│       │   ├── dashboard.html
+│       │   ├── help.html
+│       │   ├── profile.html
+│       │   ├── today.html
+│       │   └── upcoming.html
+│       ├── 404.html
+│       ├── 405.html
+│       ├── about.html
+│       ├── auth.html
+│       ├── base.html
+│       ├── contact.html
+│       ├── forgot_password.html
 │       └── main.html
-│   .env // Environment variable
+│   .env
 │   .gitignore
-│   Procfile // Production configuration
+│   architecture.txt
+│   back_arch.png
+│   cert.pem
+│   front_arch.png
+│   key.pem
+│   Procfile
 │   requirements.txt
