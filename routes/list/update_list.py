@@ -27,6 +27,11 @@ def update_list(app, database):
           return jsonify({
             'error': 'List not found'
           }), 404
+        existing_list = List.query.filter(List.list_name == list_name, List.user_id == current_user.user_id, List.list_id != list_id).first()
+        if existing_list:
+          return jsonify({
+            'error': f'List {list_name} already exist in your list'
+          }), 409
         task_nbr = db.session.query(Task).filter(Task.list_id == list.list_id, Task.user_id == current_user.user_id, Task.stat == True).count()
         list.list_name = list_name
         list.description = description

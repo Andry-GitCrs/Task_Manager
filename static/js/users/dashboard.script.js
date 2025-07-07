@@ -442,7 +442,7 @@ async function addSubTask(id, title){
                     <li 
                         class='justify-content-between align-items-center subTask subtask${subtask.subtask_id} rounded-pill px-3 py-2'
                         id='subtask${subtask.subtask_id}'
-                        style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
+                        style="background-color: ${(subtask.finished)?'#1987544f' : '#f8f9fa'}"
                         ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
                     >
                     <span 
@@ -839,7 +839,7 @@ function addNewTask(list_id, id, title, start_date, end_date, description, bg_co
                     <li 
                         class='justify-content-between align-items-center subTask subtask${subtask.subtask_id} rounded-pill px-3 py-2' 
                         id='subtask${subtask.subtask_id}'
-                        style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
+                        style="background-color: ${(subtask.finished)?'#1987544f' : '#f8f9fa'}"
                         ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
                     >
                         <span 
@@ -988,7 +988,7 @@ async function check(id){
     
             if (response.ok) {
                 showNotification("success", responseData.message)
-                $(`.subtask${id}`).css("background-color", '#198754')
+                $(`.subtask${id}`).css("background-color", '#1987544f')
                 $(`.subtask${id} span`).css("color", '#f8f9fa')
                 $(`#check_icon${id}`).css("display", 'inline')
                 $(`#input${id}`).val("off")
@@ -1235,7 +1235,7 @@ function genTaskCard(list_id, bg_color, description, start_date, end_date, title
                     <li 
                         class='justify-content-between align-items-center subTask subtask${subtask.subtask_id} rounded-pill px-3 py-2'
                         id='subtask${subtask.subtask_id}'
-                        style="background-color: ${(subtask.finished)?'#198754' : '#f8f9fa'}"
+                        style="background-color: ${(subtask.finished)?'#1987544f' : '#f8f9fa'}"
                         ondblclick="editSubTask('subtask${subtask.subtask_id}', ${subtask.subtask_id})"
                     >
                         <span 
@@ -1383,7 +1383,7 @@ socket.on('new_notification', (data) => {
             <li id="notification${data.notification_id}" class="list-group-item border-0 px-3 py-2 rounded-3 mb-2 shadow-sm">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex flex-column">
-                        span class="text-body">${data.message}</span>
+                        <span class="text-body">${data.message}</span>
                         <small class="text-muted mt-1">${data.created_at}</small>
                     </div>
                     <button type="button" class="btn btn-sm btn-light text-success ms-3 border-0" onclick="deleteNotification(${data.notification_id})" aria-label="Delete">
@@ -1393,12 +1393,31 @@ socket.on('new_notification', (data) => {
             </li>
         `;
         dropdownMenu?.insertAdjacentHTML('afterbegin', newNotification);
-
         showNotification('success', "You received a new notification: ");
+        showPopPupNotification(`Stack Task notification for: ${data.email}`, {
+            body: extractSubjectAndMessage(data.message),
+            icon: "static/images/logo.png",
+            vibrate: [200, 100, 200],
+        })
     } else {
         console.warn('Notification received for a different user:', data.user_id); // Debug: Warn if the notification is for another user
     }
 });
+
+function extractSubjectAndMessage(html) {
+    // Match first tag and its content (e.g. <span>...</span>)
+    const subjectMatch = html.match(/<[^>]+>(.*?)<\/[^>]+>/);
+    const subject = subjectMatch ? subjectMatch[1].trim() : '';
+
+    // Remove all tags
+    const noTags = html.replace(/<[^>]+>/g, '');
+    const cleanMessage = noTags.replace(/\s+/g, ' ').trim();
+
+    // Remove the subject from message if it's included (to avoid duplication)
+    const messageWithoutSubject = subject ? cleanMessage.replace(subject, '').trim() : cleanMessage;
+
+    return subject ? `${subject} — ${messageWithoutSubject}` : cleanMessage;
+}
 
 // Fetch initial notifications on page load
 const fetchNotifications = async () => {
@@ -1613,3 +1632,29 @@ function showFlexibleModal(message, type = 'confirm', defaultValue = '') {
     };
   });
 }
+
+// pop-up notification
+// Request notification permission
+async function requestNotificationPermission() {
+    Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+            console.log("Notification permission granted")
+        } else {
+            console.log("Notification permission denied")
+        }
+    })
+} 
+
+// Show notification
+function showPopPupNotification(title, options) {
+    if (Notification.permission == "granted") {
+    const notification = new Notification(title, options);
+    notification.onclick = () => {
+        window.location.href = 'https://localhost:5001/dashboard'
+    }
+    } else {
+        console.log('Notification permission not granted.');
+    }
+}
+
+requestNotificationPermission()

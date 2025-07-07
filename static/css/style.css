@@ -188,7 +188,7 @@ textarea{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--grey);
+    border: 1px solid #a09f9fa2;;
     border-radius: 50px;
     padding: 10px;
     gap: 10px;
@@ -382,12 +382,11 @@ main .container li:hover{
 
 .taskBox{
     transition: .5s all;
-    cursor: pointer;
     background-color: transparent;
 }
 
 .taskBox ul{
-    max-height: 322px;
+    max-height: 200px;
     overflow-y: auto;
 }
 
@@ -824,9 +823,9 @@ li:hover .notification-hover-info {
     display: flex;
 }
 
-.py-0.px-4:focus-within {
+.py-0.px-4:focus-within, .py-0.ps-4:focus-within {
   border: 1px solid #e9540e;
-  background-color: #f0f0f0;
+  /* background-color: #f0f0f0; */
   transform: .5s ease-in-out;
 }
 
@@ -1083,4 +1082,179 @@ li:hover .notification-hover-info {
   z-index: 1;
   font-size: 9px;
   line-height: 1;
+}
+
+/* ========= DARK MODE EXTENSION ========= */
+body.dark-mode {
+  background-color: #2f2f35 !important;
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode nav,
+body.dark-mode .nav,
+body.dark-mode header,
+body.dark-mode .welcome-modal-content,
+body.dark-mode #calendar,
+body.dark-mode .mod,
+body.dark-mode .custom-modal,
+body.dark-mode #aside,
+body.dark-mode .form-container > div,
+body.dark-mode .dropdown-menu,
+body.dark-mode .event {
+  background-color: #2f2f35 !important;
+  color: #e0e0e0 !important;
+  box-shadow: none;
+}
+
+body.dark-mode .dropdown-menu li:hover {
+    background-color: #4a4c4e!important;
+}
+
+.dropdown-menu li:hover {
+    background-color:  #8b8b8b18!important;
+    transition: .5s all;
+}
+
+body.dark-mode h6.text-muted.text-center {
+    color: #f0f4ff!important;
+}
+
+body.dark-mode main .container li {
+  background-color: #2f2f353a !important;
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .open-modal {
+    background-color: #ececec59 !important;
+}
+
+body.dark-mode .dropdown-menu .text-body {
+    color: #fff!important;
+}
+
+body.dark-mode .border-bottom {
+    border-bottom: var(--bs-border-width) var(--bs-border-style) #3d3d3f !important;
+}
+
+body.dark-mode .dropdown-menu .text-muted {
+    color: #ffffffab!important;
+}
+
+body.dark-mode .subTask {
+    background-color: #292b2e!important;
+}
+
+body.dark-mode .subTask span {
+    color: #fff!important;
+}
+
+body.dark-mode #aside a,
+body.dark-mode #aside h3,
+body.dark-mode #aside h4,
+body.dark-mode #aside span,
+body.dark-mode #aside li,
+body.dark-mode nav li a,
+body.dark-mode .form-container i,
+body.dark-mode .dropdown-menu a.dropdown-item {
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode .form-control,
+body.dark-mode textarea,
+body.dark-mode .form-floating input,
+body.dark-mode .form-floating textarea {
+  background-color: #2f2f35!important;
+  color: #f0f0f0 !important;
+  border-color: #444 !important;
+}
+
+body.dark-mode input{
+    color: #fff!important;
+}
+
+body.dark-mode .border,
+body.dark-mode .modal-content,
+body.dark-mode .dropdown-menu {
+  border-color: #444 !important;
+}
+
+body.dark-mode .btn,
+body.dark-mode .btn-container button,
+body.dark-mode .form-container button,
+body.dark-mode .get-started-btn {
+  color: #f8f9fa !important;
+}
+
+body.dark-mode .btn-light {
+    color: #198754!important;
+    background-color: transparent;
+}
+
+body.dark-mode .btn:hover,
+body.dark-mode .btn-container button:hover,
+body.dark-mode .get-started-btn:hover {
+  background-color: #444 !important;
+  color: #fff !important;
+}
+
+body.dark-mode .text-dark {
+    color: #fff!important
+}
+
+body.dark-mode aside div ul li:hover,
+body.dark-mode main .container li:hover,
+body.dark-mode .subTask:hover,
+body.dark-mode .active-dash-link {
+  background-color: #444447 !important;
+  box-shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background-color: #555;
+}
+
+
+
+body.dark-mode .active-link {
+  color: #00c9a7 !important;
+  border-bottom-color: #00c9a7;
+}
+
+body.dark-mode .progress-circle::after {
+  background-color: #2f2f35 !important;
+}
+
+body.dark-mode .progress-circle {
+  color: #ccc;
+}
+
+body.dark-mode .date-range {
+  background-color: transparent;
+  color: #8ab4f8;
+}
+
+body.dark-mode .event {
+  border-color: #3b4b7f;
+  background-color: #2b2b3d;
+}
+
+body.dark-mode .dropdown-menu a.dropdown-item:hover {
+  background-color: #333 !important;
+  color: #fff !important;
+}
+
+body.dark-mode .bg-light,body.dark-mode aside div ul li span, body.dark-mode .modal div div {
+    --bs-bg-opacity: 0;
+    background-color: #2f2f35!important;
+    color: #fff!important
+}
+
+body.dark-mode .card,  body.dark-mode .list-card {
+    background-color: #47474d!important;
+    color: #fff!important
+ }
+
+
+body.dark-mode .subtask-dropdown li {
+    color: #292b2e!important;
 }

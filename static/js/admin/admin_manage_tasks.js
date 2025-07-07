@@ -120,7 +120,7 @@ function formatDate(dateStr) {
   };
 }
 
-showNotification("success", "Task manager")
+showNotification("success", "Stack Task")
 
 fetchTasks()
 

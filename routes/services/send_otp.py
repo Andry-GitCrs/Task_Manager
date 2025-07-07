@@ -91,7 +91,7 @@ def send_otp(app, database):
             )
 
             msg = Message(
-                subject="Task Manager Email verification",
+                subject="Stack Task Email verification",
                 sender=app.config['MAIL_USERNAME'],
                 recipients=[email],
                 html=emailHtml

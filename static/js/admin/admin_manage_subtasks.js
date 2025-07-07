@@ -28,7 +28,7 @@ function showNotification(type, message) {
     })
 }
 
-showNotification("success", "Subtask manager")
+showNotification("success", "SubStack Task")
 
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
