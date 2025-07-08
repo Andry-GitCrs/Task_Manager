@@ -140,7 +140,7 @@ function assignSubtasks(taskId) {
 }
 
 async function deleteTask(task_id) {
-  if (confirm(`Are you sure you want this task ?`)) {
+  if (await showFlexibleModal('Are you sure you want to permanently delete this task')) {
     document.getElementById("loading").style.display = 'inline';
       try{
           const response = await fetch(`/api/user/deleteTaskPermanentely/${task_id}`,{
@@ -158,4 +158,61 @@ async function deleteTask(task_id) {
       }
       document.getElementById("loading").style.display = 'none';
   }
+}
+
+function showFlexibleModal(message, type = 'confirm', defaultValue = '') {
+  return new Promise((resolve) => {
+    const modalId = `flexModal_${Date.now()}`;
+    const container = document.getElementById("flex-modal-container");
+    container.innerHTML = ''; // Clear previous modal
+
+    const modalHtml = `
+      <div id="${modalId}" class="modal show d-block" tabindex="-1" role="dialog" style="z-index: 9000;">
+        <div class="modal-backdrop fade show" style="z-index: 1999;"></div>
+        <div class="modal-dialog modal-dialog-centered" role="document" style="z-index: 2001; pointer-events: all;">
+          <div class="modal-content rounded-4 shadow bg-white">
+            <form class="p-4 d-flex flex-column justify-content-between gap-3">
+              <div class="form-floating">
+                <p class="fs-5 text-dark m-0">${message}</p>
+              </div>
+
+              ${
+                type === 'input'
+                  ? `
+                  <div class="form-floating">
+                    <input type="text" class="form-control rounded-4 ps-4" id="flexModalInput" placeholder="Your input..." value="${defaultValue.replace(/"/g, '&quot;')}">
+                    <label for="flexModalInput"><i class="fas fa-keyboard me-2 text-primary"></i> Enter a title</label>
+                  </div>
+                `
+                  : ''
+              }
+
+              <div class="d-flex justify-content-end gap-2 pt-2">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" id="flexModalCancel">Cancel</button>
+                <button type="button" class="btn btn-primary rounded-pill px-4" id="flexModalConfirm">
+                  ${type === 'confirm' ? 'Confirm' : 'OK'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = modalHtml;
+
+    // Event Listeners
+    document.getElementById('flexModalCancel').onclick = () => {
+      container.innerHTML = '';
+      resolve(type === 'confirm' ? false : null);
+    };
+
+    document.getElementById('flexModalConfirm').onclick = () => {
+      const value = type === 'confirm'
+        ? true
+        : document.getElementById('flexModalInput').value;
+      container.innerHTML = '';
+      resolve(value);
+    };
+  });
 }

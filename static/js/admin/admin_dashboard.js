@@ -358,7 +358,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         const actionBadge = (text, color = "primary") => {
-        return `<span class="badge bg-${color} text-capitalize p-2">${text}</span>`;
+            return `<span class="badge bg-${color} text-capitalize p-2">${text}</span>`;
         };
 
         const buildRow = (time, user, action, details, icon, badgeColor) => `

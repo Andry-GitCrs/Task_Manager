@@ -31,7 +31,7 @@ body{
 
 aside{
     width: 250px;
-    z-index: 10000;
+    z-index: 5000;
     overflow-y: auto;
     overflow-x: auto;
     transition: .5s ease-in-out;
