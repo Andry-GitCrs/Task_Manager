@@ -79,16 +79,40 @@
                     <form name="listForm" id="listForm" onsubmit="return addNewList(event)" class="p-0 mb-2">
                         <!-- List Name -->
                         <div class="form-floating mb-2">
-                            <input type="text" class="form-control form-control-sm rounded-pill ps-4" id="listName" placeholder="Enter list name">
-                            <label for="listName" class="small"><i class="fas fa-heading text-primary me-2 fs-6"></i> List name</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-sm rounded-pill ps-4" 
+                                id="listName" 
+                                placeholder="Enter list name"
+                                pattern="^[^<>]{3,50}$"
+                                minlength="3"
+                                maxlength="50"
+                                required
+                            >
+                            <label for="listName" class="small">
+                                <i class="fas fa-heading text-primary me-2 fs-6"></i> List name
+                            </label>
                         </div>
 
+                        <!-- Description -->
                         <div class="form-floating mb-2">
-                            <input type="text" class="form-control form-control-sm rounded-pill ps-4" id="listDescription" placeholder="Enter list description">
-                            <label for="listDescription" class="small"><i class="fas fa-align-left text-secondary me-2 fs-6"></i> Description</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-sm rounded-pill ps-4" 
+                                id="listDescription" 
+                                placeholder="Enter list description"
+                                pattern="^[^<>]{5,100}$"
+                                minlength="5"
+                                maxlength="100"
+                            >
+                            <label for="listDescription" class="small">
+                                <i class="fas fa-align-left text-secondary me-2 fs-6"></i> Description
+                            </label>
                         </div>
 
-                        <button type="submit" class="btn btn-success btn-sm w-100 rounded-pill d-flex align-items-center justify-content-center gap-1 py-2">
+                        <button 
+                            type="submit" 
+                            class="btn btn-success btn-sm w-100 rounded-pill d-flex align-items-center justify-content-center gap-1 py-2">
                             <i class="fas fa-plus-circle fs-6"></i> <span class="small">Create</span>
                         </button>
                     </form>
@@ -267,17 +291,33 @@
 
                 <!-- Modal Body -->
                 <form class="custom-modal-body" id="updateListForm">
-
                     <!-- List Name -->
                     <div class="form-floating mb-3">
-                        <input type="text" id="renameListInput" class="form-control" placeholder="Rename list..." required>
-                        <label for="renameListInput"><i class="fas fa-header"></i>List Name</label>
+                        <input 
+                            type="text" 
+                            id="renameListInput" 
+                            class="form-control" 
+                            placeholder="Rename list..." 
+                            pattern="^[^<>]{3,50}$"
+                            minlength="3"
+                            maxlength="50"
+                            required
+                        >
+                        <label for="renameListInput"><i class="fas fa-header"></i> List Name</label>
                     </div>
 
                     <!-- Description -->
                     <div class="form-floating mb-3">
-                        <textarea id="descriptionListInput" class="form-control" placeholder="Add a description..." style="height: 100px;"></textarea>
-                        <label for="descriptionListInput"><i class="fas fa-align-left"></i>Description</label>
+                        <textarea 
+                            id="descriptionListInput" 
+                            class="form-control" 
+                            placeholder="Add a description..." 
+                            style="height: 100px;" 
+                            pattern="^[^<>]{5,100}$"
+                            minlength="5"
+                            maxlength="100"
+                        ></textarea>
+                        <label for="descriptionListInput"><i class="fas fa-align-left"></i> Description</label>
                     </div>
 
                     <!-- Star + Delete -->
@@ -293,14 +333,21 @@
                             </label>
                         </div>
 
-                        <button class="btn btn-outline-danger text-danger w-50 d-flex align-items-center justify-content-center gap-2"
-                            id="deleteListBtn" data-bs-toggle="tooltip" title="This will permanently delete the list">
+                        <button 
+                            class="btn btn-outline-danger text-danger w-50 d-flex align-items-center justify-content-center gap-2"
+                            id="deleteListBtn" 
+                            data-bs-toggle="tooltip" 
+                            title="This will permanently delete the list"
+                        >
                             <i class="fas fa-trash-alt"></i> Delete
                         </button>
                     </div>
 
                     <!-- Save Button -->
-                    <button class="rounded-pill btn btn-success w-100 d-flex align-items-center justify-content-center gap-2" id="saveListChangesBtn">
+                    <button 
+                        class="rounded-pill btn btn-success w-100 d-flex align-items-center justify-content-center gap-2" 
+                        id="saveListChangesBtn"
+                    >
                         <i class="fas fa-save"></i> <span>Save Changes</span>
                     </button>
                 </form>

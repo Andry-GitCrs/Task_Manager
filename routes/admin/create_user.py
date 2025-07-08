@@ -1,4 +1,4 @@
-from flask import abort, jsonify, request
+from flask import abort, jsonify, request, url_for
 from flask_bcrypt import Bcrypt
 from flask_login import current_user, login_required
 
@@ -6,6 +6,7 @@ def create_user(app, database):
     db = database["db"]
     User = database["tables"]["User"]
     List =  database["tables"]["List"]
+    Notification = database["tables"]["Notification"]
 
     @app.route('/admin/adduser', methods = ['POST'])
     @login_required
@@ -27,11 +28,20 @@ def create_user(app, database):
                     return jsonify({"error": "Email already taken"}), 400 # User already registered
 
                 if bcrypt.check_password_hash(password, confirmation_password):
+                    greeting = "<span class='fw-bold btn bg-light border m-0'>💁‍♀️Tips</span> Hi, welcome to <b>Stack Task</b>, you're on the right APP to manage your Task. Please visit the <a class='text-primary' href='/dashboard/help'>guide</a> page before starting using the app. Don't hesitate to <a class='text-primary' href='/dashboard/help#contact-us'>contact us</a> if needed"
+
                     user = User(email = email, password = password, admin = admin_privilege)
                     db.session.add(user)
                     db.session.commit()
-                    db.session.add( List(list_name = "Personal", user_id = user.user_id) )
+
+                    list = List(list_name = "Personal", user_id = user.user_id, strict = True) 
+                    db.session.add(list)
                     db.session.commit()
+                    
+                    notification = Notification( message = greeting, user_id = user.user_id )
+                    db.session.add(notification)
+                    db.session.commit()
+
                     user = {
                         "user_id": user.user_id,
                         "email": user.email,
@@ -44,7 +54,11 @@ def create_user(app, database):
                         "user_inactive_tasks_count": 0,
                         "finished_subtasks_count": 0,
                         "user_subtasks_count": 0,
-                        "user_active_tasks_count": 0
+                        "user_active_tasks_count": 0,
+                        "profile_pic": url_for('static', filename='uploads/profile/' + user.profile_pic) if user.profile_pic else "",
+                        "cover_pic": url_for('static', filename='uploads/profile/' + user.cover_pic) if user.cover_pic else "",
+                        "bio": user.bio if user.bio else "",
+                        "username": user.username,
                     }
                     return jsonify({
                         "message": f"User {email} created successfully",
