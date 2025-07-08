@@ -1258,3 +1258,11 @@ body.dark-mode .card,  body.dark-mode .list-card {
 body.dark-mode .subtask-dropdown li {
     color: #292b2e!important;
 }
+
+#select_arg {
+    color: #000 !important;
+}
+
+body.dark-mode #select_arg {
+    color: #fff !important;
+}
