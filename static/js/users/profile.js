@@ -40,22 +40,22 @@ $('#update-form').on('submit', async function(e) {
 // Chart
 let chartInstance = null;
 
-  function createGradient(ctx, chartArea, data) {
-    const max = Math.max(...data);
-    const min = Math.min(...data);
+function createGradient(ctx, chartArea, data) {
+  const max = Math.max(...data);
+  const min = Math.min(...data);
 
-    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+  const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
 
-    // Helper to calculate position in gradient
-    const getStop = value => (value - min) / (max - min);
+  // Helper to calculate position in gradient
+  const getStop = value => (value - min) / (max - min);
 
-    // Red → Yellow → Green
-    gradient.addColorStop(0, 'red'); // lowest
-    gradient.addColorStop(0.5, 'yellow'); // middle
-    gradient.addColorStop(1, 'green'); // highest
+  // Red → Yellow → Green
+  gradient.addColorStop(0, 'red'); // lowest
+  gradient.addColorStop(0.5, 'yellow'); // middle
+  gradient.addColorStop(1, 'green'); // highest
 
-    return gradient;
-  }
+  return gradient;
+}
 
   function loadChartData() {
     $('#chartStatus').text('Loading chart...');
@@ -141,12 +141,14 @@ let chartInstance = null;
         },
         plugins: [{
           id: 'customGradientLine',
-          beforeDatasetsDraw(chart) {
+          afterLayout(chart) {
             const dataset = chart.data.datasets[0];
             const ctx = chart.ctx;
             const chartArea = chart.chartArea;
-            const gradient = createGradient(ctx, chartArea, dataset.data);
 
+            if (!chartArea || !chartArea.top || !chartArea.bottom) return;
+
+            const gradient = createGradient(ctx, chartArea, dataset.data);
             dataset.borderColor = gradient;
             dataset.backgroundColor = gradient;
           }

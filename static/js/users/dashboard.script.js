@@ -105,7 +105,7 @@ $(document).ready(function() {
     $(".add").on("click", (e) => {
         e.preventDefault();
         let content = $("#content").val().trim();
-        const contentRegex = /^[\w\s]{3,}$/; 
+        const contentRegex = /^[^<>]{3,}$/; 
         $("#content").val("");
         if (!contentRegex.test(content)) {
             showNotification("error", "Task content must be at least 3 characters and contain only letters, numbers, and spaces.");
@@ -192,37 +192,37 @@ $(document).ready(function() {
         let description = $("#description").val().trim();
         let list_id = $("#list_id").val();
 
-        // Regex patterns
-        const titleRegex = /^[\w\s]{3,}$/;                  // letters, numbers, underscores, spaces
-        const descriptionRegex = /^.{5,}$/;                 // at least 5 characters if present
-        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;            // YYYY-MM-DD
-        const colorRegex = /^#([0-9A-Fa-f]{6})$/;           // valid hex color
-        const idRegex = /^\d+$/;                            // only digits
+        // Allow letters, digits, spaces, and useful punctuation, but block < >
+        const titleRegex = /^[^<>]{3,}$/;               // at least 3 characters, block < >
+        const descriptionRegex = /^[^<>]{5,}$/;         // at least 5 characters, block < >
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;        // YYYY-MM-DD
+        const colorRegex = /^#([0-9A-Fa-f]{6})$/;       // valid hex color
+        const idRegex = /^\d+$/;                        // only digits
 
         // Validation
         if (!titleRegex.test(title)) {
-            showNotification('error', "Title must be at least 3 characters and contain only letters, numbers, and spaces.");
-            return
+            showNotification('error', "Title must be at least 3 characters and cannot contain '<' or '>'.");
+            return;
         }
 
         if (description && !descriptionRegex.test(description)) {
-            showNotification('error', "Description must be at least 5 characters.");
-            return
+            showNotification('error', "Description must be at least 5 characters and cannot contain '<' or '>'.");
+            return;
         }
 
         if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
             showNotification('error', "Dates must be in the format YYYY-MM-DD.");
-            return
+            return;
         }
 
         if (!colorRegex.test(bgColor)) {
             showNotification('error', "Background color must be a valid hex code (e.g., #ffcc00).");
-            return
+            return;
         }
 
         if (!idRegex.test(list_id)) {
             showNotification('error', "List ID must be a valid number.");
-            return
+            return;
         }
 
         if (title.trim() !== "" && startDate !== "" && endDate !== "") {

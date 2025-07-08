@@ -26,26 +26,27 @@ def add_task(app, database):
 
             subtasksArray = []
 
-            # Patterns
-            title_pattern = re.compile(r'^[\w\s\-]{3,}$')  # Letters, numbers, spaces, dashes, underscores, min 3 chars
-            date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')  # YYYY-MM-DD
-            color_pattern = re.compile(r'^#[0-9A-Fa-f]{6}$')  # Hex color
+            # Updated Patterns
+            title_pattern = re.compile(r'^[^<>]{3,}$')               # Any char except < or >, at least 3 chars
+            date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')        # YYYY-MM-DD
+            color_pattern = re.compile(r'^#[0-9A-Fa-f]{6}$')         # Hex color
 
+            # Validation
             if not title_pattern.match(task_title):
                 return jsonify({
-                    "error": "Invalid task title. Must be at least 3 characters and contain only letters, numbers, spaces, dashes or underscores."
+                    "error": "Invalid task title. Must be at least 3 characters and cannot contain '<' or '>'."
                 }), 400
-            
+
             if not date_pattern.match(task_start_date):
                 return jsonify({
                     "error": "Invalid start date format. Use YYYY-MM-DD."
                 }), 400
-            
+
             if not date_pattern.match(task_end_date):
                 return jsonify({
                     "error": "Invalid end date format. Use YYYY-MM-DD."
                 }), 400
-            
+
             if not color_pattern.match(task_background_color):
                 return jsonify({
                     "error": "Invalid color format. Use #RRGGBB."

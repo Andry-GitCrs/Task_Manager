@@ -15,7 +15,7 @@ async function fetchUpcomingTasks(element_id, condition, day, message) {
             const upComingTasks = responseData.data;
             const date = formatDate(responseData.date);
             //$("#upcomingTaskNbr").text(upComingTasks.length);
-            showNotification("success", `You have ${upComingTasks.length} task${upComingTasks.length > 1 ? "s" : ""} to do ${condition} ${date}`);
+            // showNotification("success", `You have ${upComingTasks.length} task${upComingTasks.length > 1 ? "s" : ""} to do ${condition} ${date}`);
             $(`#${element_id}`).append($("<h3 class='m-0 my-1'></h3>").html(`<span class="event p-1 px-3 text-dark rounded-pill">${message}</span>`))
             upComingTasks.forEach(task => {
                 const {
